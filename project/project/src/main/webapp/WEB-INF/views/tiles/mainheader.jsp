@@ -82,7 +82,7 @@
 									class="caret"></b></a>
 								<ul class="dropdown-menu">
 									<li><a href="faq">자주묻는질문</a></li>
-									<li><a href="qna">Q&A</a></li>
+									<li><a href="qna?pnum=1">Q&A</a></li>
 								</ul></li>
 						</ul>
 					</div>

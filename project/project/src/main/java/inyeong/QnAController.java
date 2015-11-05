@@ -38,7 +38,7 @@ public class QnAController {
 		model.addAttribute("navi", navi);
 		model.addAttribute("search", false);
         //return "qna/qnalist";
-		return "tiles/tilesQnAlist";
+		return "qna/qnalist";
     }
 	
 	@RequestMapping(value="faq", method=RequestMethod.GET)
