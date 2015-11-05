@@ -13,15 +13,21 @@
     
     <!-- 제이쿼리 -->
  	<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script> 
+ 	
+ 	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+	
  	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> -->
 <!--  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script> -->
-  <!--   <script>
-        window.jQuery || document.write('<script src="<c:url value="../resources/js/jquery-1.11.0.min.js"/>"><\/script>')
-    </script> -->
+  <script>
+        window.jQuery || document.write('<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"><\/script>')
+    </script> 
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
+    
+	
+	
     <script src="<c:url value="../resources/js/jquery.cookie.js"/>"></script>
     <script src="<c:url value="../resources/js/waypoints.min.js"/>"></script>
     <script src="<c:url value="../resources/js/jquery.counterup.min.js"/>"></script>
