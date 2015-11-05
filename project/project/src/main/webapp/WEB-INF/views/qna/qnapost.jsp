@@ -9,36 +9,36 @@ $(jqueryOk);
 function jqueryOk() {
 	$('button[name=submit]').on('click', function(evt){
 		  evt.preventDefault();
-		 if($('input[name=title]').val() == ''){
+		alert($('form').eq(0).serialize());
+		  if($('input[name=title]').val() == ''){
 				 $('input[name=title]').val($('input[name=title]').attr('placeholder'));
 			 } 
 		  if($('input[name=ref]').val() == ''){
 				 $('input[name=ref]').val(0);
 			 }
-        	  		  $.ajax({
-        	  			type : "post",
-        	  			url : "qnapost",
-        	  			dataType : "json",
-        	  			data :   $('form').eq(0).serialize()
-        	  			,
-        	  			success : function(json) {
-        	  				if (json.check) {
-        	  					alert("저장성공");
-        	  					//location.href="<c:url value="/board/list?pnum=1"/>";
-        	  					/* location.href="http://192.168.8.55:8500/SpringWeb/temp/qna?pnum=1"; */
-        	  					location.href="../temp/qnaread?num="+json.num+"";
-        	  					
-        	  					/* location.href="../temp/qnaread?num=1"; */
-        	  				} else{
-        	  					alert("저장실패");
-        	  				}
-        	  			},
-        	  			error : function(err) {
-        	  				alert("에러 : 다시 시도해주세요");
-        	  			}
+     	  		  $.ajax({
+     	  			type : "post",
+     	  			url : "qnapost",
+     	  			dataType : "json",
+     	  			data :   $('form').eq(0).serialize()
+     	  			,
+     	  			success : function(json) {
+     	  				if (json.check) {
+     	  					alert("저장성공");
+     	  					//location.href="<c:url value="/board/list?pnum=1"/>";
+     	  					/* location.href="http://192.168.8.55:8500/SpringWeb/temp/qna?pnum=1"; */
+     	  					location.href="../temp/qnaread?num="+json.num+"";
+     	  					
+     	  					/* location.href="../temp/qnaread?num=1"; */
+     	  				} else{
+     	  					alert("저장실패");
+     	  				}
+     	  			},
+     	  			error : function(err) {
+     	  				alert("에러 : 다시 시도해주세요");
+     	  			}
 
-        	  		}); 
-          
+     	  		}); 
             
     });
 }
@@ -65,36 +65,77 @@ function jqueryOk() {
             </div>
         </div>
 <!-- 서브페이지 배너 끝 -->   
-<h5>글쓰기</h5>
-<div>
-<form>
-<table>
 
-<tr>
-<td>글제목 :</td>
-<td><input type="text" name="title" placeholder="${title}"></td>
-</tr>
-<tr>
-<td>글쓴이 :</td>
-<td><input type="text"name="author" ></td>
-</tr>
-<tr>
-<td>내용 :</td>
-<td><textarea name="contents" ></textarea></td>
-</tr>
+  <div id="content">
+            <div class="container">
 
-<tr>
-<td><input type="text" name="ref" value="${ref}" hidden="hidden"></td>
-<td><button type="button" name="submit">등록하기</button>
-<button type="reset">초기화</button></td>
-</tr>
-<tr>
+                <div class="row">
 
-<td colspan="2"><a href="qna?pnum=1"><button type="button">리스트보기</button></a></td>
-</tr>
-</table>
-</form>
-</div>
+                    <div class="col-md-12 clearfix" id="checkout">
+
+                        <div class="box">
+                            <form><h5>글쓰기</h5>
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="titlel">글제목</label>
+                                                <input type="text" name="title" placeholder="${title}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.row -->
+
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="authorl">작성자</label>
+                                                <input type="text"name="author" >
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.row -->
+
+                                    <div class="row">
+                                       <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label for="street">내용</label>
+                                                <textarea name="contents" ></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+<input type="text" name="ref" value="${ref}" hidden="hidden">
+                                    <!-- /.row -->
+                                </div>
+
+                                <div class="box-footer">
+                                    <div>
+                                       <a href="#"> <button type="reset">초기화</button></a>
+                                    </div>
+				    <div>
+                                        <a href="qna?pnum=1"><button type="button">리스트보기</button></a>
+                                    </div>
+                                    <div>
+                                        <button type="button" class="btn btn-template-main" name="submit">등록하기</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.box -->
+
+
+                    </div>
+                    <!-- /.col-md-9 -->
+
+                 
+
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /#content -->
 
     </tiles:putAttribute>
 </tiles:insertDefinition>
