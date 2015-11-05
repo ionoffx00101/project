@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="inyeong.QnADAO"> <!--이 sql 문장과 매핑될 인터페이스의 완전한 경로-->
+
+ 	<resultMap id="voMap" type="inyeong.QnABoardVO"></resultMap>
+    <resultMap id="reMap" type="inyeong.QnAReplyVO"></resultMap> 
+	<resultMap id="myMap" type="hashmap"></resultMap>
+    
+    <select id="getPostDAO" parameterType="java.util.Map" statementType="CALLABLE">
+    	{CALL QNA_GETPOST(#{num, mode=IN},
+    				 #{key, jdbcType=CURSOR, mode=OUT, javaType=java.sql.ResultSet,resultMap=voMap})}
+    </select>
+   
+    <select id="getPagelist" parameterType="java.util.Map" statementType="CALLABLE">
+    	{CALL QNA_GETPAGELIST(#{num, mode=IN},
+    				 #{key, jdbcType=CURSOR, mode=OUT, javaType=java.sql.ResultSet,resultMap=voMap})}
+    </select>
+    <select id="getTotalRows" resultType="java.lang.Integer">
+   		 select count(*) from QnABOARD
+    </select>
+     <select id="getsearchTotalRows" resultType="java.lang.Integer">
+   		 select count(*) from QnABOARD where title like '%'||#{title}||'%'
+    </select>
+     <select id="getsearchaTotalRows" resultType="java.lang.Integer">
+   		 select count(*) from QnABOARD where author like '%'||#{author}||'%' 
+    </select>
+    <select id="search" resultType="inyeong.QnABoardVO">
+    select t2.* from (SELECT t1.*, TRUNC((ROWNUM-1)/5)+1 page FROM ( SELECT NUM,LPAD(' ', (LEVEL-1)*4,'　') || DECODE(LEVEL,1,'','┕ ')||title as title,CONTENTS,WDATE,author,REF,hitcnt FROM QNABOARD where title like '%'||#{title}||'%' START WITH REF='0' CONNECT BY PRIOR NUM=REF order siblings by NUM DESC) t1) t2 where page=#{page} 
+    </select>
+     <select id="searcha" resultType="inyeong.QnABoardVO">
+ 
+    select t2.* from (SELECT t1.*, TRUNC((ROWNUM-1)/5)+1 page FROM ( SELECT NUM,LPAD(' ', (LEVEL-1)*4,'　') || DECODE(LEVEL,1,'','┕ ')||title as title,CONTENTS,WDATE,author,REF,hitcnt FROM QNABOARD where author like '%'||#{author}||'%' START WITH REF='0' CONNECT BY PRIOR NUM=REF order siblings by NUM DESC) t1) t2 where page=#{page} 
+    </select>
+    <update id="update" parameterType="inyeong.QnABoardVO">
+       update QNABOARD set title=#{title},CONTENTS=#{contents},author=#{author} where NUM=#{num}
+    </update>
+    
+    <select id="momcheck" resultType="java.lang.Integer">
+   		 select count(*) from QnABOARD where ref=#{num}
+    </select>
+    <delete id="delete">
+        delete from qnaboard  where NUM=#{num}
+    </delete>
+    
+
+	<select id="getpostreply" parameterType="java.util.Map" statementType="CALLABLE">
+    	{CALL QNA_GETPOSTREPLY(#{num, mode=IN},
+    				 #{key, jdbcType=CURSOR, mode=OUT, javaType=java.sql.ResultSet,resultMap=reMap})}
+    </select>
+        <!-- <insert id="newpostdao" parameterType="inyeong.QnABoardVO">
+    	insert into qnaboard (num ,title,contents,author ,wdate,hitcnt ,ref) values (qnaboard_seq.nextval,#{title},#{contents},#{author},SYSDATE,0,#{ref})
+    </insert> -->
+    <select id="newpostpro" parameterType="java.util.Map" statementType="CALLABLE">
+    	 {CALL QNA_NEWPOST(#{title, mode=IN},#{author, mode=IN},#{contents, mode=IN},#{ref, mode=IN},  #{num, mode=OUT, jdbcType=VARCHAR, resultMap=myMap}) }
+	</select>
+    
+</mapper>

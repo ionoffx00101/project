@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing 
+		infrastructure -->
+
+	<!-- Process annotations on registered beans like @Autowired... -->
+	<context:annotation-config />
+
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<mvc:annotation-driven />
+
+	<context:component-scan base-package="inyeong" />
+	
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+		up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+<!-- 	<resources mapping="/css/**" location="/css/" />
+	<resources mapping="/js/**" location="/js/" />
+	<resources mapping="/font/**" location="/font/" />
+	<resources mapping="/img/**" location="/img/" /> -->
+	
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources 
+		in the /WEB-INF/views directory -->
+	<beans:bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+		<beans:property name="contentType" value="text/html; charset=UTF-8" />
+		<beans:property name="order" value="0" />
+	</beans:bean>
+
+	<!-- 타일즈 뷰 리졸버 선언 -->
+	<beans:bean id="viewResolver"
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<beans:property name="viewClass">
+			<beans:value>
+				org.springframework.web.servlet.view.tiles3.TilesView
+			</beans:value>
+		</beans:property>
+		<beans:property name="order" value="1" />
+	</beans:bean>
+
+	<!-- Tiles configuration -->
+	<beans:bean id="tilesConfigurer"
+		class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<beans:property name="definitions">
+			<beans:list>
+				<beans:value>/WEB-INF/views/tiles/tiles-definition.xml</beans:value>
+				<!-- <beans:value>/WEB-INF/views/tiles/tiles-definition.xml</beans:value> -->
+				<beans:value>/WEB-INF/views/**/views.xml</beans:value>
+			</beans:list>
+		</beans:property>
+	</beans:bean>
+
+	<!-- <beans:bean id="simpleChatHandler" class="org.kdea.spring.websocket.SimpleWebSocketHandler" 
+		/> <websocket:handlers> <websocket:mapping path="/simpleBoard" handler="simpleWebHandler" 
+		/> <websocket:handshake-interceptors> <beans:bean class="org.kdea.Board.HandshakeInterceptor" 
+		/> </websocket:handshake-interceptors> </websocket:handlers> -->
+	<!-- 타일즈 뷰 리졸버 선언 끝 -->
+
+	<!-- spring jdbc -->
+	<beans:bean id="dataSource" class="oracle.jdbc.pool.OracleDataSource">
+		<beans:property name="dataSourceName" value="ds" />
+		<beans:property name="URL"
+			value="jdbc:oracle:thin:@192.168.8.55:1521:xe" />
+		<beans:property name="user" value="scott" />
+		<beans:property name="password" value="tiger" />
+	</beans:bean>
+
+	<!-- mybatis -->
+	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- <beans:property name="mapperLocations" value="classpath:org/kdea/mybatis/*.xml"/> -->
+		<!-- <beans:property name="mapperLocations" value="classpath:org/kdea/board/*.xml" />  -->
+		<!-- <beans:property name="mapperLocations" value="classpath:inyeong/*.xml" />  -->
+		<beans:property name="mapperLocations"> 
+		<beans:array>
+           <!--  <beans:value>classpath:org/kdea/board/*.xml</beans:value> -->
+            <beans:value>classpath:inyeong/*.xml</beans:value>
+        </beans:array>
+    	</beans:property>
+		<beans:property name="dataSource" ref="dataSource" />
+
+	</beans:bean>
+
+	<beans:bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg index="0" ref="sqlSessionFactory" />
+
+	</beans:bean>
+	<!-- mybatis 끝 -->
+
+	<!-- 파일업로드 관련 -->
+	<beans:bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+</beans:beans>
