@@ -93,9 +93,11 @@ table {
 	width: 100px;
 	size: 10;
 }
-.category{
-width: 80px;
-    height: 30px;}
+
+.category {
+	width: 80px;
+	height: 30px;
+}
 </style>
 
 <tiles:insertDefinition name="subTemplate">
@@ -111,7 +113,7 @@ width: 80px;
 					</div>
 					<div class="col-md-5">
 						<ul class="breadcrumb">
-							<li><a href="home">Home</a></li>
+							<li><a href="../temp/home">Home</a></li>
 							<li>Questions and answers</li>
 						</ul>
 
@@ -131,6 +133,11 @@ width: 80px;
 				<div class="row">
 					<div class="col-md-12 clearfix">
 						<div class="box">
+						<div class="heading">
+                                <h2 >Q&A 목록</h2>
+                            </div>
+						
+						
 							<a href="qnapost"><button type="button" class="btn_postlnk">글쓰기</button></a> <br> <br>
 							<div class="table-responsive">
 								<table class="table">
@@ -171,113 +178,110 @@ width: 80px;
 										<div class="col-md-1">
 
 											<select class="category" name="category">
-											
+
 												<option>글제목</option>
 												<option>글쓴이</option>
 											</select>
 										</div>
 										<div class="col-md-5">
-										<div class="input-group">
-											<input type="text" class="form-control" placeholder="Search" name="searchword">
-										
-										
-											<span class="input-group-btn">
+											<div class="input-group">
+												<input type="text" class="form-control" placeholder="Search" name="searchword"> <span class="input-group-btn">
 
-												<button class="btn btn-template-main btn_search" type="button" name="btn_search">
-													<i class="fa fa-search"></i>
-												</button>
+													<button class="btn btn-template-main btn_search" type="button" name="btn_search">
+														<i class="fa fa-search"></i>
+													</button>
 
-											</span>
-</div>
+												</span>
+											</div>
 										</div>
 										<div class="col-md-3"></div>
 
 									</div>
 									<Br> <Br>
 									<div class="pagenavi">
-									
-									<ul class="pagination pagination-lg">
-										<c:choose>
-											<c:when test="${search}">
-												<c:choose>
-													<c:when test="${navi.leftMore}">
-														<li><a href="search?word=${word}&cate=${cate}&pnum=1"> « </a> </li>
-														<%-- ${navi.links.length-1}${navi.links().length-1}--%>
-													</c:when>
-												</c:choose>
-											</c:when>
+
+										<ul class="pagination pagination-lg">
+											<c:choose>
+												<c:when test="${search}">
+													<c:choose>
+														<c:when test="${navi.leftMore}">
+															<li><a href="search?word=${word}&cate=${cate}&pnum=1"> « </a></li>
+															<%-- ${navi.links.length-1}${navi.links().length-1}--%>
+														</c:when>
+													</c:choose>
+												</c:when>
 
 
-											<c:otherwise>
-												<c:choose>
-													<c:when test="${navi.leftMore}">
-													<li>	<a href="qna?pnum=1"> « </a> </li>
-													</c:when>
-												</c:choose>
-											</c:otherwise>
+												<c:otherwise>
+													<c:choose>
+														<c:when test="${navi.leftMore}">
+															<li><a href="qna?pnum=1"> « </a></li>
+														</c:when>
+													</c:choose>
+												</c:otherwise>
 
-										</c:choose>
+											</c:choose>
 
 
-										<!--  -->
+											<!--  -->
 
-										<c:choose>
-											<c:when test="${search}">
-												<c:forEach var="board" items="${navi.links}">
+											<c:choose>
+												<c:when test="${search}">
+													<c:forEach var="board" items="${navi.links}">
+
+														<c:choose>
+															<c:when test="${navi.currPage==board}">
+																<li class="active"><a href="search?word=${word}&cate=${cate}&pnum=${board}">${board}</a></li>
+															</c:when>
+															<c:when test="${navi.currPage!=board}">
+																<li><a href="search?word=${word}&cate=${cate}&pnum=${board}">${board}</a></li>
+															</c:when>
+														</c:choose>
+
+													</c:forEach>
+												</c:when>
+
+												<c:otherwise>
+													<c:forEach var="board" items="${navi.links}">
+
+														<c:choose>
+															<c:when test="${navi.currPage==board}">
+																<li class="active"><a href="qna?pnum=${board}">${board}</a></li>
+															</c:when>
+															<c:when test="${navi.currPage!=board}">
+																<li><a href="qna?pnum=${board}">${board}</a></li>
+															</c:when>
+														</c:choose>
+
+													</c:forEach>
+												</c:otherwise>
+
+											</c:choose>
+
+											<!--  -->
+
+
+											<c:choose>
+												<c:when test="${search}">
 
 													<c:choose>
-														<c:when test="${navi.currPage==board}">
-          <li><a href="search?word=${word}&cate=${cate}&pnum=${board}">${board}</a></li>
-       </c:when>
-														<c:when test="${navi.currPage!=board}">
-        <li><a href="search?word=${word}&cate=${cate}&pnum=${board}">${board}</a></li>
-       </c:when>
+														<c:when test="${navi.rightMore}">
+															<li><a href="search?word=${word}&cate=${cate}&pnum=${navi.linknum}">»</a></li>
+															<%-- ${navi.links.length-1}${navi.links().length-1}--%>
+														</c:when>
 													</c:choose>
 
-												</c:forEach>
-											</c:when>
+												</c:when>
 
-											<c:otherwise>
-												<c:forEach var="board" items="${navi.links}">
-
+												<c:otherwise>
 													<c:choose>
-														<c:when test="${navi.currPage==board}">
-          <li><a href="qna?pnum=${board}">${board}</a></li>
-       </c:when>
-														<c:when test="${navi.currPage!=board}">
-        <li><a href="qna?pnum=${board}">${board}</a></li>
-       </c:when>
+														<c:when test="${navi.rightMore}">
+															<li><a href="qna?pnum=${navi.linknum}">»</a></li>
+															<%-- ${navi.links.length-1}${navi.links().length-1}--%>
+														</c:when>
 													</c:choose>
-
-												</c:forEach>
-											</c:otherwise>
-
-										</c:choose>
-										
-										<!--  -->
-
-
-										<c:choose>
-											<c:when test="${search}">
-
-												<c:choose>
-													<c:when test="${navi.rightMore}">
-														<li><a href="search?word=${word}&cate=${cate}&pnum=${navi.linknum}">»</a></li>
-														<%-- ${navi.links.length-1}${navi.links().length-1}--%>
-													</c:when>
-												</c:choose>
-
-											</c:when>
-
-											<c:otherwise>
-												<c:choose>
-													<c:when test="${navi.rightMore}">
-														<li><a href="qna?pnum=${navi.linknum}">»</a></li>
-														<%-- ${navi.links.length-1}${navi.links().length-1}--%>
-													</c:when>
-												</c:choose>
-											</c:otherwise>
-										</c:choose>
+												</c:otherwise>
+											</c:choose>
 										</ul>
 									</div>
 								</div>

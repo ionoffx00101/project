@@ -9,7 +9,6 @@ $(jqueryOk);
 function jqueryOk() {
 	$('button[name=submit]').on('click', function(evt){
 		  evt.preventDefault();
-		alert($('form').eq(0).serialize());
 		  if($('input[name=title]').val() == ''){
 				 $('input[name=title]').val($('input[name=title]').attr('placeholder'));
 			 } 
@@ -18,9 +17,9 @@ function jqueryOk() {
 			 }
      	  		  $.ajax({
      	  			type : "post",
-     	  			url : "qnapost",
+     	  			url : "../temp/qnapost",
      	  			dataType : "json",
-     	  			data :   $('form').eq(0).serialize()
+     	  			data :   $('#qnapostform').serialize()
      	  			,
      	  			success : function(json) {
      	  				if (json.check) {
@@ -55,7 +54,7 @@ function jqueryOk() {
                     </div>
                     <div class="col-md-5">
                         <ul class="breadcrumb">
-                            <li><a href="home">Home</a>
+                            <li><a href="../temp/home">Home</a>
                             </li>
                             <li>Questions and answers</li>
                         </ul>
@@ -66,68 +65,38 @@ function jqueryOk() {
         </div>
 <!-- 서브페이지 배너 끝 -->   
 
-  <div id="content">
+ <div id="content">
             <div class="container">
 
                 <div class="row">
-
-                    <div class="col-md-12 clearfix" id="checkout">
-
+                    <div class="col-md-12">
                         <div class="box">
-                            <form><h5>글쓰기</h5>
-                                <div class="content">
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="titlel">글제목</label>
-                                                <input type="text" name="title" placeholder="${title}">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /.row -->
+                            
+							<div class="heading">
+                                <h2 >글작성</h2>
+                            </div>
+                            <hr>
 
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="authorl">작성자</label>
-                                                <input type="text"name="author" >
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- /.row -->
-
-                                    <div class="row">
-                                       <div class="col-sm-6">
-                                            <div class="form-group">
-                                                <label for="street">내용</label>
-                                                <textarea name="contents" ></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-<input type="text" name="ref" value="${ref}" hidden="hidden">
-                                    <!-- /.row -->
+                            <form id="qnapostform">
+                            <input type="text" name="ref" value="${ref}"  hidden="hidden"><!-- hidden="hidden" -->
+                            <input type="text" name="author">
+                                <div class="form-group">
+                                    <label for="name-login">글제목</label>
+                                    <input type="text" class="form-control" name="title" placeholder="${title}">
                                 </div>
-
-                                <div class="box-footer">
-                                    <div>
-                                       <a href="#"> <button type="reset">초기화</button></a>
-                                    </div>
-				    <div>
-                                        <a href="qna?pnum=1"><button type="button">리스트보기</button></a>
-                                    </div>
-                                    <div>
-                                        <button type="button" class="btn btn-template-main" name="submit">등록하기</button>
-                                    </div>
+                                <div class="form-group">
+                                    <label for="email-login">내용</label>
+                                    <textarea name="contents" class="form-control" rows="15"></textarea>
+                                    <!-- <input type="text" class="form-control" id="email-login"> -->
+                                </div>
+                                <div class="text-center">
+									<button type="reset"  class="btn btn-template-main">초기화</button>
+                                    <button type="button" class="btn btn-template-main" name="submit"> 등록</button>
+                                    <a href="../temp/qna?pnum=1" ><button type="button"  class="btn btn-template-main">목록</button></a>
                                 </div>
                             </form>
                         </div>
-                        <!-- /.box -->
-
-
                     </div>
-                    <!-- /.col-md-9 -->
-
-                 
 
                 </div>
                 <!-- /.row -->

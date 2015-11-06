@@ -1,6 +1,39 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<script type="text/javascript">
+$(start);
+function start(){
+	
+	$("#loginbutton").click(function(){
+		$.ajax({
+			url : "../mainpage/logingo",
+			type : "post",
+			dataType : "json",
+			data : $("#loginform").eq(0).serialize(),
+			success : function(ok) {
+				if (ok.ok) {
+					if(ok.temp){
+						alert("임시비밀번호로 로그인하셨습니다. 비밀번호를 변경해 주세요.")
+					}
+					alert("로그인에 성공하였습니다.");	
+					
+					location.href="../mainpage/main";
+					
+				}
+				else if(!ok.ok){
+					alert("로그인에 실패하였습니다.");
+				}
+			},
+			error : function(err) {
+				alert("에러"+err);
+			}
+			
+		});	
+	});
+}
+
+</script>
 <div id="all">
 	<!-- div all  -->
 	<header>
@@ -25,13 +58,22 @@
 								class="fa fa-twitter"></i></a> <a href="#" class="email"
 								data-animate-hover="pulse"><i class="fa fa-envelope"></i></a>
 						</div>
+						
+						<c:choose>
+						   <c:when test='${loginOk == null}'>
 						<div class="login">
 							<a href="#" data-toggle="modal" data-target="#login-modal"><i
 								class="fa fa-sign-in"></i> <span
 								class="hidden-xs text-uppercase">Sign in</span></a> <a
-								href="customer-register.html"><i class="fa fa-user"></i> <span
+								href="../mem/input"><i class="fa fa-user"></i> <span
 								class="hidden-xs text-uppercase">Sign up</span></a>
+							<a href="../mem/searchID">아이디</a>/<a href="../mem/searchPW">PW 찾기</a>
 						</div>
+						    </c:when>
+						    <c:otherwise>
+						    <a href="../mainpage/logout">Logout</a>　<a href="../mem/editpage">회원변경　페이지</a>
+						    </c:otherwise>
+						</c:choose>	
 					</div>
 				</div>
 			</div>
@@ -42,7 +84,7 @@
 			<div class="navbar navbar-default yamm" role="navigation" id="navbar">
 				<div class="container">
 					<div class="navbar-header">
-						<a class="navbar-brand home" href="index.html"> <img
+						<a class="navbar-brand home" href="../temp/home"> <img
 							src="<c:url value="../resources/img/logo.png"/>"
 							alt="Universal logo" class="hidden-xs hidden-sm"> <img
 							src="<c:url value="../resources/img/logo-small.png"/>"
@@ -61,28 +103,24 @@
 					<div class="navbar-collapse collapse" id="navigation">
 						<ul class="nav navbar-nav navbar-right">
 							<li>
-								<!-- class="dropdown active" --> <a href="javascript: void(0)"
-								class="dropdown-toggle" data-toggle="dropdown">Home</a>
+								<!-- class="dropdown active" --> <a href="../temp/home">Home</a>
 							</li>
 							<li class="dropdown"><a href="javascript: void(0)"
 								class="dropdown-toggle" data-toggle="dropdown">게임소개<b
 									class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li><a href="contact.html">게임소개</a></li>
-									<li><a href="contact2.html">조작법</a></li>
+									<li><a href="../temp/gameinfo">게임소개</a></li>
+									<li><a href="../temp/gamecont">조작법</a></li>
 								</ul></li>
-							<li class="dropdown"><a href="javascript: void(0)"
-								class="dropdown-toggle" data-toggle="dropdown">공지게시판 </a></li>
-							<li class="dropdown"><a href="javascript: void(0)"
-								class="dropdown-toggle" data-toggle="dropdown">자유게시판 </a></li>
-							<li class="dropdown"><a href="javascript: void(0)"
-								class="dropdown-toggle" data-toggle="dropdown">이미지게시판 </a></li>
+							<li class="dropdown"><a href="../notice/list">공지게시판 </a></li>
+							<li class="dropdown"><a href="../FB/list">자유게시판 </a></li>
+							<li class="dropdown"><a href="#">이미지게시판 </a></li>
 							<li class="dropdown"><a href="javascript: void(0)"
 								class="dropdown-toggle" data-toggle="dropdown">질문 <b
 									class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li><a href="faq">자주묻는질문</a></li>
-									<li><a href="qna?pnum=1">Q&A</a></li>
+									<li><a href="../temp/faq">자주묻는질문</a></li>
+									<li><a href="../temp/qna?pnum=1">Q&A</a></li>
 								</ul></li>
 						</ul>
 					</div>
@@ -107,6 +145,7 @@
 		<!-- *** NAVBAR END *** -->
 	</header>
 	<!-- *** LOGIN MODAL ***
+	
 _________________________________________________________ -->
 
 	<div class="modal fade" id="login-modal" tabindex="-1" role="dialog"

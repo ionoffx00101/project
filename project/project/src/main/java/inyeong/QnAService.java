@@ -49,7 +49,7 @@ public class QnAService {
 
 	public int newpost(QnABoardVO vo) {
 		QnADAO dao = sqlSessionTemplate.getMapper(QnADAO.class);
-		
+
 		HashMap<String,Object> map = new HashMap<String,Object>();
 		map.put("title", vo.getTitle());
 		map.put("author", vo.getAuthor());
@@ -58,23 +58,9 @@ public class QnAService {
 		dao.newpostpro(map);
 		String snum = (String) map.get("num");
 		int num = Integer.parseInt(snum);
-		
-		
-		
+
 		return num;
-		/*
-		HashMap<String, Object> map = new HashMap<String, Object>();
-		map.put("vo", vo);
-		dao.newpostmap(map);
-		List<QnABoardVO> list = (List<QnABoardVO>) map.get("key");
 		
-		int rows = list.get(0).getNum();
-		System.out.println(rows);
-		//int rows = dao.newpostdao(vo);
-		//글번호가 있으면 0보다 크겠
-		boolean check = rows>0 ? true : false;
-		return check;*/
-		//return true;
 	}
 
 	public boolean delpost(HttpServletRequest request) {

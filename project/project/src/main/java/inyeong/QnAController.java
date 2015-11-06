@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping("/temp/")
+@RequestMapping("temp")
 public class QnAController {
 
 	@Autowired
@@ -50,23 +50,26 @@ public class QnAController {
 	@RequestMapping(value="qnapost", method=RequestMethod.GET)
     public String qnapostlnk(Model model,HttpServletRequest request,QnABoardVO vo) {
 		model.addAttribute("QnABoardVO", vo);
+
         return "qna/qnapost";
     }
 	
 	@RequestMapping(value="qnarepost", method=RequestMethod.GET)
     public String qnarepostlnk(Model model,HttpServletRequest request,@RequestParam int refnum,@RequestParam String reftitle) {
+
 		model.addAttribute("ref", refnum);
 		model.addAttribute("title", "re:"+reftitle);
+
         return "qna/qnapost";
     }
 	
 	@RequestMapping(value="qnapost", method=RequestMethod.POST)
 	@ResponseBody
     public String qnapostfn(QnABoardVO vo) {
-    
+
 		int num =qnasvc.newpost(vo);//boardsvc.inputpost(vo);
 		boolean check = num>0 ? true : false;
-		
+
     	return "{\"check\":"+check+",\"num\":"+num+"}";
     }
 	
@@ -118,4 +121,15 @@ public class QnAController {
 		model.addAttribute("search", true);
     	return "qna/qnalist";
 	}
+	
+	@RequestMapping(value="gameinfo", method=RequestMethod.GET)
+    public String gameinfolnk(Model model,HttpServletRequest request) {
+		
+        return "gameinfo/gameinfo";
+    }
+	@RequestMapping(value="gamecont", method=RequestMethod.GET)
+    public String gamecontlnk(Model model,HttpServletRequest request) {
+		
+        return "gameinfo/gamecont";
+    }
 }

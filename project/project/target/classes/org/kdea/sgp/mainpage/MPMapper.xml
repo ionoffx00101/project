@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kdea.sgp.mainpage.MainpageDAO"> 
+	<select id="logingo" resultType="java.lang.Integer" parameterType="org.kdea.sgp.mainpage.LoginVO">
+		select count(*) from sgpmember inner join pwcondition using (mnum) where id=#{id} and pwd=#{pwd}
+	</select>
+	
+    <select id="getTemp" resultType="java.lang.Integer" parameterType="org.kdea.sgp.mainpage.LoginVO">
+		select temp from sgpmember inner join pwcondition using (mnum) where id=#{id} and pwd=#{pwd}
+	</select>
+	
+</mapper>

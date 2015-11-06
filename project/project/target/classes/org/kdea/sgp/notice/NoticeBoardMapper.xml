@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kdea.sgp.notice.NoticeBoardDAO">
+
+	<resultMap id="boardvoMap" type="org.kdea.sgp.notice.BoardVO">
+	</resultMap>
+	
+    <resultMap id="myMap" type="hashmap"></resultMap>
+	
+
+<!-- 	<select id="NBgetlogin" resultType="java.lang.Integer" parameterType="org.kdea.sgp.notice.BoardLoginVO">
+		select count(*) from sgpmember inner join pwcondition using (mnum) where id=#{ename} and pwd=#{empno}
+	</select>  -->
+	
+    <select id="NBgetList" resultType="org.kdea.sgp.notice.BoardVO" >
+     select * from(select t1.*, trunc((rownum-1)/5)+1 page from(select num,title, contents, author, wdate, hitcnt from noticeboard order by num) t1) where page=#{page}
+	</select>
+
+  	<select id="NBgetTotalRows" resultType="java.lang.Integer">
+		select count(*) from noticeboard
+	</select>
+  
+<!--      <insert id="NBwriteRegi" parameterType="org.kdea.sgp.notice.BoardVO">
+        insert into noticeboard values (noticenum.nextval, #{title}, #{contents}, #{author}, #{wdate}, #{hitcnt})
+    </insert>   
+ -->  
+    <select id="NBgetinfo" parameterType="java.util.Map" statementType="CALLABLE">
+		{CALL NBPROC01(#{infosc, mode=IN},
+		#{nbKey, jdbcType=CURSOR, mode=OUT,
+		javaType=java.sql.ResultSet,resultMap=boardvoMap})}
+	</select>
+	
+	<select id="NBgeteditSc" resultType="org.kdea.sgp.notice.BoardVO">
+        select * from noticeboard where num=#{editsc}
+    </select>
+    
+    <update id="NBeditgo" parameterType="org.kdea.sgp.notice.BoardVO">
+        update noticeboard set title=#{title}, contents=#{contents}, author=#{author} where num=#{num}
+    </update>
+  
+    <delete id="NBdeletego" parameterType="int">
+        delete from noticeboard where num=#{deletesc}
+    </delete>
+    
+    <select id="NBsearchlist" resultType="org.kdea.sgp.notice.BoardVO" parameterType="org.kdea.sgp.notice.SearchVO">
+
+    select * from(select t1.*, trunc((rownum-1)/5)+1 as page from(select num, title, contents, author, wdate, hitcnt from noticeboard where title like '%'||#{title}||'%' order by num) t1) where page = #{page}
+    </select>
+  
+    <select id="NBgetTitleTotalRows" resultType="java.lang.Integer" parameterType="String">
+        select count(*) from noticeboard where title like '%'||#{title}||'%'
+    </select>
+  
+    <select id="NBauthorsearchlist" resultType="org.kdea.sgp.notice.BoardVO" parameterType="org.kdea.sgp.notice.SearchVO">
+        select * from(select t1.*, trunc((rownum-1)/5)+1 as page from(select num, title, contents, author, wdate, hitcnt from noticeboard where author like '%'||#{author}||'%' order by num) t1) where page=${page}
+    </select>
+    
+    <select id="NBgetAuthorTotalRows" resultType="java.lang.Integer" parameterType="String">
+        select count(*) from noticeboard where author like '%'||#{author}||'%'
+    </select>
+    
+     <select id="getNBnum" parameterType="java.util.Map" statementType="CALLABLE">
+    	 {CALL NBPROC02( #{title, mode=IN}, #{contents, mode=IN}, #{author, mode=IN},
+    	  #{wdate, mode=IN}, #{hitcnt, mode=IN},  #{key1, mode=OUT, jdbcType=INTEGER, resultMap=myMap}) }
+	</select>
+</mapper>

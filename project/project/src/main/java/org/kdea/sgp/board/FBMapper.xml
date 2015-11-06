@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kdea.sgp.board.FBDAO"> 
+	<resultMap id="boardVOMap" type="org.kdea.sgp.board.BoardVO">
+    </resultMap>
+	
+	<select id="getList" resultType="org.kdea.sgp.board.BoardVO">
+        SELECT * FROM (SELECT t1.*, TRUNC((ROWNUM-1)/4)+1 page FROM (SELECT num, LPAD(' ', (LEVEL-1)*4,'　') || DECODE(LEVEL,1,'','┕ ')||title as title, contents, wdate, author, hitcnt, ref FROM freeboard START WITH ref=0 CONNECT BY PRIOR num=ref order siblings by num) t1) where page=#{page}
+    </select>
+    <select id="getTotalCount" resultType="java.lang.Integer">
+    	select count(*) from freeboard
+    </select>
+    <insert id="setInput" parameterType="org.kdea.sgp.board.BoardVO"> <!-- 들어가는것은 parameterType -->
+        insert into freeboard (num, title, contents, wdate, author, hitcnt, ref) 
+        	values (free_num_seq.nextval, #{title}, #{contents}, sysdate, #{author}, #{hitcnt}, #{ref})
+    </insert>
+    <select id="getInfo" parameterType="java.util.Map" statementType="CALLABLE">
+    	{CALL FBPROC01(#{num, mode=IN},
+    				 #{key, jdbcType=CURSOR, mode=OUT, javaType=java.sql.ResultSet,resultMap=boardVOMap})}
+    </select>
+    <update id="setUpdate" parameterType="org.kdea.sgp.board.BoardVO">
+    	update freeboard set title=#{title}, contents=#{contents}, wdate=sysdate where num = #{num}
+    </update>
+    <select id="getFindSref" resultType="java.lang.Integer">
+    	select * from freeboard where ref=#{num}
+    </select>
+    <delete id="setDelete">
+    	{CALL FBRPOC02(#{num, mode=IN})}
+    </delete>
+    <select id="getSearchStitle" resultType="org.kdea.sgp.board.BoardVO" parameterType="org.kdea.sgp.board.BoardVO">
+    	SELECT * FROM (SELECT t1.*, TRUNC((ROWNUM-1)/4)+1 as page FROM (SELECT num, LPAD(' ', (LEVEL-1)*4,'　') || DECODE(LEVEL,1,'','┕')|| title as title, contents, wdate, author, hitcnt, ref FROM freeboard where title like '%'||#{title}||'%' START WITH ref=0 CONNECT BY PRIOR num=ref order siblings by num desc) t1) where page=#{page}
+    </select>
+    <select id="getSearchSauthor" resultType="org.kdea.sgp.board.BoardVO" parameterType="org.kdea.sgp.board.BoardVO">
+    	SELECT * FROM (SELECT t1.*, TRUNC((ROWNUM-1)/4)+1 as page FROM (SELECT num, LPAD(' ', (LEVEL-1)*4,'　') || DECODE(LEVEL,1,'','┕')|| title as title, contents, wdate, author, hitcnt, ref FROM freeboard where author like '%'||#{author}||'%' START WITH ref=0 CONNECT BY PRIOR num=ref order siblings by num desc) t1) where page=#{page}
+    </select>
+    <select id="getTotalCountStitle" resultType="java.lang.Integer">
+    	select count(*) from freeboard where title like '%'||#{title}||'%'
+    </select>
+    <select id="getTotalCountSauthor" resultType="java.lang.Integer">
+    	select count(*) from freeboard where author like '%'||#{author}||'%'
+    </select>
+    <insert id="setReplyInput" parameterType="org.kdea.sgp.board.ReplyVO"> <!-- 들어가는것은 parameterType -->
+        insert into fbreply (reNum, reAuthor, reContents, reRef, reDate, bNum) 
+        	values (fbreply_num_seq.nextval, #{reAuthor}, #{reContents}, #{reRef}, sysdate, #{bNum})
+    </insert>
+    <select id="getReList" resultType="org.kdea.sgp.board.ReplyVO">
+    	SELECT * FROM (SELECT t1.*, TRUNC((ROWNUM-1)/100)+1 page FROM (SELECT reNum, LPAD(' ', (LEVEL-1)*4,'　') || DECODE(LEVEL,1,'','┕ ')||reAuthor as reAuthor, reContents, reRef, reDate, bNum FROM fbreply START WITH reRef=0 CONNECT BY PRIOR reNum=reRef order siblings by reNum) t1) where bNum = #{num}
+    </select>
+    <delete id="setReplyDelete">
+    	delete from fbreply where reNum=#{reNum}
+    </delete>
+    <select id="getReAuthor" parameterType="int" resultType="String">
+    	select reAuthor from fbreply where reNum=#{reNum}
+    </select>
+    <select id="getFindReRef" resultType="java.lang.Integer">
+    	select * from fbreply where reRef=#{reNum}
+    </select>
+</mapper>

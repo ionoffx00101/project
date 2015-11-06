@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.kdea.sgp.member.MemDAO">
+
+      <select id="ETpwCheck" parameterType="String" resultType="java.lang.Integer"> 
+         select count(*) from pwcondition where pwd=#{pw} 
+      </select>
+      
+      <select id="ETidCheck" parameterType="String" resultType="java.lang.Integer"> 
+         select count(*) from sgpmember where id=#{id} 
+      </select>
+
+      <update id="ETpwUpdate" parameterType="org.kdea.sgp.member.BoardVO">
+        update pwcondition set pwd=#{newpw}, temp=#{temp} where pwd=#{pw} and mnum=(select mnum from sgpmember where id=#{id})
+      </update>
+      
+      <select id="ETnickCheck" parameterType="String" resultType="java.lang.Integer"> 
+         select count(*) from sgpmember where nick=#{nicksc} 
+      </select>
+      
+      <update id="ETnewNickRegi" parameterType="org.kdea.sgp.member.BoardVO">
+        update sgpmember set nick=#{nick} where id=#{id}
+      </update>
+      
+      <update id="ETemailEdit" parameterType="org.kdea.sgp.member.BoardVO">
+        update sgpmember set email=#{email} where id=#{id}
+      </update>
+      
+      <select id="ETidsearchCheck" parameterType="org.kdea.sgp.member.BoardVO" resultType="java.lang.Integer"> 
+         select count(*) from sgpmember where nick=#{nick} and email=#{email} 
+      </select>
+      
+      <select id="SCidsc" parameterType="org.kdea.sgp.member.BoardVO" resultType="String"> 
+         select id from sgpmember where nick=#{nick} and email=#{email} 
+      </select>
+      
+      <select id="SCpwsc" parameterType="org.kdea.sgp.member.BoardVO" resultType="int"> 
+         select mnum from sgpmember where id=#{id} and email=#{email} 
+      </select>
+      
+      <update id="setTempPw" parameterType="org.kdea.sgp.member.BoardVO">
+        update pwcondition set pwd=#{pw}, temp=#{temp} where mnum=#{num}
+      </update>
+      
+      <!-- ======================================================================================== -->
+      
+      <insert parameterType="org.kdea.sgp.member.MemberVO" id="memregist"> 
+      insert into sgpmember (mnum, id, nick, name, email) values ( mem_seq.nextval, #{id}, #{nick}, #{name}, #{email} ) 
+      </insert>
+
+      <insert parameterType="org.kdea.sgp.member.MemberVO" id="pwregist"> 
+      insert into pwcondition (mnum,pwd,temp) values ( #{mnum}, #{pwd}, #{temp}) 
+      </insert>
+
+<select id="getMnum" resultType="java.lang.Integer"> 
+select mnum from sgpmember where id=#{id} 
+</select>
+
+<select id="idCheck" resultType="java.lang.Integer"> 
+select count(*) from sgpmember where id=#{id} 
+</select>
+
+<select id="nickCheck" resultType="java.lang.Integer"> 
+SELECT count(*) from sgpmember where nick=#{nick} 
+</select>
+
+</mapper>

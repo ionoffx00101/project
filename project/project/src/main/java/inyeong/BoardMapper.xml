@@ -6,7 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
  	<resultMap id="voMap" type="inyeong.QnABoardVO"></resultMap>
     <resultMap id="reMap" type="inyeong.QnAReplyVO"></resultMap> 
-	<resultMap id="myMap" type="hashmap"></resultMap>
+	<resultMap id="saveMap" type="hashmap"></resultMap>
     
     <select id="getPostDAO" parameterType="java.util.Map" statementType="CALLABLE">
     	{CALL QNA_GETPOST(#{num, mode=IN},
@@ -53,7 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	insert into qnaboard (num ,title,contents,author ,wdate,hitcnt ,ref) values (qnaboard_seq.nextval,#{title},#{contents},#{author},SYSDATE,0,#{ref})
     </insert> -->
     <select id="newpostpro" parameterType="java.util.Map" statementType="CALLABLE">
-    	 {CALL QNA_NEWPOST(#{title, mode=IN},#{author, mode=IN},#{contents, mode=IN},#{ref, mode=IN},  #{num, mode=OUT, jdbcType=VARCHAR, resultMap=myMap}) }
+    	 {CALL QNA_NEWPOST(#{title, mode=IN},#{author, mode=IN},#{contents, mode=IN},#{ref, mode=IN},  #{num, mode=OUT, jdbcType=VARCHAR, resultMap=saveMap}) }
 	</select>
     
 </mapper>

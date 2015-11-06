@@ -2,6 +2,29 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
 <%--defaultTemplate를 적용할 때 템플릿의 title, body 영역은 여기에서 오버라이드한다 --%>
+<style type="text/css">
+a:link {
+	text-decoration: none;
+	color: black;
+}
+
+a:visited {
+	text-decoration: none;
+	color: black;
+}
+
+a:active {
+	text-decoration: none;
+	color: black;
+}
+
+a:hover {
+	text-decoration: none;
+	color: blue;
+	font-weight: bold;
+}
+</style>
+
 <tiles:insertDefinition name="subTemplate">
     <tiles:putAttribute name="title">자주 묻는 질문</tiles:putAttribute>
     <tiles:putAttribute name="body">
@@ -14,7 +37,7 @@
                     </div>
                     <div class="col-md-5">
                         <ul class="breadcrumb">
-                            <li><a href="home">Home</a>
+                            <li><a href="../temp/home">Home</a>
                             </li>
                             <li>Frequently asked questions</li>
                         </ul>
@@ -31,10 +54,13 @@
                     <!-- *** LEFT COLUMN ***
 			 _________________________________________________________ -->
 
-                    <div class="col-md-9 clearfix">
+                    <div class="col-md-12 clearfix">
                         <section>
 
-                            <p class="lead">자주 묻는 질문을 모아두었습니다</p>
+                            <div class="heading">
+                                <h2>FAQ</h2>
+                            </div>
+
 
                             <div class="panel-group" id="accordion">
 

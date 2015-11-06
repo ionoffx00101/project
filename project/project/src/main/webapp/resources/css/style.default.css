@@ -2320,7 +2320,7 @@ fieldset[disabled] .btn-template-primary.active {
 }
 .goToDescription a {
   color: #999999;
-  text-decoration: underline;
+  /* text-decoration: underline; */
 }
 #productMain {
   margin-bottom: 30px;
@@ -3163,7 +3163,7 @@ a {
 a:hover,
 a:focus {
   color: #267280;
-  text-decoration: underline;
+ /*  text-decoration: underline; */
 }
 a:focus {
   outline: thin dotted;

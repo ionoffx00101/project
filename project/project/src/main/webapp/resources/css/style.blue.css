@@ -306,7 +306,7 @@ ul.list-style-none {
 }
 .navbar ul.nav > li > a {
   text-transform: uppercase;
-  text-decoration: underline;
+  /* text-decoration: underline; */
   font-weight: bold;
   letter-spacing: 0.08em;
   border-top: solid 5px transparent;
@@ -2320,7 +2320,7 @@ fieldset[disabled] .btn-template-primary.active {
 }
 .goToDescription a {
   color: #999999;
-  text-decoration: underline;
+  /* text-decoration: underline; */
 }
 #productMain {
   margin-bottom: 30px;
@@ -3163,7 +3163,7 @@ a {
 a:hover,
 a:focus {
   color: #2f5a89;
-  text-decoration: underline;
+ /*  text-decoration: underline; */
 }
 a:focus {
   outline: thin dotted;
