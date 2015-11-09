@@ -24,6 +24,7 @@ public class QnAController {
 	@RequestMapping(value="home", method=RequestMethod.GET)
     public String homelnk(Model model,HttpServletRequest request) {
 		
+		//return "mainpage/home";
 		return "qna/home";
     }
 	
