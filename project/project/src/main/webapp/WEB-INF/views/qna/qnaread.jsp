@@ -81,9 +81,17 @@
 							</div>
 						</div>
 						<div class="text-center">
+						<c:choose>
+						<c:when test="${nick=='KING'}">
 							<a href="../temp/qnarepost?refnum=${post.num}&reftitle=${post.title}"><button type="button" class="btn btn-template-main">답글쓰기</button></a>
-							<a href="../temp/qnamodi?num=${post.num}"><button type="button" class="btn btn-template-main">수정</button></a>
-							<button type="button" class="btn btn-template-main" name="delete" data-idx="${post.num}">삭제</button>
+						</c:when>
+						</c:choose>
+							<c:choose>
+								<c:when test="${nick==post.author}">
+									<a href="../temp/qnamodi?num=${post.num}"><button type="button" class="btn btn-template-main">수정</button></a>
+									<button type="button" class="btn btn-template-main" name="delete" data-idx="${post.num}">삭제</button>
+								</c:when>
+							</c:choose>
 							<a href="../temp/qna?pnum=1"><button type="button" class="btn btn-template-main">목록</button></a>
 						</div>
 						

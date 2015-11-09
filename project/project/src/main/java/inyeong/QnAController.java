@@ -28,6 +28,13 @@ public class QnAController {
 		request.getSession().setAttribute("id", "tempid"); 
 		request.getSession().setAttribute("nick", "´Ð³×ÀÓ");
 		
+/*	boolean loginok = ((Boolean) request.getSession().getAttribute("ok"));
+		
+		if(!loginok){
+			return "qna/home";
+		}*/
+		
+		
 		//return "mainpage/home";
 		return "qna/home";
     }
