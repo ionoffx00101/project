@@ -81,7 +81,8 @@
 							</div>
 						</div>
 						<div class="text-center">
-							<a href="../temp/qnarepost?refnum=${post.num}&reftitle=${post.title}"><button type="button" class="btn btn-template-main">답글쓰기</button></a> <a href="../temp/qnamodi?num=${post.num}"><button type="button" class="btn btn-template-main">수정</button></a>
+							<a href="../temp/qnarepost?refnum=${post.num}&reftitle=${post.title}"><button type="button" class="btn btn-template-main">답글쓰기</button></a>
+							<a href="../temp/qnamodi?num=${post.num}"><button type="button" class="btn btn-template-main">수정</button></a>
 							<button type="button" class="btn btn-template-main" name="delete" data-idx="${post.num}">삭제</button>
 							<a href="../temp/qna?pnum=1"><button type="button" class="btn btn-template-main">목록</button></a>
 						</div>

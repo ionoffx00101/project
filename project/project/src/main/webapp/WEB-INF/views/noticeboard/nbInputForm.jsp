@@ -8,11 +8,13 @@ if(ok==null){
 	response.sendRedirect("login");
 }
 %>
-<script type="text/javascript" src="<c:url value="/resources/jquery-2.1.4.min.js"/>"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<%-- <script type="text/javascript" src="<c:url value="../resources/js/jquery-2.1.4.min.js"/>"></script> --%>
 <script type="text/javascript">
 $(start);
 function start(){
 	$("#btn").click(function(){
+		alert( $("#form1").serialize());
 		$.ajax({
 			url : "writeRegi",
 			type : "post",
@@ -34,45 +36,67 @@ function start(){
 <tiles:insertDefinition name="mainTemplate">
 <tiles:putAttribute name="title">홈</tiles:putAttribute>
 <tiles:putAttribute name="body">
-    <!-- 서브페이지 배너 -->
- <div id="heading-breadcrumbs">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-7">
-                        <h1>공　지　게　시　판</h1>
-                    </div>
-                    <div class="col-md-5">
-                        <ul class="breadcrumb">
-                            <li><a href="home">Home</a>
-                            </li>
-                            <li>Questions and answers</li>
-                        </ul>
 
-                    </div>
-                </div>
-            </div>
-        </div>
-<!-- 서브페이지 배너 끝 -->
-<h2>게시글 작성</h2>
-<form id="form1">
-<table>
-<tr>
-<td>제　목:　</td>
-<td><input type="text" name="title"></td>
-</tr>
-<tr>
-<td>작　성　자:　</td>
-<td><input type="text" name="author" value="${loginOk }"></td>
-</tr>
-<tr>
-<td>내　용:　</td>
-<td><textarea name="contents"></textarea></td>
-</tr>
-<tr>
-<td> </td>
-<td><button type="button" id="btn">등　록</button></td>
-</tr>
-</table>
-</form>
+     <!-- 서브페이지 배너 -->
+		<div id="heading-breadcrumbs">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-7">
+						<h1>공지게시판</h1>
+					</div>
+					<div class="col-md-5">
+						<ul class="breadcrumb">
+							<li><a href="../temp/home">Home</a></li>
+							<li>공지게시판</li>
+						</ul>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 서브페이지 배너 끝 -->
+<div id="content">
+			<div class="container">
+
+				<div class="row">
+					<div class="col-md-12">
+						<div class="box">
+
+							<div class="heading">
+								<h2>게시글 작성</h2>
+							</div>
+							<hr>
+							<form id="form1">
+								
+								  <div class="form-group">
+                                    <label >제목</label>
+                                   <input type="text" name="title" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label >작성자</label>
+                                  <input type="text" name="author" value="${loginOk }" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label >내용</label>
+                                    <textArea name="contents" cols="50" rows="3"  class="form-control"></textArea>
+                                </div>
+                                <div class="text-center">
+                                <button type="button" id="btn"  class="btn btn-template-main">등　록</button>
+									
+                                </div>
+								
+							</form>
+
+						</div>
+					</div>
+
+				</div>
+				<!-- /.row -->
+
+			</div>
+			<!-- /.container -->
+		</div>
+		<!-- /#content -->
+
 </tiles:putAttribute>
 </tiles:insertDefinition>

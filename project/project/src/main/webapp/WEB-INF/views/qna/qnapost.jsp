@@ -79,7 +79,7 @@ function jqueryOk() {
 
                             <form id="qnapostform">
                             <input type="text" name="ref" value="${ref}"  hidden="hidden"><!-- hidden="hidden" -->
-                            <input type="text" name="author">
+                            <input type="text" name="author" value="${nick}"  hidden="hidden">
                                 <div class="form-group">
                                     <label for="name-login">글제목</label>
                                     <input type="text" class="form-control" name="title" placeholder="${title}">

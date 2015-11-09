@@ -188,7 +188,7 @@ table {
 												<input type="text" class="form-control" placeholder="Search" name="searchword"> <span class="input-group-btn">
 
 													<button class="btn btn-template-main btn_search" type="button" name="btn_search">
-														<i class="fa fa-search"></i>
+														<i class="fa fa-search"></i>검색
 													</button>
 
 												</span>

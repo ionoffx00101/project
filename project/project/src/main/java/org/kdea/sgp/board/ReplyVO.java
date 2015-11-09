@@ -13,7 +13,7 @@ public class ReplyVO {
 	
 	private boolean ok;		//등록결과
 	private String checkAuthor;	//비교할 이름
-	
+	private int level; // level 받는 값
 	
 	public int getReNum() {
 		return reNum;
@@ -63,4 +63,13 @@ public class ReplyVO {
 	public void setCheckAuthor(String checkAuthor) {
 		this.checkAuthor = checkAuthor;
 	}
+	public int getLevel() {
+		return level;
+	}
+	public void setLevel(int level) {
+		this.level = (level-1)*50;
+	}
+	
+	
 }
+

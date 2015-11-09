@@ -8,7 +8,7 @@ if(ok==null){
 	response.sendRedirect("login");
 }
 %>
-<script type="text/javascript" src="<c:url value="/resources/jquery-2.1.4.min.js"/>"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
 $(start);
 function start(){
@@ -41,45 +41,68 @@ function start(){
 <tiles:putAttribute name="title">홈</tiles:putAttribute>
 <tiles:putAttribute name="body">
     <!-- 서브페이지 배너 -->
- <div id="heading-breadcrumbs">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-7">
-                        <h1>공　지　게　시　판</h1>
-                    </div>
-                    <div class="col-md-5">
-                        <ul class="breadcrumb">
-                            <li><a href="home">Home</a>
-                            </li>
-                            <li>Questions and answers</li>
-                        </ul>
+		<div id="heading-breadcrumbs">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-7">
+						<h1>공지게시판</h1>
+					</div>
+					<div class="col-md-5">
+						<ul class="breadcrumb">
+							<li><a href="../temp/home">Home</a></li>
+							<li>공지게시판</li>
+						</ul>
 
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 서브페이지 배너 끝 -->
+<div id="content">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box">
+                            
+							<div class="heading">
+                                <h2 >글수정</h2>
+                            </div>
+                            <hr>
+
+                            <form id="form1">  
+                            <input type="hidden" name="num" value="${list.num }">
+                            <div class="form-group">
+                                    <label >제목</label>
+
+                                    <input type="text" class="form-control" name="title" value="${list.title}" >
+                                </div>
+                             <div class="form-group">
+                                    <label >작성자</label>
+                                    <input type="text" class="form-control" name="author" value="${list.author }" readonly="readonly">
+                                </div>
+                            
+                                <div class="form-group">
+                                    <label >내용</label>
+                                    <textarea name="contents" class="form-control" rows="30" cols="70" >${info.contents}</textarea>
+                                    <!-- <input type="text" class="form-control" id="email-login"> -->
+                                </div>
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-template-main"  id="btn1"> 수　정　완　료</button>
+                                    <button type="reset" class="btn btn-template-main">취　소</button>
+                                    <a href="list"><button type="button"  class="btn btn-template-main">목록</button></a>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+
                 </div>
+                <!-- /.row -->
+
             </div>
+            <!-- /.container -->
         </div>
-<!-- 서브페이지 배너 끝 -->
-<h2>글　작　성</h2>
-<form id="form1">
-<input type="hidden" name="num" value="${list.num }">
-<table>
-<tr>
-<td>제　목</td>
-<td><input type="text" name="title" placeholder="${list.title }"></td>
-</tr>
-<tr>
-<td>작　성　자</td>
-<td><input type="text" name="author" value="${list.author }" readonly="readonly"></td>
-</tr>
-<tr>
-<td>내　　용</td>
-<td><textarea rows="30" cols="70" name="contents" placeholder="${list.contents }"></textarea>
-</tr>
-<tr>
-<td><button type="button" id="btn1">수　정　완　료</button></td>
-<td><button type="reset">취　소</button></td>
-</tr>
-</table>
-</form>
+        <!-- /#content -->
+
 </tiles:putAttribute>
 </tiles:insertDefinition>

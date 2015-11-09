@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         	values (free_num_seq.nextval, #{title}, #{contents}, sysdate, #{author}, #{hitcnt}, #{ref})
     </insert>
     <select id="getInfo" parameterType="java.util.Map" statementType="CALLABLE">
-    	{CALL FBPROC01(#{num, mode=IN},
+    	{CALL freeboardinfo(#{num, mode=IN},
     				 #{key, jdbcType=CURSOR, mode=OUT, javaType=java.sql.ResultSet,resultMap=boardVOMap})}
     </select>
     <update id="setUpdate" parameterType="org.kdea.sgp.board.BoardVO">
@@ -27,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	select * from freeboard where ref=#{num}
     </select>
     <delete id="setDelete">
-    	{CALL FBRPOC02(#{num, mode=IN})}
+    	{CALL fbdelete(#{num, mode=IN})}
     </delete>
     <select id="getSearchStitle" resultType="org.kdea.sgp.board.BoardVO" parameterType="org.kdea.sgp.board.BoardVO">
     	SELECT * FROM (SELECT t1.*, TRUNC((ROWNUM-1)/4)+1 as page FROM (SELECT num, LPAD(' ', (LEVEL-1)*4,'　') || DECODE(LEVEL,1,'','┕')|| title as title, contents, wdate, author, hitcnt, ref FROM freeboard where title like '%'||#{title}||'%' START WITH ref=0 CONNECT BY PRIOR num=ref order siblings by num desc) t1) where page=#{page}
@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         	values (fbreply_num_seq.nextval, #{reAuthor}, #{reContents}, #{reRef}, sysdate, #{bNum})
     </insert>
     <select id="getReList" resultType="org.kdea.sgp.board.ReplyVO">
-    	SELECT * FROM (SELECT t1.*, TRUNC((ROWNUM-1)/100)+1 page FROM (SELECT reNum, LPAD(' ', (LEVEL-1)*4,'　') || DECODE(LEVEL,1,'','┕ ')||reAuthor as reAuthor, reContents, reRef, reDate, bNum FROM fbreply START WITH reRef=0 CONNECT BY PRIOR reNum=reRef order siblings by reNum) t1) where bNum = #{num}
+    	SELECT * FROM (SELECT t1.*, TRUNC((ROWNUM-1)/100)+1 page FROM (SELECT reNum,level, LPAD('',(LEVEL-1),'') || DECODE(LEVEL,1,'','┕ ')||reAuthor as reAuthor, reContents, reRef, reDate, bNum FROM fbreply START WITH reRef=0 CONNECT BY PRIOR reNum=reRef order siblings by reNum) t1) where bNum = #{num}
     </select>
     <delete id="setReplyDelete">
     	delete from fbreply where reNum=#{reNum}

@@ -71,45 +71,10 @@ a:hover {
                             <p>
                                 <img src="<c:url value="../resources/img/blog2.jpg"/>" class="img-responsive col-md-12 clearfix" alt="Example blog post alt">
                             </p>
-                           
+                           <br>
                         </div>
                         <!-- /#post-content -->
                          
-                         
-                           <div id="comments">
-                           다른 게시판에서 쓸 코멘트
-                            <h4 class="text-uppercase">2 comments</h4>
-
-                            <div class="row comment">
-
-                                <div class="col-sm-9 col-md-12">
-                                    <h5 class="text-uppercase">Julie Alma</h5>
-                                    <p class="posted"><i class="fa fa-clock-o"></i> September 23, 2011 at 12:00 am</p>
-                                    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.
-                                        Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
-                                    <p class="reply"><a href="#"><i class="fa fa-reply"></i> Reply</a>
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- /.comment -->
-
-
-                            <div class="row comment last">
-                                <div class="col-sm-9 col-md-12">
-                                    <h5 class="text-uppercase">Louise Armero</h5>
-                                    <p class="posted"><i class="fa fa-clock-o"></i> September 23, 2012 at 12:00 am</p>
-                                    <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.
-                                        Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
-                                    <p class="reply"><a href="#"><i class="fa fa-reply"></i> Reply</a>
-                                    </p>
-                                </div>
-
-                            </div>
-                            <!-- /.comment -->
-                        </div>
-                        <!-- /#comments -->
-                          
-                          
                           
                         </section>
 
@@ -125,5 +90,6 @@ a:hover {
             <!-- /.container -->
         </div>
         <!-- /#content -->
+        <br> <!-- 내용 차서 밑에 공간 생기면 이거 지워도 됨  사진 밑에 공간없어서 이렇게 함 -->
     </tiles:putAttribute>
 </tiles:insertDefinition>

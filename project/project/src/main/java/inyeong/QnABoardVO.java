@@ -9,6 +9,7 @@ public class QnABoardVO {
 	private int hitcnt ;
 	private int ref;
 	private int page;
+	
 	public int getNum() {
 		return num;
 	}
@@ -57,6 +58,4 @@ public class QnABoardVO {
 	public void setPage(int page) {
 		this.page = page;
 	}
-	
-	
 }

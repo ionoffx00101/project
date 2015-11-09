@@ -1,145 +1,225 @@
-<%@ page language="java" contentType="text/html; charset=utf-8"
-    pageEncoding="utf-8"%>
-<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles" %>
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <style type="text/css">
- 
-a:link {text-decoration: none; color: black;}
-a:visited {text-decoration: none; color: black;}
-a:active {text-decoration: none; color: black;}
-a:hover {text-decoration: none; color: blue; font-weight: bold;}
-body {
+a:link {
+	text-decoration: none;
+	color: black;
+}
+
+a:visited {
+	text-decoration: none;
+	color: black;
+}
+
+a:active {
+	text-decoration: none;
+	color: black;
+}
+
+a:hover {
+	text-decoration: none;
+	color: blue;
+	font-weight: bold;
+}
+
+table {
+	display: inline-block;
+	border-collapse: collapse;
+	text-align: center;
+	line-height: 1.5;
+}
+
+.cole {
 	text-align: center;
 }
-table {
-display: inline-block;
-    border-collapse: collapse;
-    text-align: left;
-    line-height: 1.5;
- 
+
+.cols {
+	text-align: left;
+	width: 450px;
 }
-table td.cols {
-    padding: 10px;
-    font-weight: bold;
-    vertical-align: top;
-    color: #369;
-    border-bottom: 3px solid #036;
+
+.colss {
+	text-align: left;
+	width: 450px;
 }
-table td {
-    width: 250px;
-    padding: 10px;
-    vertical-align: top;
-    border-bottom: 1px solid #ccc;
+
+.btn_postlnk {
+	float: right;
 }
-table td.colss {
-    width: 550px;
-        padding: 10px;
-    font-weight: bold;
-    vertical-align: top;
-    color: #369;
-    border-bottom: 3px solid #036;
+
+.searchform {
+	text-align: center;
+}
+
+.pagenavi {
+	text-align: center;
+	vertical-align: middle;
+}
+
+.box .box-footer:after {
+	text-align: center;
+	clear: both;
+}
+
+.form-control {
+	width: 100px;
+	size: 10;
+}
+
+.category {
+	width: 80px;
+	height: 30px;
 }
 </style>
 
-<script type="text/javascript" src="<c:url value="/resources/jquery-2.1.4.min.js"/>"></script>
+<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
-$(start);
-function start(){
-	$("#btn1").click(function(){
-	alert("글쓰기 버튼 작동");
-	location.href="write";
-		
-	});	
-	
-	$("#btn2").click(function(){
-		
-		location.href="search?catego="+$("#combo").val()+"&Ssc="+$("#search").val();
-	});
-	
-}
+	$(start);
+	function start() {
+		$("#btn1").click(function() {
+			alert("글쓰기 버튼 작동");
+			location.href = "write";
+
+		});
+
+		$("#btn2").click(function() {
+
+			location.href = "search?catego=" + $("#combo").val() + "&Ssc=" + $("#search").val();
+		});
+
+	}
 </script>
 
 <tiles:insertDefinition name="mainTemplate">
-<tiles:putAttribute name="title">홈</tiles:putAttribute>
-<tiles:putAttribute name="body">
-    <!-- 서브페이지 배너 -->
- <div id="heading-breadcrumbs">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-7">
-                        <h1>공　지　게　시　판</h1>
-                    </div>
-                    <div class="col-md-5">
-                        <ul class="breadcrumb">
-                            <li><a href="home">Home</a>
-                            </li>
-                            <li>Questions and answers</li>
-                        </ul>
+	<tiles:putAttribute name="title">홈</tiles:putAttribute>
+	<tiles:putAttribute name="body">
+		<!-- 서브페이지 배너 -->
+		<div id="heading-breadcrumbs">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-7">
+						<h1>공지게시판</h1>
+					</div>
+					<div class="col-md-5">
+						<ul class="breadcrumb">
+							<li><a href="../temp/home">Home</a></li>
+							<li>공지게시판</li>
+						</ul>
 
-                    </div>
-                </div>
-            </div>
-        </div>
-<!-- 서브페이지 배너 끝 -->
-<h2>게시판 리스트</h2>
-<table>
-    <tr>
-        <td class="cols">글번호</td>
-        <td class="colss">제목</td>
-        <td class="cols">작성자</td>
-        <td class="cols">작성일</td>
-        <td class="cols">조회수</td>
-    </tr>
-<c:forEach var="lts" items="${list}">
-<tr>
-<td>${lts.num }.</td>　
-<td><a href="info?infosc=${lts.num}">${lts.title }　</a></td>
-<td>${lts.author }　</td>
-<td>${lts.wdate }</td>
-<td>${lts.hitcnt }</td>
-</tr>
-</c:forEach>
-</table><br>
-<c:choose>
-    <c:when test="${loginOk =='KING'}">
-       <button type="button" id="btn1">글　쓰　기</button>
-    </c:when>
-</c:choose>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 서브페이지 배너 끝 -->
+		<div id="content">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12 clearfix">
+						<div class="box">
+							<div class="heading">
+								<h2>공지게시판</h2>
+							</div>
+							<c:choose>
+								<c:when test="${loginOk =='KING'}">
+									<button type="button" id="btn1" class="btn_postlnk">글 쓰 기</button>
+								</c:when>
+							</c:choose>
+							<br> <br>
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+										<tr>
+											<th class="cole">글번호</th>
+											<th class="cols">제목</th>
+											<th class="cole">작성자</th>
+											<th class="cole">작성일</th>
+											<th class="cole">조회수</th>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach var="lts" items="${list}">
+											<tr>
+												<td>${lts.num }.</td>
+												<td><a href="info?infosc=${lts.num}">${lts.title } </a></td>
+												<td>${lts.author }</td>
+												<td>${lts.wdate }</td>
+												<td>${lts.hitcnt }</td>
+											</tr>
+										</c:forEach>
+								</table>
+							</div>
+							<!-- /.table-responsive -->
+							<div class="box-footer">
+								<div class="panel-body">
+									
+										<div class="row">
+											<div class="col-md-3"></div>
+											<div class="col-md-1">
+												<select name="searchChoice" id="combo">
+													<option value="제목으로 검색" selected>제목</option>
+													<option value="작가로 검색">작가</option>
+												</select>
+											</div>
+											<div class="col-md-5">
+												<div class="input-group">
+													<input type="text" id="search" class="form-control" placeholder="Search"> <span class="input-group-btn">
 
-<select id="combo">
-<option>제목</option>
-<option>작성자</option>
-</select>　
-<input type="text" id="search">
-<button type="button" id="btn2">검색</button><br>
-<c:choose>
-	<c:when test="${nvo.leftMore}">
-		<a href="nvi?page=${nvo.links[0]-1}"> [<<] </a>
-	</c:when>
-</c:choose>
+														<button class="btn btn-template-main btn_search" type="button" id="btn2">
+															<i class="fa fa-search"></i>검색
+														</button>
 
+													</span>
+												</div>
+											</div>
+											<div class="col-md-3"></div>
+										</div>
+										<Br> <Br>
+										<div class="pagenavi">
 
-<c:forEach var="s" items="${nvo.links}">
+											<ul class="pagination pagination-lg">
 
-<c:choose>
-	<c:when test="${nvo.currPage == s}">
-		[<span style='color:red;font-size:1.5em;'>${s}</span>]
-	</c:when>
-<c:otherwise>
-	<a href="nvi?page=${s}">[${s}]</a> 
-</c:otherwise>
-</c:choose>
+												<c:choose>
+													<c:when test="${nvo.leftMore}">
+														<li><a href="nvi?page=${nvo.links[0]-1}"> « </a></li>
+													</c:when>
+												</c:choose>
 
-</c:forEach>
+												<!--  -->
 
+												<c:forEach var="s" items="${nvo.links}">
+													<c:choose>
+														<c:when test="${nvo.currPage == s}">
+															<li class="active"><a href="nvi?page=${s}">${s}</a></li>
+														</c:when>
+														<c:otherwise>
+															<li><a href="nvi?page=${s}">${s}</a></li>
+														</c:otherwise>
+													</c:choose>
+												</c:forEach>
+												<!--  -->
+												<c:choose>
 
-<c:choose>
+													<c:when test="${nvo.rightMore}">
+														<li><a href="nvi?page=${nvo.links[1]+1}">»</a></li>
+													</c:when>
+												</c:choose>
+											</ul>
+										</div>
+									
+								</div>
+							</div>
+							<!-- /.box -->
+						</div>
+						<!-- /.col-md-9 -->
+					</div>
+					<!-- /.row -->
+				</div>
+				<!-- /.container -->
+			</div>
+		</div>
+		<!-- /#content -->
 
-	<c:when test="${nvo.rightMore}">
-	<a href="nvi?page=${nvo.links[1]+1}"> [>>] </a>
-	</c:when>
-
-</c:choose>
-</tiles:putAttribute>
+	</tiles:putAttribute>
 </tiles:insertDefinition>

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="tiles" uri="http://tiles.apache.org/tags-tiles"  %>
+
 <tiles:insertDefinition name="mainTemplate">
 <tiles:putAttribute name="title">홈</tiles:putAttribute>
     <tiles:putAttribute name="body">
@@ -28,25 +29,73 @@ function jqueryOk() {
 	});
 }
 </script>
-<h2>사원정보 수정 페이지</h2>
-<form id="form">  
-<input type="hidden" name="num" value="${info.num}">
-<table>
-	<tr>
-		<td>등록번호:</td><td>${info.num}</td>
-	</tr>
-	<tr>
-		<td>글쓴이:</td><td>${info.author}</td>
-	</tr>
-	<tr>
-		<td>제목:</td><td><input type="text" name="title" value="${info.title}"></td>
-	</tr>
-	<tr>
-		<td>내용:</td><td><textarea name="contents">${info.contents}</textarea></td>
-	</tr>
-	<tr><td><button type="button" id="btn">변경사항 적용</button></td></tr>
-</table>
-</form>
-<a href="list">목록으로</a>  
+
+<!-- 서브페이지 배너 -->
+		<div id="heading-breadcrumbs">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-7">
+						<h1>자유게시판</h1>
+					</div>
+					<div class="col-md-5">
+						<ul class="breadcrumb">
+							<li><a href="../temp/home">Home</a></li>
+							<li>자유게시판</li>
+						</ul>
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 서브페이지 배너 끝 -->
+
+
+<div id="content">
+            <div class="container">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="box">
+                            
+							<div class="heading">
+                                <h2 >글수정</h2>
+                            </div>
+                            <hr>
+
+                            <form id="form">  
+                            <input type="hidden" name="num" value="${info.num}">
+                            <div class="form-group">
+                                    <label >글번호</label>
+                                    <input type="text" class="form-control" name="numtitle" value="${info.num}" readonly="readonly">
+                                </div>
+                             <div class="form-group">
+                                    <label >글쓴이</label>
+                                    <input type="text" class="form-control" name="author" value="${info.author}" readonly="readonly">
+                                </div>
+                            
+                                <div class="form-group">
+                                    <label >글제목</label>
+                                    <input type="text" class="form-control" name="title" value="${info.title}">
+                                </div>
+                                <div class="form-group">
+                                    <label >내용</label>
+                                    <textarea name="contents" class="form-control" rows="15">${info.contents}</textarea>
+                                    <!-- <input type="text" class="form-control" id="email-login"> -->
+                                </div>
+                                <div class="text-center">
+                                    <button type="button" class="btn btn-template-main"  id="btn"> 변경사항 적용</button>
+                                    <a href="list"><button type="button"  class="btn btn-template-main">목록</button></a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /.row -->
+
+            </div>
+            <!-- /.container -->
+        </div>
+        <!-- /#content -->
 </tiles:putAttribute>
 </tiles:insertDefinition>
