@@ -6,33 +6,41 @@
 <script type="text/javascript">
 	$(jqueryOk);
 	function jqueryOk() {
+
 		$('button[name=delete]').on('click', function(evt) {
 			evt.preventDefault();
 			var idx = $(this).attr('data-idx');
-			if (confirm("정말삭제하시겠습니까")) {
-				$.ajax({
-					type : "post",
-					url : "../temp/qnadel",
-					dataType : "json",
-					data : {
-						"num" : idx
-					},
-					success : function(json) {
-						if (json.check) {
-							alert("삭제성공");
-							//location.href="<c:url value="/board/list?pnum=1"/>";
-							/* location.href="http://192.168.8.55:8500/CoffeeWeb/temp/qna?pnum=1"; */
-							location.href = "../temp/qna?pnum=1";
-						} else {
-							alert("답글이 있으면 삭제할 수 없습니다.");
-						}
-					},
-					error : function(err) {
-						alert("에러 : 다시 시도해주세요");
-					}
 
-				});
-			}
+			bootbox.confirm({
+				size : 'small',
+				message : "정말 삭제 하시겠습니까?",
+				callback : function(result) {
+					if (result) {
+						$.ajax({
+							type : "post",
+							url : "../temp/qnadel",
+							dataType : "json",
+							data : {
+								"num" : idx
+							},
+							success : function(json) {
+								if (json.check) {
+									bootbox.alert("삭제성공", function() {location.href = "../temp/qna?pnum=1";});
+									
+								} else {
+									bootbox.alert("답글이 있으면 삭제할 수 없습니다.");
+								}
+							},
+							error : function(err) {
+								alert("에러 : 다시 시도해주세요");
+							}
+
+						});
+					} else {
+						bootbox.alert("삭제 실패");
+					}
+				}
+			});
 
 		});
 	}
@@ -40,6 +48,9 @@
 <tiles:insertDefinition name="subTemplate">
 	<tiles:putAttribute name="title">Q&A</tiles:putAttribute>
 	<tiles:putAttribute name="body">
+
+
+
 		<!-- 서브페이지 배너 -->
 		<div id="heading-breadcrumbs">
 			<div class="container">
@@ -81,11 +92,11 @@
 							</div>
 						</div>
 						<div class="text-center">
-						<c:choose>
-						<c:when test="${nick=='KING'}">
-							<a href="../temp/qnarepost?refnum=${post.num}&reftitle=${post.title}"><button type="button" class="btn btn-template-main">답글쓰기</button></a>
-						</c:when>
-						</c:choose>
+							<c:choose>
+								<c:when test="${nick=='KING'}">
+									<a href="../temp/qnarepost?refnum=${post.num}&reftitle=${post.title}"><button type="button" class="btn btn-template-main">답글쓰기</button></a>
+								</c:when>
+							</c:choose>
 							<c:choose>
 								<c:when test="${nick==post.author}">
 									<a href="../temp/qnamodi?num=${post.num}"><button type="button" class="btn btn-template-main">수정</button></a>
@@ -94,8 +105,8 @@
 							</c:choose>
 							<a href="../temp/qna?pnum=1"><button type="button" class="btn btn-template-main">목록</button></a>
 						</div>
-						
-						
+
+
 					</section>
 				</div>
 			</div>

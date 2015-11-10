@@ -33,6 +33,7 @@
     <script src="<c:url value="../resources/js/jquery.counterup.min.js"/>"></script>
     <script src="<c:url value="../resources/js/jquery.parallax-1.1.3.js"/>"></script>
     <script src="<c:url value="../resources/js/front.js"/>"></script>
+    <script src="<c:url value="../resources/js/bootbox.js"/>"></script>
     <!-- 홈 -->
 	<script src="<c:url value="../resources/js/owl.carousel.min.js"/>"></script>
 

@@ -181,4 +181,20 @@ public class QnAController {
 		
         return "gameinfo/gamecont";
     }
+	
+	@RequestMapping(value="game", method=RequestMethod.GET)
+    public String tempgamelnk(Model model,HttpServletRequest request) {
+		
+        return "game/tilesgame";
+    }
+	@RequestMapping(value="tempgame", method=RequestMethod.GET)
+    public String tempgame2lnk(Model model,HttpServletRequest request) {
+		
+        return "game/Tempgame";
+    }
+	@RequestMapping(value="tempgame2", method=RequestMethod.GET)
+    public String tempgame3lnk(Model model,HttpServletRequest request) {
+		
+        return "game/Tempgame2";
+    }
 }
