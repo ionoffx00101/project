@@ -28,7 +28,24 @@ a:hover {
 <tiles:insertDefinition name="subTemplate">
 	<tiles:putAttribute name="title">자주 묻는 질문</tiles:putAttribute>
 	<tiles:putAttribute name="body">
+<script>
+(function ($) {
+    $(document).ready(function () {
 
+        $('#check').click(function () {
+            var btn = $(this);
+            btn.button('loading');
+            setTimeout(function () {
+                btn.button('reset');
+            }, 4000);
+        });
+    });
+})(jQuery);
+</script>
+
+                                    <label for="name-login">Email</label><br>
+                                    <input type="text" class="form-control" name="email"  style="width:400px; height:35px; float: left;" value="${email}">　
+                                    <button type="button" class="btn btn-template-main" id="check" ><i class="fa fa-user-md"></i>인　증</button>
 
 		<!-- 서브페이지 배너 -->
 		<div id="heading-breadcrumbs">
