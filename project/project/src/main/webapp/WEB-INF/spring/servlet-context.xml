@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+<beans:beans xmlns="http://www.springframework.org/schema/mvc" xmlns:websocket="http://www.springframework.org/schema/websocket"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/websocket http://www.springframework.org/schema/websocket/spring-websocket.xsd">
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing 
 		infrastructure -->
@@ -17,7 +18,8 @@
 	
 	<!-- home/ qna / faq-->
 	<context:component-scan base-package="inyeong" />
-	
+	<!-- 게임 -->
+	<context:component-scan base-package="org.kdea.sgp.game" />
 	<!-- 자유게시판 -->
 	<context:component-scan base-package="org.kdea.sgp.board" />
 	<!-- 회원가입 -->
@@ -68,10 +70,7 @@
 		</beans:property>
 	</beans:bean>
 
-	<!-- <beans:bean id="simpleChatHandler" class="org.kdea.spring.websocket.SimpleWebSocketHandler" 
-		/> <websocket:handlers> <websocket:mapping path="/simpleBoard" handler="simpleWebHandler" 
-		/> <websocket:handshake-interceptors> <beans:bean class="org.kdea.Board.HandshakeInterceptor" 
-		/> </websocket:handshake-interceptors> </websocket:handlers> -->
+	
 	<!-- 타일즈 뷰 리졸버 선언 끝 -->
 
 	<!-- spring jdbc -->
@@ -128,5 +127,15 @@
 	    </beans:props>
 	    </beans:property>
 	</beans:bean>
+	
+	<!-- 핸들러 성정 -->
+	<beans:bean id="GameHandler" class="org.kdea.sgp.game.GameHandler" />
+	<websocket:handlers>
+		<websocket:mapping path="/game" handler="GameHandler" />
+		<websocket:handshake-interceptors>
+			<beans:bean class="org.kdea.sgp.game.GameInterceptor" />
+		</websocket:handshake-interceptors>
+	</websocket:handlers>
+	
 	
 </beans:beans>

@@ -439,15 +439,16 @@
 		//아군 탄환 객체 사용 함수
 		function useplayerBullet() {
 
-			if (spacekey && spacetimer) {
+			if (spacekey && spacetimer) { /*  스페이스 키가 눌러져 있고 스페이스타이머(reder()가 돌때마다 시간을 재는 용이다)값을 받아 둘다 트루일때만 객체를 캔버스로 부른다 */
 
 				if (playerBulletcnt > (playerBulletMax - 1)) {
 					playerBulletcnt = 0;
 				}
-
+				
+				/* 아이템을 먹었을때 발사되는 탄환수 늘리고 탄환수가 늘면 플레이어 기체 안에서 영역을 나눠서 예쁘게 나가게 함  */
 				var width = playerUnit.width / item_twoweapon;
-
-				for (var i = 1; i < item_twoweapon; i++) {
+				/* 이 for은 아이템을 먹었을때 탄환이 두개면 2번 호출해서 각자 좌료를 잡아주는 함수이다 */
+				for (var i = 1; i < item_twoweapon; i++) { 
 
 					playerBullet[playerBulletcnt].x = playerUnit.x + (width * i) - 2;
 					playerBullet[playerBulletcnt].y = playerUnit.y + playerUnit.height / 2;
@@ -458,6 +459,7 @@
 						playerBulletcnt = 0;
 					}
 				}
+				/* 발사 탄환 증가 기능 끝 */
 			}
 
 		}
