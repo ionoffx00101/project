@@ -130,7 +130,6 @@ canvas { border: 1px solid #555555;}
 
 			/* 아군 탄환 그리기   */
 		for (var i = 0; i < playerBullet2.length; i++) {
-			if(playerBullet2[i].use){
 				ctx2.drawImage(playerBulletimg2, //Source Image
 				0, 0, //X, Y Position on spaceShipSprit
 				9, 54, //Cut Size from spaceShipSprit
@@ -138,7 +137,6 @@ canvas { border: 1px solid #555555;}
 				5, 20 //View Size
 				);
 				ctx2.drawImage(canvasBuffer2, 0, 0);
-			}
 			} 
 		if(!gameEnd2){
 			/* 플레이어 기체를 그려준다 */
