@@ -174,76 +174,9 @@ public class QnAController {
         return "gameinfo/gamecont";
     }
 	
-	@RequestMapping(value="game", method=RequestMethod.GET)
-    public String tempgamelnk(Model model,HttpServletRequest request) {
-		
-        return "game/tilesgame";
-    }
-	@RequestMapping(value="tempgame", method=RequestMethod.GET)
-    public String tempgame2lnk(Model model,HttpServletRequest request) {
-		
-        return "game/thirdMix(ver.jquery1.0)";
-    }
-	@RequestMapping(value="tempgame2", method=RequestMethod.GET)
-    public String tempgame3lnk(Model model,HttpServletRequest request) {
-		
-        return "game/thirdMix(ver.jquery2.0)";
-    }
-	@RequestMapping(value="tempgame3", method=RequestMethod.GET)
-    public String tempgame4lnk(Model model,HttpServletRequest request) {
-		
-        return "game/thirdMix(ver.jquery3.0)";
-    }
-	
-	@RequestMapping(value="tempgame4", method=RequestMethod.GET)
-    public String tempgame5lnk(Model model,HttpServletRequest request) {
-		
-        return "game/thirdMix(ver.jquery3.1)";
-    }
-	
-	@RequestMapping(value="tempgame5", method=RequestMethod.GET)
-    public String tempgame6lnk(Model model,HttpServletRequest request) {
-		
-        return "game/thirdMix(ver.jquery3.2)";
-    }
-	@RequestMapping(value="tempgame6", method=RequestMethod.GET)
-    public String tempgame7lnk(Model model,HttpServletRequest request) {
-		
-        return "game/thirdMix(ver.jquery3.3)";
-    }
-	@RequestMapping(value="tempgame7", method=RequestMethod.GET)
-    public String tempgame8lnk(Model model,HttpServletRequest request) {
-		
-        return "game/thirdMix(ver.jquery3.4)";
-    }
-	@RequestMapping(value="tempgame8", method=RequestMethod.GET)
-    public String tempgame9lnk(Model model,HttpServletRequest request) {
-		
-        return "game/thirdMix(ver.jquery3.5)";
-    }
-	@RequestMapping(value="tempgame9", method=RequestMethod.GET)
-    public String tempgame10lnk(Model model,HttpServletRequest request) {
-		
-        return "game/thirdMix(ver.jquery4.0)";
-    }
-	@RequestMapping(value="tempgame10", method=RequestMethod.GET)
-    public String tempgame11lnk(Model model,HttpServletRequest request) {
-		
-        return "game/thirdMix(ver.jquery4.1)";
-    }
-	@RequestMapping(value="tempgame11", method=RequestMethod.GET)
-    public String tempgame12lnk(Model model,HttpServletRequest request) {
-		
-        return "game/thirdMix(ver.jquery4.2)";
-    }
-	@RequestMapping(value="tempgame12", method=RequestMethod.GET)
-    public String tempgame13lnk(Model model,HttpServletRequest request) {
-		
-        return "game/thirdMix(ver.jquery4.3)";
-    }
 	@RequestMapping(value="tempgame13", method=RequestMethod.GET)
     public String tempgame14lnk(Model model,HttpServletRequest request) {
 		
-        return "game/thirdMix(ver.jquery5.0)";
+        return "game/thirdMix(ver.jquery6.0)";
     }
 }

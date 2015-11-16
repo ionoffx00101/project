@@ -25,34 +25,34 @@ public class GameHandler extends TextWebSocketHandler {
 	private int rnum = 1;
 	private int gnum = 1;
 
-	// À¥¼ÒÄÏ ¼­¹öÃø¿¡ ÅØ½ºÆ® ¸Ş½ÃÁö°¡ Á¢¼öµÇ¸é È£ÃâµÇ´Â ¸Ş¼Òµå
+	// ì›¹ì†Œì¼“ ì„œë²„ì¸¡ì— í…ìŠ¤íŠ¸ ë©”ì‹œì§€ê°€ ì ‘ìˆ˜ë˜ë©´ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
 	@Override
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
-		// Å¬¶óÀÌ¾ğÆ®¿¡¼­ ¿Ã¶ó¿Â ¸Ş½ÃÁö¸¦ ¹®ÀÚ¿­·Î ¹Ù²Û´Ù
+		// í´ë¼ì´ì–¸íŠ¸ì—ì„œ ì˜¬ë¼ì˜¨ ë©”ì‹œì§€ë¥¼ ë¬¸ìì—´ë¡œ ë°”ê¾¼ë‹¤
 		String payloadMessage = (String) message.getPayload();
 
-		// Åë½ÅÀº ¸ğÁ¶¸® Á¦ÀÌ½¼ ¹®ÀÚ¿­À» ÅëÇØ ÇÏ°Ô µÈ´Ù(¼­¹ö¿¡ ÇÚµé·¯´Â 1°³¸¸ ÀÖ´Â°Ô ¾ÈÁ¤ÀûÀÌ±â¿¡ ´ÙÁ¾ ´Ù¾çÇÑ ¸í·ÉÀ» ¹Ş±â À§ÇØ¼­´Â
-		// Á¦ÀÌ½¼¹®ÀÚ¿­ÀÌ ÇÊ¼ö°¡ µÈ´Ù) ±×·¸±â¿¡ À¥¼ÒÄÏÀÌ Åë½ÅÀ» ¹Ş°Ô µÇ¸é Á¦ÀÌ½¼ ÆÄ¼­¸¦ È£ÃâÇÑ´Ù.
+		// í†µì‹ ì€ ëª¨ì¡°ë¦¬ ì œì´ìŠ¨ ë¬¸ìì—´ì„ í†µí•´ í•˜ê²Œ ëœë‹¤(ì„œë²„ì— í•¸ë“¤ëŸ¬ëŠ” 1ê°œë§Œ ìˆëŠ”ê²Œ ì•ˆì •ì ì´ê¸°ì— ë‹¤ì¢… ë‹¤ì–‘í•œ ëª…ë ¹ì„ ë°›ê¸° ìœ„í•´ì„œëŠ”
+		// ì œì´ìŠ¨ë¬¸ìì—´ì´ í•„ìˆ˜ê°€ ëœë‹¤) ê·¸ë ‡ê¸°ì— ì›¹ì†Œì¼“ì´ í†µì‹ ì„ ë°›ê²Œ ë˜ë©´ ì œì´ìŠ¨ íŒŒì„œë¥¼ í˜¸ì¶œí•œë‹¤.
 		JSONParser jsonParser = new JSONParser();
 
 		try {
-			// Á¦ÀÌ½¼ ÆÄ¼­¸¦ ÅëÇØ ¹®ÀÚ¿­À» Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®·Î ¸¸µç´Ù.
+			// ì œì´ìŠ¨ íŒŒì„œë¥¼ í†µí•´ ë¬¸ìì—´ì„ ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ë¡œ ë§Œë“ ë‹¤.
 			JSONObject jsonObj = (JSONObject) jsonParser.parse(payloadMessage);
 
-			// ¿ÀºêÁ§Æ® ³»ÀÇ Á¶°ÇÀ» ´Ü°èº°·Î °ËÁõÇÔÀ¸·Î¼­ ¸í·ÉÀ» ±¸ºĞÇÏ°ÔµÈ´Ù. ¿ì¼±¼øÀ§´Â ¾ó¸¶³ª ¸¹Àº Á¾·ùÀÇ ÆäÀÌÁö¿¡¼­ ¾²´Â°¡¸¦
-			// ±âÁØÀ¸·Î ÇÑ´Ù. ±×·± ÀÇ¹Ì¿¡¼­ °¡Àå Áß¿äÇÑ°ÍÀº ¾î´À Á¾·ùÀÇ ÆäÀÌÁö¿¡¼­ ¸í·ÉÀÌ ¿Ô´Â°¡ÇÏ´Â°Í Áï À§Ä¡¸¦ ¾Ë¾Æº¸´Â °ÍÀÌ
-			// µÈ´Ù.
-			// ±×·± ÀÇ¹Ì¿¡¼­ ¸Ç¸ÕÀú 'À§Ä¡' Á¤º¸¸¦ ¸ÕÀú ¹Ş´Â´Ù(¼­·Î °øÅçµÇ´Â ¸í·ÉÀÌ¶ó°í ÇØµµ ¾È¾²´Â ÆäÀÌÁö°¡ ÀÖÀ¸¸é °ËÁõÀ» À§ÇØ
-			// Çêµµ´Â ·ÎÁ÷ÀÌ »ı±ä´Ù. ·ÎÁ÷±¸¼ºÀº ÄÚµå Àı¾àº¸´Ü ·ÎÁ÷ ÇÊ¿¬¼ºÀ» ¿ì¼±Çß´Ù.)
+			// ì˜¤ë¸Œì íŠ¸ ë‚´ì˜ ì¡°ê±´ì„ ë‹¨ê³„ë³„ë¡œ ê²€ì¦í•¨ìœ¼ë¡œì„œ ëª…ë ¹ì„ êµ¬ë¶„í•˜ê²Œëœë‹¤. ìš°ì„ ìˆœìœ„ëŠ” ì–¼ë§ˆë‚˜ ë§ì€ ì¢…ë¥˜ì˜ í˜ì´ì§€ì—ì„œ ì“°ëŠ”ê°€ë¥¼
+			// ê¸°ì¤€ìœ¼ë¡œ í•œë‹¤. ê·¸ëŸ° ì˜ë¯¸ì—ì„œ ê°€ì¥ ì¤‘ìš”í•œê²ƒì€ ì–´ëŠ ì¢…ë¥˜ì˜ í˜ì´ì§€ì—ì„œ ëª…ë ¹ì´ ì™”ëŠ”ê°€í•˜ëŠ”ê²ƒ ì¦‰ ìœ„ì¹˜ë¥¼ ì•Œì•„ë³´ëŠ” ê²ƒì´
+			// ëœë‹¤.
+			// ê·¸ëŸ° ì˜ë¯¸ì—ì„œ ë§¨ë¨¼ì € 'ìœ„ì¹˜' ì •ë³´ë¥¼ ë¨¼ì € ë°›ëŠ”ë‹¤(ì„œë¡œ ê³µí†¨ë˜ëŠ” ëª…ë ¹ì´ë¼ê³  í•´ë„ ì•ˆì“°ëŠ” í˜ì´ì§€ê°€ ìˆìœ¼ë©´ ê²€ì¦ì„ ìœ„í•´
+			// í—›ë„ëŠ” ë¡œì§ì´ ìƒê¸´ë‹¤. ë¡œì§êµ¬ì„±ì€ ì½”ë“œ ì ˆì•½ë³´ë‹¨ ë¡œì§ í•„ì—°ì„±ì„ ìš°ì„ í–ˆë‹¤.)
 			String position = (String) jsonObj.get("position");
 
 			try {
-				// º¸³»Áø ÆäÀÌÁö°¡ '¹æ ¸ñ·Ï'ÀÎ°æ¿ì ºÒ·¯¿ÍÁö´Â ¸í·Éµé
+				// ë³´ë‚´ì§„ í˜ì´ì§€ê°€ 'ë°© ëª©ë¡'ì¸ê²½ìš° ë¶ˆëŸ¬ì™€ì§€ëŠ” ëª…ë ¹ë“¤
 				if (position.equals("roomList")) {
-					// À§Ä¡°¡ '¸ñ·Ï'ÀÎ°ÍÀ» È®ÀÎÇÑ µÚ¿¡ '¸í·É'À» °Ë»çÇÑ´Ù.
+					// ìœ„ì¹˜ê°€ 'ëª©ë¡'ì¸ê²ƒì„ í™•ì¸í•œ ë’¤ì— 'ëª…ë ¹'ì„ ê²€ì‚¬í•œë‹¤.
 					String cmd = (String) jsonObj.get("cmd");
-					// ¸í·ÉÀÌ Ã¤ÆÃÀÎ°æ¿ì ÇöÀç ¸ñ·Ï ÆäÀÌÁö¿¡ Á¢¼ÓµÇ¾î ÀÖ´Â Àü¿ø(¼¼¼Ç ¸Ê¿¡ ´ã±ä ¼¼¼Çµé ÀüºÎ)¿¡°Ô ¸Ş½ÃÁö¸¦
-					// Àü´ŞÇÑ´Ù
+					// ëª…ë ¹ì´ ì±„íŒ…ì¸ê²½ìš° í˜„ì¬ ëª©ë¡ í˜ì´ì§€ì— ì ‘ì†ë˜ì–´ ìˆëŠ” ì „ì›(ì„¸ì…˜ ë§µì— ë‹´ê¸´ ì„¸ì…˜ë“¤ ì „ë¶€)ì—ê²Œ ë©”ì‹œì§€ë¥¼
+					// ì „ë‹¬í•œë‹¤
 					if (cmd.equals("chat")) {
 
 						Iterator<String> sessionkeys = sessionMap.keySet().iterator();
@@ -62,40 +62,40 @@ public class GameHandler extends TextWebSocketHandler {
 						}
 
 					}
-					// ¸í·ÉÀÌ '¹æ ¸¸µé±â'ÀÎ°æ¿ì
+					// ëª…ë ¹ì´ 'ë°© ë§Œë“¤ê¸°'ì¸ê²½ìš°
 					else if (cmd.equals("roomCreate")) {
-						// ¹æ ÀÌ¸§°ú ¹æÀ» ¸¸µç »ç¶÷ÀÇ ÀÌ¸§À» ¹Ş¾Æ³½´Ù
+						// ë°© ì´ë¦„ê³¼ ë°©ì„ ë§Œë“  ì‚¬ëŒì˜ ì´ë¦„ì„ ë°›ì•„ë‚¸ë‹¤
 						String nick = (String) jsonObj.get("nick");
 						String roomName = (String) jsonObj.get("roomName");
 
-						// ¹æÁ¤º¸¿ë ¸ÊÀ¸·Î »ç¿ëÇÒ ¸ÊÀ» ¸¸µç´Ù.
+						// ë°©ì •ë³´ìš© ë§µìœ¼ë¡œ ì‚¬ìš©í•  ë§µì„ ë§Œë“ ë‹¤.
 						Map<String, String> roomDataMap = new HashMap<String, String>();
 
-						// Á¤º¸¸Ê¿¡ °¢Á¾ Á¤º¸¸¦ Áı¾î ³Ö´Â´Ù
+						// ì •ë³´ë§µì— ê°ì¢… ì •ë³´ë¥¼ ì§‘ì–´ ë„£ëŠ”ë‹¤
 						roomDataMap.put("master", nick);
 						roomDataMap.put("roomName", roomName);
 						roomDataMap.put("memCnt", "0");
 						roomDataMap.put("roomCondition", "ready");
 
-						// ¹æ¸â¹öÀÇ ¼¼¼ÇÀ» ´ãÀ» ¸ÉÀ» ¸¸µé ¸ÉÀ» ¸¸µé°í ÇØ´ç¸ÊÀ» ´ã´Â ¿ëµµÀÇ ¸®½ºÆ®¿¡ ÀúÀåÇÑ´Ù.
-						// ±× ÀÌÈÄ µ¿ÀÎÇÑ Å°¸¦ ÀÌ¿ëÇØ¼­ À§ÂÊ¿¡¼­ ¸¸µç Á¤º¸¿ë ¸ÊÀ» ´ã´Â´Ù.(¹æÀÇ Á¤º¸¿Í ¼¼¼ÇÀÌ ÀúÀåµÇ´Â
-						// 2Á¾·ùÀÇ ¸ÊÀÌ »ı±ä´Ù.)
+						// ë°©ë©¤ë²„ì˜ ì„¸ì…˜ì„ ë‹´ì„ ë§´ì„ ë§Œë“¤ ë§´ì„ ë§Œë“¤ê³  í•´ë‹¹ë§µì„ ë‹´ëŠ” ìš©ë„ì˜ ë¦¬ìŠ¤íŠ¸ì— ì €ì¥í•œë‹¤.
+						// ê·¸ ì´í›„ ë™ì¸í•œ í‚¤ë¥¼ ì´ìš©í•´ì„œ ìœ„ìª½ì—ì„œ ë§Œë“  ì •ë³´ìš© ë§µì„ ë‹´ëŠ”ë‹¤.(ë°©ì˜ ì •ë³´ì™€ ì„¸ì…˜ì´ ì €ì¥ë˜ëŠ”
+						// 2ì¢…ë¥˜ì˜ ë§µì´ ìƒê¸´ë‹¤.)
 						listMemberMap.put(rnum, new HashMap<String, WebSocketSession>());
 						listDataMap.put(rnum, roomDataMap);
 
-						// ¿äÃ»ÀÚ¿¡°Ô ¹İÈ¯ÇÒ Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¸¦ ¸¸µé°í ¹æÀÌ ¸¸µé¾îÁ³À¸´Ï ÀÔÀåÇÏ¶ó´Â ¸í·É°ú ¹æÀÇ ¹øÈ£¸¦
-						// ´ã´Â´Ù.
+						// ìš”ì²­ìì—ê²Œ ë°˜í™˜í•  ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ë¥¼ ë§Œë“¤ê³  ë°©ì´ ë§Œë“¤ì–´ì¡Œìœ¼ë‹ˆ ì…ì¥í•˜ë¼ëŠ” ëª…ë ¹ê³¼ ë°©ì˜ ë²ˆí˜¸ë¥¼
+						// ë‹´ëŠ”ë‹¤.
 						JSONObject reTurnJson = new JSONObject();
 						reTurnJson.put("cmd", "enter");
 						reTurnJson.put("rnum", rnum);
 
-						// Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¸¦ ¹®ÀÚ¿­·Î ¸¸µç´Ù.
+						// ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ë¥¼ ë¬¸ìì—´ë¡œ ë§Œë“ ë‹¤.
 						String sJson = reTurnJson.toJSONString();
 
-						// ¹æ ÀÛ¼ºÀÚ¿¡°Ô ¸í·ÉÀ» µ¹·Áº¸³½´Ù
+						// ë°© ì‘ì„±ìì—ê²Œ ëª…ë ¹ì„ ëŒë ¤ë³´ë‚¸ë‹¤
 						sessionMap.get(nick).sendMessage(new TextMessage(sJson));
 
-						// ¹æ Á¤º¸ÀÇ °íÀ¯¼ºÀ» À§ÇÏ¿© Å°°ªÀ» ÇÏ³ª ¿Ã·ÁµĞ´Ù
+						// ë°© ì •ë³´ì˜ ê³ ìœ ì„±ì„ ìœ„í•˜ì—¬ í‚¤ê°’ì„ í•˜ë‚˜ ì˜¬ë ¤ë‘”ë‹¤
 						rnum += 1;
 
 					}
@@ -112,21 +112,21 @@ public class GameHandler extends TextWebSocketHandler {
 							reTurnJson.put("cmd", "enter");
 							reTurnJson.put("rnum", roomNum);
 
-							// ¹æ ÀÛ¼ºÀÚ¿¡°Ô ¸í·ÉÀ» µ¹·Áº¸³½´Ù
+							// ë°© ì‘ì„±ìì—ê²Œ ëª…ë ¹ì„ ëŒë ¤ë³´ë‚¸ë‹¤
 
 						} else {
 
 							reTurnJson.put("cmd", "enterFalse");
 
-							// Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¸¦ ¹®ÀÚ¿­·Î ¸¸µç´Ù.
+							// ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ë¥¼ ë¬¸ìì—´ë¡œ ë§Œë“ ë‹¤.
 
 						}
-						// ¹æ ÀÛ¼ºÀÚ¿¡°Ô ¸í·ÉÀ» µ¹·Áº¸³½´Ù
+						// ë°© ì‘ì„±ìì—ê²Œ ëª…ë ¹ì„ ëŒë ¤ë³´ë‚¸ë‹¤
 						String sJson = reTurnJson.toJSONString();
 						sessionMap.get(nick).sendMessage(new TextMessage(sJson));
 					}
-				} // À§Ä¡°¡ ¹æ¿¡¼­ ¿Â ¸í·ÉÀÎ°æ¿ì (ÇöÀç Ã¤ÆÃ±â´É¸¸ ´ã°ÜÀÖ¾î¼­ µû·Î ¸í·ÉÀ» ÀÎ½ÄÇÏÁö ¾Ê´Â´Ù. ¸í·É ±¸ºĞÀº ÈÄ¿¡
-					// ¹İµå½Ã µé¾î°¡´Â ±â´ÉÀÌ±â¿¡ Àç°»½Å ¿¹Á¤)
+				} // ìœ„ì¹˜ê°€ ë°©ì—ì„œ ì˜¨ ëª…ë ¹ì¸ê²½ìš° (í˜„ì¬ ì±„íŒ…ê¸°ëŠ¥ë§Œ ë‹´ê²¨ìˆì–´ì„œ ë”°ë¡œ ëª…ë ¹ì„ ì¸ì‹í•˜ì§€ ì•ŠëŠ”ë‹¤. ëª…ë ¹ êµ¬ë¶„ì€ í›„ì—
+					// ë°˜ë“œì‹œ ë“¤ì–´ê°€ëŠ” ê¸°ëŠ¥ì´ê¸°ì— ì¬ê°±ì‹  ì˜ˆì •)
 				else if (position.equals("room")) {
 
 					String cmd = (String) jsonObj.get("cmd");
@@ -159,7 +159,7 @@ public class GameHandler extends TextWebSocketHandler {
 						while (roomMemberKeys.hasNext()) {
 							String key = roomMemberKeys.next();
 							roomMemberMap.get(key).sendMessage(new TextMessage(payloadMessage));
-							System.out.println(key + "¿¡°Ô Àü¼Û ¿Ï·á");
+							System.out.println(key + "ì—ê²Œ ì „ì†¡ ì™„ë£Œ");
 						}
 					} else if (cmd.equals("start")) {
 						Map<String, Object> map = session.getAttributes();
@@ -188,7 +188,7 @@ public class GameHandler extends TextWebSocketHandler {
 						while (roomMemberKeys.hasNext()) {
 							String key = roomMemberKeys.next();
 							roomMemberMap.get(key).sendMessage(new TextMessage(sJson));
-							System.out.println(key + "¿¡°Ô Àü¼Û ¿Ï·á");
+							System.out.println(key + "ì—ê²Œ ì „ì†¡ ì™„ë£Œ");
 						}
 						gnum += 1;
 						roomListupdate();
@@ -203,20 +203,7 @@ public class GameHandler extends TextWebSocketHandler {
 						while (Keys.hasNext()) {
 							String key = Keys.next();
 							gameMember.get(key).sendMessage(new TextMessage(payloadMessage));
-							System.out.println(key + "¿¡°Ô Àü¼Û ¿Ï·á");
-						}
-					}
-					if (cmd.equals("playing")) {
-						Map<String, Object> map = session.getAttributes();
-						int gnum = (Integer) map.get("gnum");
-						String nick = (String) map.get("nick"); // ´ĞÀÌ °°À»¶§ º¸³»Áö ¾Ê
-						Map<String, WebSocketSession> gameMember = gameMembersMap.get(gnum);
-						Iterator<String> Keys = gameMember.keySet().iterator();
-						while (Keys.hasNext()) {
-							String key = Keys.next();
-							if(!key.equals(nick)){
-								gameMember.get(key).sendMessage(new TextMessage(payloadMessage));
-							}
+							System.out.println(key + "ì—ê²Œ ì „ì†¡ ì™„ë£Œ");
 						}
 					}
 				}
@@ -230,76 +217,76 @@ public class GameHandler extends TextWebSocketHandler {
 
 	}
 
-	// À¥¼ÒÄÏ ¼­¹ö¿¡ Å¬¶óÀÌ¾ğÆ®°¡ Á¢¼ÓÇÏ¸é È£ÃâµÇ´Â ¸Ş¼Òµå
+	// ì›¹ì†Œì¼“ ì„œë²„ì— í´ë¼ì´ì–¸íŠ¸ê°€ ì ‘ì†í•˜ë©´ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
 		super.afterConnectionEstablished(session);
 
-		// Ã³À½ Á¢¼Ó ÇßÀ»¶§ ÇÊ¼öÀûÀ¸·Î ¹Ş¾Æ¾ßÇÏ´Â °ÍÀº ¾î´À ÆäÀÌÁö¿¡¼­ Á¢¼ÓÇß´Â°¡¿Í Á¢¼ÓÀÚ¸íÀÌ¹Ç·Î µÎ °ªÀ» ¹Ş¾Æ³½´Ù(¾î´À ¸Ê¿¡ ¼¼¼Ç°ú
-		// ´Ğ³×ÀÓÀ» ÀúÀåÇÒÁö¸¦ ¾Ë±â À§ÇØ ÇÊ¿äÇÏ´Ù)
+		// ì²˜ìŒ ì ‘ì† í–ˆì„ë•Œ í•„ìˆ˜ì ìœ¼ë¡œ ë°›ì•„ì•¼í•˜ëŠ” ê²ƒì€ ì–´ëŠ í˜ì´ì§€ì—ì„œ ì ‘ì†í–ˆëŠ”ê°€ì™€ ì ‘ì†ìëª…ì´ë¯€ë¡œ ë‘ ê°’ì„ ë°›ì•„ë‚¸ë‹¤(ì–´ëŠ ë§µì— ì„¸ì…˜ê³¼
+		// ë‹‰ë„¤ì„ì„ ì €ì¥í• ì§€ë¥¼ ì•Œê¸° ìœ„í•´ í•„ìš”í•˜ë‹¤)
 		Map<String, Object> map = session.getAttributes();
 		String nick = (String) map.get("usrNick");
 		String position = (String) map.get("position");
 
-		// ÆäÀÌÁö°¡ '¹æ ¸ñ·Ï'ÀÎ °æ¿ì
+		// í˜ì´ì§€ê°€ 'ë°© ëª©ë¡'ì¸ ê²½ìš°
 		if (position.equals("roomList")) {
-			// ¼¼¼Ç¸Ê¿¡ ´Ğ³×ÀÓÀ» Å°·Î ¼¼¼ÇÀ» ÀúÀåÇÑ´Ù
+			// ì„¸ì…˜ë§µì— ë‹‰ë„¤ì„ì„ í‚¤ë¡œ ì„¸ì…˜ì„ ì €ì¥í•œë‹¤
 			sessionMap.put(nick, session);
 
-			// Á¢¼ÓÀÚ¿¡°Ô ¹æ¸ñ·ÏÀÇ Á¤º¸¸¦ Àü¼ÛÇÏ±â À§ÇØ Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¿Í ¹è¿­À» ÁØºñÇÑ´Ù.
+			// ì ‘ì†ìì—ê²Œ ë°©ëª©ë¡ì˜ ì •ë³´ë¥¼ ì „ì†¡í•˜ê¸° ìœ„í•´ ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ì™€ ë°°ì—´ì„ ì¤€ë¹„í•œë‹¤.
 			JSONObject jsonObj = new JSONObject();
 			jsonObj.put("cmd", "roomList");
 			JSONArray jsonArr = new JSONArray();
 
-			// ¹æ¸ñ·ÏÀ» ¸¸µé±â À§ÇØ ¹æÁ¤º¸¸Ê ¸ñ·ÏÀÇ Å°°ªÀ» ¹Ş¾Æ³½´Ù
+			// ë°©ëª©ë¡ì„ ë§Œë“¤ê¸° ìœ„í•´ ë°©ì •ë³´ë§µ ëª©ë¡ì˜ í‚¤ê°’ì„ ë°›ì•„ë‚¸ë‹¤
 			Iterator<Integer> keys = listDataMap.keySet().iterator();
 			while (keys.hasNext()) {
 				int key = keys.next();
 
-				// ¸®½ºÆ®¿¡ ´ãÀ» Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¸¦ ¸¸µç´Ù. ±×¸®°í ¹æÁ¤º¸¸ÊÀÇ Å°°ªÀÌ ¹æÀÇ ¹øÈ£ÀÌ¹Ç·Î ¹Ù·Î ¿ÀºêÁ§Æ®¿¡ ´ã´Â´Ù
+				// ë¦¬ìŠ¤íŠ¸ì— ë‹´ì„ ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ë¥¼ ë§Œë“ ë‹¤. ê·¸ë¦¬ê³  ë°©ì •ë³´ë§µì˜ í‚¤ê°’ì´ ë°©ì˜ ë²ˆí˜¸ì´ë¯€ë¡œ ë°”ë¡œ ì˜¤ë¸Œì íŠ¸ì— ë‹´ëŠ”ë‹¤
 				JSONObject listData = new JSONObject();
 				listData.put("rnum", key);
 
-				// ¹æÁ¤º¸¸Ê ¸ñ·Ï¿¡¼­ ¹æÁ¤º¸ ¸ÊÀ» Å°°ªÀ» ÀÌ¿ëÇØ °¡Á®¿À°í ±× ¾È¿¡¼­ °¢Á¾ Á¤º¸¸¦ »Ì¾Æ³»¾î Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¿¡ ´ã´Â´Ù
+				// ë°©ì •ë³´ë§µ ëª©ë¡ì—ì„œ ë°©ì •ë³´ ë§µì„ í‚¤ê°’ì„ ì´ìš©í•´ ê°€ì ¸ì˜¤ê³  ê·¸ ì•ˆì—ì„œ ê°ì¢… ì •ë³´ë¥¼ ë½‘ì•„ë‚´ì–´ ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ì— ë‹´ëŠ”ë‹¤
 				Map<String, String> roomDataMap = listDataMap.get(key);
 				String roomName = roomDataMap.get("roomName");
 				listData.put("roomName", roomName);
 
-				// ¿Ï¼ºµÈ Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¸¦ ¹è¿­¿¡ ´ã´Â´Ù
+				// ì™„ì„±ëœ ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ë¥¼ ë°°ì—´ì— ë‹´ëŠ”ë‹¤
 				jsonArr.add(listData);
 			}
 
-			// ¹İÈ¯¿ë Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¿¡ ¿Ï¼ºµÈ ¹è¿­À» ´ã°í ¹®ÀÚ¿­·Î ¸¸µç´Ù
+			// ë°˜í™˜ìš© ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ì— ì™„ì„±ëœ ë°°ì—´ì„ ë‹´ê³  ë¬¸ìì—´ë¡œ ë§Œë“ ë‹¤
 			jsonObj.put("list", jsonArr);
 			String sJson = jsonObj.toJSONString();
 
-			// ¹æ¸ñ·Ï¿¡ ÀÔÀåÇÑ À¯Àú¿¡°Ô º¸³»ÁØ´Ù.
+			// ë°©ëª©ë¡ì— ì…ì¥í•œ ìœ ì €ì—ê²Œ ë³´ë‚´ì¤€ë‹¤.
 			sessionMap.get(nick).sendMessage(new TextMessage(sJson));
 
 			memListupdate();
 
 		}
 
-		// ÆäÀÌÁö°¡ '¹æ'ÀÎ °æ¿ì
+		// í˜ì´ì§€ê°€ 'ë°©'ì¸ ê²½ìš°
 		else if (position.equals("room")) {
 
-			// ÆÄ¶ó¹ÌÅÍ·Î ÀÎÅÍ¼ÁÅÍ¿¡¼­ ¹Ş¾Æ³½ ¹æ ¼ıÀÚÀ» »Ì¾Æ³»°í ÇØ´ç ¹æ ¼ıÀÚ¸¦ Å°·Î ÇÏ´Â ¹æ À» ºÒ·¯³»¾î ´Ğ³×ÀÓ°ú ¼¼¼ÇÀ»
-			// ´ã´Â´Ù(¾Æ·¡ÂÊÀº ¸®½ºÆ® °»½Å ±â´ÉÀÌ³ª ÀÌ¶ÇÇÑ Á¶°Ç¿¡ ÀÇÇØ ½ÇÇà ¿©ºÎ°¡ °áÁ¤µÉ ¿¹Á¤ÀÌ¹Ç·Î ÈÄÀÏ ±âÀçÇÑ´Ù)
+			// íŒŒë¼ë¯¸í„°ë¡œ ì¸í„°ì…‰í„°ì—ì„œ ë°›ì•„ë‚¸ ë°© ìˆ«ìì„ ë½‘ì•„ë‚´ê³  í•´ë‹¹ ë°© ìˆ«ìë¥¼ í‚¤ë¡œ í•˜ëŠ” ë°© ì„ ë¶ˆëŸ¬ë‚´ì–´ ë‹‰ë„¤ì„ê³¼ ì„¸ì…˜ì„
+			// ë‹´ëŠ”ë‹¤(ì•„ë˜ìª½ì€ ë¦¬ìŠ¤íŠ¸ ê°±ì‹  ê¸°ëŠ¥ì´ë‚˜ ì´ë˜í•œ ì¡°ê±´ì— ì˜í•´ ì‹¤í–‰ ì—¬ë¶€ê°€ ê²°ì •ë  ì˜ˆì •ì´ë¯€ë¡œ í›„ì¼ ê¸°ì¬í•œë‹¤)
 			int rnum = (Integer) map.get("rnum");
 			Map<String, WebSocketSession> roomMemberMap = listMemberMap.get(rnum);
 			roomMemberMap.put(nick, session);
-			System.out.println("¹æ ÀÔÀå ¿Ï·á");
+			System.out.println("ë°© ì…ì¥ ì™„ë£Œ");
 			Map<String, String> roomDataMap = listDataMap.get(rnum);
 			int memCnt = Integer.parseInt(roomDataMap.get("memCnt")) + 1;
 			roomDataMap.put("memCnt", Integer.toString(memCnt));
-			System.out.println("¹æ ÀÎ¿ø¼ö Á¶Á¤:" + memCnt);
+			System.out.println("ë°© ì¸ì›ìˆ˜ ì¡°ì •:" + memCnt);
 			if (memCnt > 1) {
 				String roomCondition = "ready";
 				roomDataMap.put("roomCondition", roomCondition);
 			}
 			roomUpdate(roomMemberMap, roomDataMap);
-			// ¹æ ³»ºÎ ÀÎ¿ø¿¡°Ô ¹æ Á¤º¸¸¦ Àü¼ÛÇÑ´Ù.
+			// ë°© ë‚´ë¶€ ì¸ì›ì—ê²Œ ë°© ì •ë³´ë¥¼ ì „ì†¡í•œë‹¤.
 			JSONObject roomData = new JSONObject();
 			roomData.put("cmd", "roomUpdate");
 
@@ -327,24 +314,24 @@ public class GameHandler extends TextWebSocketHandler {
 			while (roomMemberKeys.hasNext()) {
 				String key = roomMemberKeys.next();
 				roomMemberMap.get(key).sendMessage(new TextMessage(sJson));
-				System.out.println(key + "¿¡°Ô Àü¼Û ¿Ï·á");
+				System.out.println(key + "ì—ê²Œ ì „ì†¡ ì™„ë£Œ");
 			}
-			System.out.println("¹æ ¾÷µ¥ÀÌÆ® ¿Ï·á");
+			System.out.println("ë°© ì—…ë°ì´íŠ¸ ì™„ë£Œ");
 			roomListupdate();
 		}
-		//ÆäÀÌÁö°¡ '°ÔÀÓ'ÀÎ°æ¿ì
+		//í˜ì´ì§€ê°€ 'ê²Œì„'ì¸ê²½ìš°
 		else if (position.equals("game")) {
 
-			// ÆÄ¶ó¹ÌÅÍ·Î ÀÎÅÍ¼ÁÅÍ¿¡¼­ ¹Ş¾Æ³½ ¹æ ¼ıÀÚÀ» »Ì¾Æ³»°í ÇØ´ç ¹æ ¼ıÀÚ¸¦ Å°·Î ÇÏ´Â ¹æ À» ºÒ·¯³»¾î ´Ğ³×ÀÓ°ú ¼¼¼ÇÀ»
-			// ´ã´Â´Ù(¾Æ·¡ÂÊÀº ¸®½ºÆ® °»½Å ±â´ÉÀÌ³ª ÀÌ¶ÇÇÑ Á¶°Ç¿¡ ÀÇÇØ ½ÇÇà ¿©ºÎ°¡ °áÁ¤µÉ ¿¹Á¤ÀÌ¹Ç·Î ÈÄÀÏ ±âÀçÇÑ´Ù)
+			// íŒŒë¼ë¯¸í„°ë¡œ ì¸í„°ì…‰í„°ì—ì„œ ë°›ì•„ë‚¸ ë°© ìˆ«ìì„ ë½‘ì•„ë‚´ê³  í•´ë‹¹ ë°© ìˆ«ìë¥¼ í‚¤ë¡œ í•˜ëŠ” ë°© ì„ ë¶ˆëŸ¬ë‚´ì–´ ë‹‰ë„¤ì„ê³¼ ì„¸ì…˜ì„
+			// ë‹´ëŠ”ë‹¤(ì•„ë˜ìª½ì€ ë¦¬ìŠ¤íŠ¸ ê°±ì‹  ê¸°ëŠ¥ì´ë‚˜ ì´ë˜í•œ ì¡°ê±´ì— ì˜í•´ ì‹¤í–‰ ì—¬ë¶€ê°€ ê²°ì •ë  ì˜ˆì •ì´ë¯€ë¡œ í›„ì¼ ê¸°ì¬í•œë‹¤)
 			int gnum = (Integer) map.get("gnum");
 			Map<String, WebSocketSession> gameMember = gameMembersMap.get(gnum);
 			gameMember.put(nick, session);
-			System.out.println("¹æ ÀÔÀå ¿Ï·á");
+			System.out.println("ë°© ì…ì¥ ì™„ë£Œ");
 			Map<String, String> gameData = gameDataMap.get(gnum);
 			int memCnt = Integer.parseInt(gameData.get("memCnt")) + 1;
 			gameData.put("memCnt", Integer.toString(memCnt));
-			System.out.println("°ÔÀÓ ÀÎ¿ø¼ö Á¶Á¤:" + memCnt);
+			System.out.println("ê²Œì„ ì¸ì›ìˆ˜ ì¡°ì •:" + memCnt);
 			if (memCnt == 2) {
 				JSONObject startCmd = new JSONObject();
 				startCmd.put("cmd", "start");
@@ -356,61 +343,61 @@ public class GameHandler extends TextWebSocketHandler {
 					String key = Keys.next();
 					gameMember.get(key).sendMessage(new TextMessage(sJson));
 				}
-				System.out.println("¹æ ¾÷µ¥ÀÌÆ® ¿Ï·á");
+				System.out.println("ë°© ì—…ë°ì´íŠ¸ ì™„ë£Œ");
 				
 			}
 			
 			roomListupdate();
 		}
 		
-		System.out.println("Å¬¶óÀÌ¾ğÆ® Á¢¼ÓµÊ");
+		System.out.println("í´ë¼ì´ì–¸íŠ¸ ì ‘ì†ë¨");
 
 	}
 
-	// Å¬¶óÀÌ¾ğÆ®°¡ Á¢¼ÓÀ» Á¾·áÇÏ¸é È£ÃâµÇ´Â ¸Ş¼Òµå
+	// í´ë¼ì´ì–¸íŠ¸ê°€ ì ‘ì†ì„ ì¢…ë£Œí•˜ë©´ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		super.afterConnectionClosed(session, status);
 
-		// Á¢¼Ó Á¾·á½Ã À¯ÀúÀÇ ´Ğ³×ÀÓÀ» ¹Ş´Â´Ù
+		// ì ‘ì† ì¢…ë£Œì‹œ ìœ ì €ì˜ ë‹‰ë„¤ì„ì„ ë°›ëŠ”ë‹¤
 		Map<String, Object> map = session.getAttributes();
 		String nick = (String) map.get("usrNick");
 
-		// ´Ğ³×ÀÓÀ» °¡Áö°í ¼¼¼Ç¸ÊÀ» Æ¢Á® ÇØ´ç À¯Àú°¡ Á¸ÀçÇÒ ½Ã¿¡ À¯Àú¸¦ Áö¿î´Ù.
+		// ë‹‰ë„¤ì„ì„ ê°€ì§€ê³  ì„¸ì…˜ë§µì„ íŠ€ì ¸ í•´ë‹¹ ìœ ì €ê°€ ì¡´ì¬í•  ì‹œì— ìœ ì €ë¥¼ ì§€ìš´ë‹¤.
 		Iterator<String> listkeys = sessionMap.keySet().iterator();
 		while (listkeys.hasNext()) {
 			String key = listkeys.next();
 			if (key.equals(nick)) {
 				sessionMap.remove(nick);
-				System.out.println(nick + "·ë ¸®½ºÆ® Á¢¼ÓÁ¾·á");
+				System.out.println(nick + "ë£¸ ë¦¬ìŠ¤íŠ¸ ì ‘ì†ì¢…ë£Œ");
 				memListupdate();
 			}
 
 		}
 
-		// ´ÙÀ½À¸·Î ¹æ¿¡ ¼Ò¼ÓµÈ À¯Á®ÀÇ ¼¼¼ÇÀ» µÚÁö°Ô µÇ³ª ¾à°£ÀÇ ´Ü°è¸¦ ÇÊ¿ä·Î ÇÑ´Ù. ÀÏ´Ü ¹æ ¸ñ·Ï ¿ªÇÒÀ» ÇÏ´Â ¸®½ºÆ® ¸â¹ö ¸ÊÀÇ
-		// Å°¸¦ °¡Á®¿Â´Ù
+		// ë‹¤ìŒìœ¼ë¡œ ë°©ì— ì†Œì†ëœ ìœ ì ¸ì˜ ì„¸ì…˜ì„ ë’¤ì§€ê²Œ ë˜ë‚˜ ì•½ê°„ì˜ ë‹¨ê³„ë¥¼ í•„ìš”ë¡œ í•œë‹¤. ì¼ë‹¨ ë°© ëª©ë¡ ì—­í• ì„ í•˜ëŠ” ë¦¬ìŠ¤íŠ¸ ë©¤ë²„ ë§µì˜
+		// í‚¤ë¥¼ ê°€ì ¸ì˜¨ë‹¤
 		Iterator<Integer> roomkeys = listMemberMap.keySet().iterator();
 		while (roomkeys.hasNext()) {
-			// Å°°ªÀ» »ç¿ëÇØ¼­ ¸®½ºÆ® ¸â¹ö¸Ê ³»ºÎÀÇ °¢ ¹æÀÇ ´Ğ³×ÀÓ°ú ¼¼¼ÇÀÌ ´ã±ä ¸ÊÀ» ºÒ·¯³½´Ù.
+			// í‚¤ê°’ì„ ì‚¬ìš©í•´ì„œ ë¦¬ìŠ¤íŠ¸ ë©¤ë²„ë§µ ë‚´ë¶€ì˜ ê° ë°©ì˜ ë‹‰ë„¤ì„ê³¼ ì„¸ì…˜ì´ ë‹´ê¸´ ë§µì„ ë¶ˆëŸ¬ë‚¸ë‹¤.
 			int key = roomkeys.next();
 			Map<String, WebSocketSession> roomMemberMap = listMemberMap.get(key);
 
-			// ÇØ´ç¸ÊÀ» µÚÁ® ÀÏÄ¡ÇÏ´Â ´Ğ³×ÀÓÀÌ ÀÖÀ» °æ¿ì ÇØ´ç ¼¼¼ÇÀ» »èÁ¦ÇÑ´Ù.(ÈÄÀÏ Á¶°Ç¿¡ µû¸¥ ¸ÊÀÚÃ¼ »èÁ¦µµ »ı¼º ¿¹Á¤)
+			// í•´ë‹¹ë§µì„ ë’¤ì ¸ ì¼ì¹˜í•˜ëŠ” ë‹‰ë„¤ì„ì´ ìˆì„ ê²½ìš° í•´ë‹¹ ì„¸ì…˜ì„ ì‚­ì œí•œë‹¤.(í›„ì¼ ì¡°ê±´ì— ë”°ë¥¸ ë§µìì²´ ì‚­ì œë„ ìƒì„± ì˜ˆì •)
 			Iterator<String> roomkeys2 = roomMemberMap.keySet().iterator();
 			while (roomkeys2.hasNext()) {
 				String key2 = roomkeys2.next();
 				if (key2.equals(nick)) {
 					roomMemberMap.remove(nick);
-					System.out.println(nick + "·ë  Á¢¼ÓÁ¾·á");
+					System.out.println(nick + "ë£¸  ì ‘ì†ì¢…ë£Œ");
 
-					// Á¢¼Ó Á¾·á½Ã ¹æÀÇ Á¤º¸³»ÀÇ ÀÎ¿ø¼ö¸¦ ³»¸°´Ù.
+					// ì ‘ì† ì¢…ë£Œì‹œ ë°©ì˜ ì •ë³´ë‚´ì˜ ì¸ì›ìˆ˜ë¥¼ ë‚´ë¦°ë‹¤.
 					Map<String, String> roomDataMap = listDataMap.get(key);
 					int memCnt = Integer.parseInt(roomDataMap.get("memCnt")) - 1;
-					System.out.println("ÇöÀç ¹æ ÀÎ¿ø¼ö" + memCnt);
+					System.out.println("í˜„ì¬ ë°© ì¸ì›ìˆ˜" + memCnt);
 					roomDataMap.put("memCnt", Integer.toString(memCnt));
 
-					// ¸¸¾à ¹æÀÇ ÀÎ¿ø¼ö°¡ 0ÀÌ¶ó¸é ¹æÀÇ »óÅÂ¸¦ Ã¼Å©ÇÏ¿© ÀÏ¹İ ´ë±âÁßÀÏ½Ã ¹æÀ» Áö¿î´Ù.
+					// ë§Œì•½ ë°©ì˜ ì¸ì›ìˆ˜ê°€ 0ì´ë¼ë©´ ë°©ì˜ ìƒíƒœë¥¼ ì²´í¬í•˜ì—¬ ì¼ë°˜ ëŒ€ê¸°ì¤‘ì¼ì‹œ ë°©ì„ ì§€ìš´ë‹¤.
 					if (memCnt == 0) {
 						if (roomDataMap.get("roomCondition").equals("ready")) {
 							listDataMap.remove(key);
@@ -441,29 +428,29 @@ public class GameHandler extends TextWebSocketHandler {
 		//
 		Iterator<Integer> gamekeys = gameMembersMap.keySet().iterator();
 		while (gamekeys.hasNext()) {
-			// Å°°ªÀ» »ç¿ëÇØ¼­ ¸®½ºÆ® ¸â¹ö¸Ê ³»ºÎÀÇ °¢ ¹æÀÇ ´Ğ³×ÀÓ°ú ¼¼¼ÇÀÌ ´ã±ä ¸ÊÀ» ºÒ·¯³½´Ù.
+			// í‚¤ê°’ì„ ì‚¬ìš©í•´ì„œ ë¦¬ìŠ¤íŠ¸ ë©¤ë²„ë§µ ë‚´ë¶€ì˜ ê° ë°©ì˜ ë‹‰ë„¤ì„ê³¼ ì„¸ì…˜ì´ ë‹´ê¸´ ë§µì„ ë¶ˆëŸ¬ë‚¸ë‹¤.
 			int key = gamekeys.next();
 			Map<String, WebSocketSession> gameMember = gameMembersMap.get(key);
 
-			// ÇØ´ç¸ÊÀ» µÚÁ® ÀÏÄ¡ÇÏ´Â ´Ğ³×ÀÓÀÌ ÀÖÀ» °æ¿ì ÇØ´ç ¼¼¼ÇÀ» »èÁ¦ÇÑ´Ù.(ÈÄÀÏ Á¶°Ç¿¡ µû¸¥ ¸ÊÀÚÃ¼ »èÁ¦µµ »ı¼º ¿¹Á¤)
+			// í•´ë‹¹ë§µì„ ë’¤ì ¸ ì¼ì¹˜í•˜ëŠ” ë‹‰ë„¤ì„ì´ ìˆì„ ê²½ìš° í•´ë‹¹ ì„¸ì…˜ì„ ì‚­ì œí•œë‹¤.(í›„ì¼ ì¡°ê±´ì— ë”°ë¥¸ ë§µìì²´ ì‚­ì œë„ ìƒì„± ì˜ˆì •)
 			Iterator<String> gamekeys2 = gameMember.keySet().iterator();
 			while (gamekeys2.hasNext()) {
 				String key2 = gamekeys2.next();
 				if (key2.equals(nick)) {
 					gameMember.remove(nick);
-					System.out.println(nick + " °ÔÀÓ  Á¢¼ÓÁ¾·á");
+					System.out.println(nick + " ê²Œì„  ì ‘ì†ì¢…ë£Œ");
 
-					// Á¢¼Ó Á¾·á½Ã ¹æÀÇ Á¤º¸³»ÀÇ ÀÎ¿ø¼ö¸¦ ³»¸°´Ù.
+					// ì ‘ì† ì¢…ë£Œì‹œ ë°©ì˜ ì •ë³´ë‚´ì˜ ì¸ì›ìˆ˜ë¥¼ ë‚´ë¦°ë‹¤.
 					Map<String, String> gameData = gameDataMap.get(key);
 					int memCnt = Integer.parseInt(gameData.get("memCnt")) - 1;
-					System.out.println("ÇöÀç °ÔÀÓ ÀÜÁ¸¼ö" + memCnt);
+					System.out.println("í˜„ì¬ ê²Œì„ ì”ì¡´ìˆ˜" + memCnt);
 					gameData.put("memCnt", Integer.toString(memCnt));
 
-					// ¸¸¾à ¹æÀÇ ÀÎ¿ø¼ö°¡ 0ÀÌ¶ó¸é ¹æÀÇ »óÅÂ¸¦ Ã¼Å©ÇÏ¿© ÀÏ¹İ ´ë±âÁßÀÏ½Ã ¹æÀ» Áö¿î´Ù.
+					// ë§Œì•½ ë°©ì˜ ì¸ì›ìˆ˜ê°€ 0ì´ë¼ë©´ ë°©ì˜ ìƒíƒœë¥¼ ì²´í¬í•˜ì—¬ ì¼ë°˜ ëŒ€ê¸°ì¤‘ì¼ì‹œ ë°©ì„ ì§€ìš´ë‹¤.
 					if (memCnt == 0) {
 							gameDataMap.remove(key);
 							gameMembersMap.remove(key);
-							System.out.println("°ÔÀÓ »èÁ¦");
+							System.out.println("ê²Œì„ ì‚­ì œ");
 					} 
 				}
 
@@ -471,43 +458,43 @@ public class GameHandler extends TextWebSocketHandler {
 
 		}
 
-		System.out.println("Å¬¶óÀÌ¾ğÆ® Á¢¼ÓÇØÁ¦");
+		System.out.println("í´ë¼ì´ì–¸íŠ¸ ì ‘ì†í•´ì œ");
 	}
 
-	// ¸Ş½ÃÁö Àü¼Û½Ã³ª Á¢¼ÓÇØÁ¦½Ã ¿À·ù°¡ ¹ß»ıÇÒ ¶§ È£ÃâµÇ´Â ¸Ş¼Òµå
+	// ë©”ì‹œì§€ ì „ì†¡ì‹œë‚˜ ì ‘ì†í•´ì œì‹œ ì˜¤ë¥˜ê°€ ë°œìƒí•  ë•Œ í˜¸ì¶œë˜ëŠ” ë©”ì†Œë“œ
 	@Override
 	public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
 		super.handleTransportError(session, exception);
-		System.out.println("Àü¼Û¿À·ù ¹ß»ı");
+		System.out.println("ì „ì†¡ì˜¤ë¥˜ ë°œìƒ");
 	}
 
 	public void roomListupdate() throws Exception {
-		// Á¢¼ÓÀÚ¿¡°Ô ¹æ¸ñ·ÏÀÇ Á¤º¸¸¦ Àü¼ÛÇÏ±â À§ÇØ Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¿Í ¹è¿­À» ÁØºñÇÑ´Ù.
+		// ì ‘ì†ìì—ê²Œ ë°©ëª©ë¡ì˜ ì •ë³´ë¥¼ ì „ì†¡í•˜ê¸° ìœ„í•´ ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ì™€ ë°°ì—´ì„ ì¤€ë¹„í•œë‹¤.
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("cmd", "roomList");
 		JSONArray jsonArr = new JSONArray();
 
-		// ¹æ¸ñ·ÏÀ» ¸¸µé±â À§ÇØ ¹æÁ¤º¸¸Ê ¸ñ·ÏÀÇ Å°°ªÀ» ¹Ş¾Æ³½´Ù
+		// ë°©ëª©ë¡ì„ ë§Œë“¤ê¸° ìœ„í•´ ë°©ì •ë³´ë§µ ëª©ë¡ì˜ í‚¤ê°’ì„ ë°›ì•„ë‚¸ë‹¤
 		Iterator<Integer> keys = listDataMap.keySet().iterator();
 		while (keys.hasNext()) {
 			int listkey = keys.next();
 
-			// ¸®½ºÆ®¿¡ ´ãÀ» Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¸¦ ¸¸µç´Ù. ±×¸®°í ¹æÁ¤º¸¸ÊÀÇ Å°°ªÀÌ ¹æÀÇ ¹øÈ£ÀÌ¹Ç·Î
-			// ¹Ù·Î ¿ÀºêÁ§Æ®¿¡ ´ã´Â´Ù
+			// ë¦¬ìŠ¤íŠ¸ì— ë‹´ì„ ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ë¥¼ ë§Œë“ ë‹¤. ê·¸ë¦¬ê³  ë°©ì •ë³´ë§µì˜ í‚¤ê°’ì´ ë°©ì˜ ë²ˆí˜¸ì´ë¯€ë¡œ
+			// ë°”ë¡œ ì˜¤ë¸Œì íŠ¸ì— ë‹´ëŠ”ë‹¤
 			JSONObject listData = new JSONObject();
 			listData.put("rnum", listkey);
 
-			// ¹æÁ¤º¸¸Ê ¸ñ·Ï¿¡¼­ ¹æÁ¤º¸ ¸ÊÀ» Å°°ªÀ» ÀÌ¿ëÇØ °¡Á®¿À°í ±× ¾È¿¡¼­ °¢Á¾ Á¤º¸¸¦
-			// »Ì¾Æ³»¾î Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¿¡ ´ã´Â´Ù
+			// ë°©ì •ë³´ë§µ ëª©ë¡ì—ì„œ ë°©ì •ë³´ ë§µì„ í‚¤ê°’ì„ ì´ìš©í•´ ê°€ì ¸ì˜¤ê³  ê·¸ ì•ˆì—ì„œ ê°ì¢… ì •ë³´ë¥¼
+			// ë½‘ì•„ë‚´ì–´ ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ì— ë‹´ëŠ”ë‹¤
 			Map<String, String> DataMap = listDataMap.get(listkey);
 			String roomName = DataMap.get("roomName");
 			listData.put("roomName", roomName);
 
-			// ¿Ï¼ºµÈ Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¸¦ ¹è¿­¿¡ ´ã´Â´Ù
+			// ì™„ì„±ëœ ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ë¥¼ ë°°ì—´ì— ë‹´ëŠ”ë‹¤
 			jsonArr.add(listData);
 		}
 
-		// ¹İÈ¯¿ë Á¦ÀÌ½¼ ¿ÀºêÁ§Æ®¿¡ ¿Ï¼ºµÈ ¹è¿­À» ´ã°í ¹®ÀÚ¿­·Î ¸¸µç´Ù
+		// ë°˜í™˜ìš© ì œì´ìŠ¨ ì˜¤ë¸Œì íŠ¸ì— ì™„ì„±ëœ ë°°ì—´ì„ ë‹´ê³  ë¬¸ìì—´ë¡œ ë§Œë“ ë‹¤
 		jsonObj.put("list", jsonArr);
 		String sJson = jsonObj.toJSONString();
 
@@ -519,7 +506,7 @@ public class GameHandler extends TextWebSocketHandler {
 	}
 
 	public void memListupdate() throws Exception {
-		// ÇöÀç ÀÌ¿ëÁßÀÎ ÀÌ¿ëÀÚ¿¡°Ô °»½ÅµÈ ¸®½ºÆ® Àü¼Û
+		// í˜„ì¬ ì´ìš©ì¤‘ì¸ ì´ìš©ìì—ê²Œ ê°±ì‹ ëœ ë¦¬ìŠ¤íŠ¸ ì „ì†¡
 		JSONObject jsonMem = new JSONObject();
 		jsonMem.put("cmd", "memList");
 		JSONArray memList = new JSONArray();
@@ -542,7 +529,7 @@ public class GameHandler extends TextWebSocketHandler {
 
 		Iterator<Integer> roomkeys = listMemberMap.keySet().iterator();
 		while (roomkeys.hasNext()) {
-			// Å°°ªÀ» »ç¿ëÇØ¼­ ¸®½ºÆ® ¸â¹ö¸Ê ³»ºÎÀÇ °¢ ¹æÀÇ ´Ğ³×ÀÓ°ú ¼¼¼ÇÀÌ ´ã±ä ¸ÊÀ» ºÒ·¯³½´Ù.
+			// í‚¤ê°’ì„ ì‚¬ìš©í•´ì„œ ë¦¬ìŠ¤íŠ¸ ë©¤ë²„ë§µ ë‚´ë¶€ì˜ ê° ë°©ì˜ ë‹‰ë„¤ì„ê³¼ ì„¸ì…˜ì´ ë‹´ê¸´ ë§µì„ ë¶ˆëŸ¬ë‚¸ë‹¤.
 			Map<String, WebSocketSession> roomMemberMap = listMemberMap.get(roomkeys.next());
 
 			Iterator<String> roomkeys2 = roomMemberMap.keySet().iterator();
@@ -558,7 +545,7 @@ public class GameHandler extends TextWebSocketHandler {
 	private void roomUpdate(Map<String, WebSocketSession> roomMemberMap, Map<String, String> roomDataMap)
 			throws Exception {
 
-		// ¹æ ³»ºÎ ÀÎ¿ø¿¡°Ô ¹æ Á¤º¸¸¦ Àü¼ÛÇÑ´Ù.
+		// ë°© ë‚´ë¶€ ì¸ì›ì—ê²Œ ë°© ì •ë³´ë¥¼ ì „ì†¡í•œë‹¤.
 		JSONObject roomData = new JSONObject();
 		roomData.put("cmd", "roomUpdate");
 
@@ -586,9 +573,9 @@ public class GameHandler extends TextWebSocketHandler {
 		while (roomMemberKeys.hasNext()) {
 			String key = roomMemberKeys.next();
 			roomMemberMap.get(key).sendMessage(new TextMessage(sJson));
-			System.out.println(key + "¿¡°Ô Àü¼Û ¿Ï·á");
+			System.out.println(key + "ì—ê²Œ ì „ì†¡ ì™„ë£Œ");
 		}
-		System.out.println("¹æ ¾÷µ¥ÀÌÆ® ¿Ï·á");
+		System.out.println("ë°© ì—…ë°ì´íŠ¸ ì™„ë£Œ");
 
 	}
 }

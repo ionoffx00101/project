@@ -13,12 +13,15 @@ canvas { border: 1px solid #555555;}
 	var nick = "${nick}";
 	var rnum = "${rnum}";
 	var gnum = "${gnum}";
+	
+	/* var canvas2 = document.getElementById('canvas2');
+	var ctx2 = canvas2.getContext('2d'); */
 
 	$(function() {
 		
+		setImage();
 		var canvasBuffer2 = document.createElement("canvas");
-		var ctx2 = document.getElementById("canvas2").getContext("2d"),
-		canvasTemp2 = document.createElement("canvas"), scrollImg2 = new Image(), tempContext2 = canvasTemp2.getContext("2d"), imgWidth2 = 0, imgHeight2 = 0, imageData2 = {}, canvasWidth2 = 500, canvasHeight2 = 1530, scrollVal2 = 0, speed2 = 2;
+		var ctx2 = document.getElementById("canvas2").getContext("2d"),canvasWidth2 = 500, canvasHeight2 = 1530;
 		//var ws = new WebSocket("ws://localhost:8888/MavenWeb/wsinit");
 		var ws = new WebSocket(
 				"ws://192.168.8.55:8500/project/game?position=game&nick=" + nick
@@ -29,17 +32,14 @@ canvas { border: 1px solid #555555;}
 		ws.onmessage = function(event) {
 			var ob = eval("(" + event.data + ")");
 			if (ob.cmd == "start") {
-				scrollImg.src = "<c:url value="../resources/img/backGround.jpg"/>";
-				scrollImg.onload = loadImage;
-				/*  배경 이미지 로드 선언 스크롤링 변수는 위쪽 변수 선언때 캔버스 템프 안에 들어가 있다 */
-				scrollImg2.src = "<c:url value="../resources/img/backGround.jpg"/>";
-				scrollImg2.onload = loadImage2;
+				gameStart();
 			}
 			if (ob.cmd == 'end') {
 				alert('게임이 종료 되었습니다');
 				location.href = "roomIn?rnum=" + rnum;
 			}
 			if (ob.cmd == 'playing'){
+				console.log('in');
 				var Player2 = ob.remotePlayer;
 				remoteTwoplayer(Player2);
 			}
@@ -56,30 +56,17 @@ canvas { border: 1px solid #555555;}
 			ws.send(JSON.stringify(msg));
 
 		});
-		
-		function loadImage2() {
-			/* 사용된 이미지의 폭과 너비를 저장하고 그림용 펜의 역할을 수행하는 캔버스 템프에도 담아둔다  */
-			imgWidth2 = scrollImg2.width, imgHeight2 = scrollImg2.height;
-			canvasTemp2.width = imgWidth2;
-			canvasTemp2.height = imgHeight2;
+		function setImage() {
 
-			/* 그림을 그리고 현재 그림의 테이터를 담아둔다 */
-			tempContext2.drawImage(scrollImg2, 0, 0, imgWidth2, imgHeight2);
-			imageData2 = tempContext2.getImageData(0, 0, imgWidth2, imgHeight2);
-
-			/* 캔버스 버퍼 객체에 펜을 담는다 */
-			canvasBuffer2 = document.createElement("canvas");
-		
-			twoplayerdraw();
-
-		}
-	function twoplayerdraw() {
-		
-			spaceShipSprit2 = new Image();
-			spaceShipSprit2.src = "<c:url value="../resources/img/samplespaceships.png"/>";
+			spaceShipSprit = new Image();
+			spaceShipSprit.src = "<c:url value="../resources/img/samplespaceships.png"/>";
 			/* 아군 탄환 이미지 */
 			playerBulletimg = new Image();
 			playerBulletimg.src = "<c:url value="../resources/img/laserGreen11.png"/>";
+
+			/* 아이템 이미지 > 현재는 네모칸으로 해놔서 이미지를 사용하지 않는다 */
+			itemimg = new Image();
+			itemimg.src = "<c:url value="../resources/img/laserGreen14.png"/>";
 
 			/* 적 탄환 플레이어 충돌 이미지 */
 			explosionimg = new Image();
@@ -88,98 +75,52 @@ canvas { border: 1px solid #555555;}
 			/* 아군 탄환 적탄환 충돌 이미지 */
 			laserimg = new Image();
 			laserimg.src = "<c:url value="../resources/img/lazer_exp.png"/>";
+		}
+
+		function twoplayerdraw() {
+			/* var canvasBuffer2;
+			 var ctx2 = document.getElementById("2p").getContext("2d"); 
+			canvasBuffer2 = document.createElement("canvas"); */
 			
-			
 
-	}
-	function remoteTwoplayer(Player2) {
-			ctx2.clearRect(0, 0, canvasWidth2, canvasHeight2);
-			/*  캔버스를 한번 지운다 */
-
-			if (scrollVal2 >= canvasHeight2 - speed2) {
-				scrollVal2 = 0;
-			}
-			/* 혹시 스크롤 한바퀴 다돌아 간경우 스크롤을 초기화한다 */
-
-			scrollVal2 += speed2;
-			/* 지정된 속도를 기준으로 스크롤의 값이 늘어난다(그리는 위치가 변경된다) */
-
-			// This is the bread and butter, you have to make sure the imagedata isnt larger than the canvas your putting image data to.
-			//back buffer에 그려진 배경이미지의 끝부분(아래쪽)을 복사해서 Canvas의 앞부분(위쪽)에 붙여 넣는다
-			imageData2 = tempContext2.getImageData(0, canvasHeight2 - scrollVal2, canvasWidth2, canvasHeight2);
-			ctx2.putImageData(imageData2, 0, 0, 0, 0, canvasWidth2, imgHeight2);
-
-			//back buffer에 그려진 배경이미지의 시작부분(위쪽)을 복사해서 Canavas의 뒷부분(아래쪽)에 붙여 넣는다
-			imageData2 = tempContext2.getImageData(0, 0, canvasWidth2, canvasHeight2 - scrollVal2);
-			ctx2.putImageData(imageData2, 0, scrollVal2, 0, 0, canvasWidth2, imgHeight2);
-			/* 배경 스크롤을 그려주는 부분 */
-
-			/* 아군 탄환 그리기   */
-	/* 		for (var i = 0; i < playerBullet.length; i++) {
-				ctx.drawImage(playerBulletimg, //Source Image
-				0, 0, //X, Y Position on spaceShipSprit
-				9, 54, //Cut Size from spaceShipSprit
-				playerBullet[i].x, playerBullet[i].y, //View Position
-				5, 20 //View Size
-				);
-				ctx.drawImage(canvasBuffer, 0, 0);
-			} */
-
-			/* 플레이어 기체를 그려준다 */
-			ctx2.drawImage(spaceShipSprit2, //Source Image
-			405, 180, //X, Y Position on spaceShipSprit
-			Player2.width, Player2.height,  //Cut Size from spaceShipSprit
-			Player2.x, Player2.y, //View Position
-			Player2.width, Player2.height //View Size
-			);
-			ctx2.drawImage(canvasBuffer2, 0, 0);
-
-			/*  탄환(적기체)를 그려준다 */
-			/* for (var i = 0; i < enemyBalls.length; i++) {
-				ctx.fillStyle = enemyBalls[i].color;
-				ctx.beginPath();
-				ctx.arc(enemyBalls[i].x, enemyBalls[i].y, enemyBalls[i].radius, 0, Math.PI * 2, true)
-				ctx.closePath();
-				ctx.fill();
-			} */
-
-			/* 아이템을 그려준다   */
-			/* for (var i = 0; i < item.length; i++) {
-			
-				switch (i) {
-				case 0:
-					item[i].color = '#ff0000';
-					break;
-				case 1:
-					item[i].color = '#ffff00';
-					break;
-				case 2:
-					item[i].color = '#ff00ff';
-					break;
-				case 3:
-					item[i].color = '#00ffff';
-					break;
-				default:
-					break;
-				}
-				
-				ctx.fillStyle = item[i].color;
-				ctx.fillRect(item[i].x, item[i].y, item[i].width, item[i].height);
-			} */
-
-			/* 탄환 충돌 이펙트를 그린다 */
-			/* for (var i = 0; i < laser.length; i++) {
-				if (laser[i].use) {
-					ctx.drawImage(laserimg, laser[i].x, laser[i].y, laser[i].w, laser[i].h, laser[i].exx, laser[i].exy, 32, 32);
-				}
-			} */
-
-			
+		}
+	 
+	function gameStart(){
 		
+	$(oneplayerdraw);
+	/*	$(twoplayerdraw);  //두번째 화면(2p) 객체 미리 생성 해놓고 그리기 준비
+		 */
 	}
+	
+	
+	function remoteTwoplayer(Player2) {
+		console.log('ino'+Player2.x);
+		ctx2.clearRect(0, 0, canvasWidth2, canvasHeight2);
+		/*  캔버스를 한번 지운다 */
+
+		/* 플레이어 기체를 그려준다 */
+		ctx2.drawImage(spaceShipSprit, //Source Image
+		405, 180, //X, Y Position on spaceShipSprit
+		Player2.width, Player2.height,  //Cut Size from spaceShipSprit
+		Player2.x, Player2.y, //View Position
+		Player2.width, Player2.height //View Size
+		);
+		//ctx2.drawImage(canvasBuffer2, 0, 0);
+
+	
+	}
+	
+	
+	
+	function oneplayerdraw() {
 		var ctx = document.getElementById("canvas").getContext("2d"),
 		canvasTemp = document.createElement("canvas"), scrollImg = new Image(), tempContext = canvasTemp.getContext("2d"), imgWidth = 0, imgHeight = 0, imageData = {}, canvasWidth = 500, canvasHeight = 1530, scrollVal = 0, speed = 2;
 		/* 위쪽은 선생님 코드의 변수 선언, 그림을 그려주는 개체가 둘 필요하기때문에(그림의 처음과 끝을 이어 붙여야 하므로) 두 객체를 선언한다. 아래쪽 캔버스 템프는 조금 간략화된 클래스 선언으로 해당 객체에 상기와 같은 속성을 집어 넣어 준것이다 */
+		
+		
+		scrollImg.src = "<c:url value="../resources/img/backGround.jpg"/>";
+		scrollImg.onload = loadImage;
+		/*  배경 이미지 로드 선언 스크롤링 변수는 위쪽 변수 선언때 캔버스 템프 안에 들어가 있다 */
 
 		var playerUnit = {};
 		var keyPressOn = {};//pressed - true
@@ -247,7 +188,7 @@ canvas { border: 1px solid #555555;}
 			/*   창 자체에 이벤트 리스너를 설정하고 이미지를 불러와 기체 그림에 집어 넣는다 */
 			document.addEventListener("keydown", getKeyDown, false);
 			document.addEventListener("keyup", getKeyUp, false);
-			setImage();
+			
 
 			/*  탄환 객체 선언 특정 개체를 배열로 만들고  */
 			enemyBalls = new Array();
@@ -270,26 +211,7 @@ canvas { border: 1px solid #555555;}
 		}
 
 		/* 2.기체이미지를 가져오는 펑션 */
-		function setImage() {
-
-			spaceShipSprit = new Image();
-			spaceShipSprit.src = "<c:url value="../resources/img/samplespaceships.png"/>";
-			/* 아군 탄환 이미지 */
-			playerBulletimg = new Image();
-			playerBulletimg.src = "<c:url value="../resources/img/laserGreen11.png"/>";
-
-			/* 아이템 이미지 > 현재는 네모칸으로 해놔서 이미지를 사용하지 않는다 */
-			itemimg = new Image();
-			itemimg.src = "<c:url value="../resources/img/laserGreen14.png"/>";
-
-			/* 적 탄환 플레이어 충돌 이미지 */
-			explosionimg = new Image();
-			explosionimg.src = "<c:url value="../resources/img/explosion-sprite-sheet.png"/>";
-
-			/* 아군 탄환 적탄환 충돌 이미지 */
-			laserimg = new Image();
-			laserimg.src = "<c:url value="../resources/img/lazer_exp.png"/>";
-		}
+		
 
 		/* 3.탄환객체를 만드는 펑션 */
 		function createEnemyBalls(iCount) {
@@ -458,7 +380,7 @@ canvas { border: 1px solid #555555;}
 			
 			/* 탄환 속도 제한을 위해 시간 체크 */
 			spacecnt++;
-			if(spacecnt%10==0){
+			if(spacecnt%5==0){
 				spacetimer=true;
 			}
 			else{
@@ -988,6 +910,8 @@ canvas { border: 1px solid #555555;}
 			}
 		}
 
+	}
+	
 	});
 </script>
 </head>

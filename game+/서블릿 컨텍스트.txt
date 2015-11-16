@@ -1,0 +1,16 @@
+<beans:bean id="GameHandler" class="org.kdea.sgp.game.GameHandler" />
+	<websocket:handlers>
+		<websocket:mapping path="/game" handler="GameHandler" />
+		<websocket:handshake-interceptors>
+			<beans:bean class="org.kdea.sgp.game.GameInterceptor" />
+		</websocket:handshake-interceptors>
+	</websocket:handlers>
+
+
+
+var ws = new WebSocket(
+				"ws://192.168.8.55:8500/project/game?position=game&nick=" + nick
+						+ "&gnum=" + gnum + "&rnum=" + rnum);
+		ws.onopen = function() {
+
+πŸ≤„¡÷±‚
