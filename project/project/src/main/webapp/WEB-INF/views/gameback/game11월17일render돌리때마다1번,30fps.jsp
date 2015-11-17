@@ -130,7 +130,7 @@ canvas {
 					ctx2.drawImage(canvasBuffer2, 0, 0);
 				}
 			}
-			/* 플레이어 기체를 그려준다 */z
+			/* 플레이어 기체를 그려준다 */
 			ctx2.drawImage(spaceShipSprit2, //Source Image
 			405, 180, 36, 36, //고정시켜버림
 			Player2.x, Player2.y, //View Position
@@ -219,7 +219,7 @@ canvas {
 				y : canvas.height / 2 - 18,
 				width : 36,
 				height : 36,
-				speed : 9
+				speed : 3
 			};
 
 			/*   창 자체에 이벤트 리스너를 설정하고 이미지를 불러와 기체 그림에 집어 넣는다 */
@@ -288,7 +288,7 @@ canvas {
 
 				/* 탄환의 방향,속도 설정 */
 				var startAngle = Math.floor((Math.random() * 60) + 60);
-				var startSpeed = Math.floor(Math.random() * (2)) + 6;
+				var startSpeed = Math.floor(Math.random() * (2)) + 2;
 
 				/*  속도에 따라 색을 다르게 설정한다 */
 				var startColor;
@@ -458,7 +458,7 @@ canvas {
 
 				/* database = new Array(); */
 			}
-			if (spacecnt % 6 == 0) {
+			if (spacecnt % 20 == 0) {
 				spacetimer = true;
 			} else {
 				spacetimer = false;
@@ -579,7 +579,7 @@ canvas {
 
 				setTimeout(function() {
 					render();
-				}, 1000 / 25);
+				}, 1000 / 30);
 			}
 
 		}
@@ -592,7 +592,7 @@ canvas {
 
 				var bullet = {
 					x : 600,
-					y : 1500,
+					y : 600,
 					use : false
 				};
 				/* 탄환 객체를 만들어 지금까지 생성한 값을 집어 넣는다 */
@@ -625,7 +625,7 @@ canvas {
 
 					playerBullet[playerBulletcnt].x = playerUnit.x + (width * i) - 2;
 					playerBullet[playerBulletcnt].y = playerUnit.y + playerUnit.height / 2;
-					playerBulletinfo[playerBulletcnt].speed = 9;
+					playerBulletinfo[playerBulletcnt].speed = 3;
 					playerBullet[playerBulletcnt].use = true;
 					playerBulletcnt++;
 					if (playerBulletcnt > (playerBulletMax - 1)) {
@@ -658,7 +658,7 @@ canvas {
 		//아군 탄환 객체 사용하지않음으로 변경 후 객체 값 초기화
 		function nouseplayerBullet(i) {
 			playerBullet[i].x = 600;
-			playerBullet[i].y = 1600;
+			playerBullet[i].y = 600;
 			playerBulletinfo[i].speed = 0;/* 0으로 해서 보이지 않는공은 아무것도 안함 */
 			playerBullet[i].use = false;
 		}
@@ -704,7 +704,7 @@ canvas {
 				var newitem = {
 					itemcode : i,
 					x : 600,
-					y : 1500,
+					y : 600,
 					use : false
 				};
 				var newiteminfo = {
@@ -729,8 +729,8 @@ canvas {
 
 			item[i].x = Math.floor(Math.random() * (canvas.width - 1)) + 1;
 			item[i].y = 0;
-			iteminfo[i].xspeed = 7;
-			iteminfo[i].yspeed = 7;
+			iteminfo[i].xspeed = 3;
+			iteminfo[i].yspeed = 3;
 			iteminfo[i].angle = Math.floor((Math.random() * 60) + 60);
 			item[i].use = true;
 
@@ -790,7 +790,7 @@ canvas {
 		/*아이템 초기화 */
 		function nouseplayeritem(i) {
 			item[i].x = 600;
-			item[i].y = 1500;
+			item[i].y = 600;
 			iteminfo[i].xspeed = 0;
 			iteminfo[i].yspeed = 0;
 			iteminfo[i].angle = 0;
@@ -906,7 +906,7 @@ canvas {
 
 				setTimeout(function() {
 					playerExplosion();
-				}, 1000 / 25);
+				}, 1000 / 30);
 			} else {
 				/*  폭발이벤트가 끝나면 배경을 뺀 모든 그림을 초기화 시킨다. */
 

@@ -211,10 +211,8 @@ public class GameHandler extends TextWebSocketHandler {
 						int gnum = (Integer) map.get("gnum");
 						String nick = (String) map.get("nick"); // 닉이 같을때 보내지 않
 						
-					/*	Object gamedata = map.get("gamedata");
+						//System.out.println(payloadMessage);
 						
-						System.out.println(payloadMessage);
-						*/
 						Map<String, WebSocketSession> gameMember = gameMembersMap.get(gnum);
 						Iterator<String> Keys = gameMember.keySet().iterator();
 						while (Keys.hasNext()) {

@@ -98,8 +98,7 @@ canvas {
 
 			var Player2 = data.remotePlayer;
 			var enemyBalls2 = data.remoteenemyBalls;
-			var playerBullet2 = data.remoteplayerBullet;
-			var item2 = data.remoteitem;
+			
 			ctx2.clearRect(0, 0, canvasWidth2, canvasHeight2);
 			/*  캔버스를 한번 지운다 */
 
@@ -118,37 +117,20 @@ canvas {
 			imageData2 = tempContext2.getImageData(0, 0, canvasWidth2, canvasHeight2 - scrollVal2);
 			ctx2.putImageData(imageData2, 0, scrollVal2, 0, 0, canvasWidth2, imgHeight2);
 
-			/* 아군 탄환 그리기   */
-			for (var i = 0; i < playerBullet2.length; i++) {
-				if (playerBullet2[i].use) {
-					ctx2.drawImage(playerBulletimg2, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					9, 54, //Cut Size from spaceShipSprit
-					playerBullet2[i].x, playerBullet2[i].y, //View Position
-					5, 20 //View Size
-					);
-					ctx2.drawImage(canvasBuffer2, 0, 0);
-				}
-			}
-			/* 플레이어 기체를 그려준다 */z
+			/* 플레이어 기체를 그려준다 */
 			ctx2.drawImage(spaceShipSprit2, //Source Image
 			405, 180, 36, 36, //고정시켜버림
 			Player2.x, Player2.y, //View Position
 			36, 36 //고정시켜버림
 			);
 			ctx2.drawImage(canvasBuffer2, 0, 0);
-
+			
 			for (var i = 0; i < enemyBalls2.length; i++) {
 				ctx2.fillStyle = '#ffffff';
 				ctx2.beginPath();
 				ctx2.arc(enemyBalls2[i].x, enemyBalls2[i].y, 8, 0, Math.PI * 2, true)
 				ctx2.closePath();
 				ctx2.fill();
-			}
-			/* 아이템을 그려준다   */
-			for (var i = 0; i < item2.length; i++) {
-				ctx2.fillStyle = '#ffffff';
-				ctx2.fillRect(item2[i].x, item2[i].y, 30, 30);
 			}
 
 		}
@@ -182,7 +164,6 @@ canvas {
 		/* 아이템 관련 변수  */
 		var itemimg;
 		var item;
-		var iteminfo;
 		var itemMax = 5;
 
 		/* 아이템 기능 관련 변수  */
@@ -219,7 +200,7 @@ canvas {
 				y : canvas.height / 2 - 18,
 				width : 36,
 				height : 36,
-				speed : 9
+				speed : 3
 			};
 
 			/*   창 자체에 이벤트 리스너를 설정하고 이미지를 불러와 기체 그림에 집어 넣는다 */
@@ -239,7 +220,6 @@ canvas {
 
 			/* 아이템 객체 선언 및 배열 내용 생성   */
 			item = new Array();
-			iteminfo = new Array();
 			createitem(itemMax);
 
 			/* 탄환 충돌시 애니메이션 발생 관련 객체 선언 및 배열 내용 생성   */
@@ -288,7 +268,7 @@ canvas {
 
 				/* 탄환의 방향,속도 설정 */
 				var startAngle = Math.floor((Math.random() * 60) + 60);
-				var startSpeed = Math.floor(Math.random() * (2)) + 6;
+				var startSpeed = Math.floor(Math.random() * (2)) + 2;
 
 				/*  속도에 따라 색을 다르게 설정한다 */
 				var startColor;
@@ -437,10 +417,10 @@ canvas {
 			};
 			var data = {
 				remotePlayer : remotePlayer,
-				remoteplayerBullet : playerBullet,
+				/* remoteplayerBullet : playerBullet, */
 				remoteenemyBalls : enemyBalls,
-			 remoteitem:item,
-			 /*remotelaser:laser,
+			/* remoteitem:item,
+			remotelaser:laser,
 			remotegameend:false  */
 			};
 			/* database.push(data); */
@@ -458,7 +438,7 @@ canvas {
 
 				/* database = new Array(); */
 			}
-			if (spacecnt % 6 == 0) {
+			if (spacecnt % 20 == 0) {
 				spacetimer = true;
 			} else {
 				spacetimer = false;
@@ -527,23 +507,23 @@ canvas {
 				/* 아이템에 따라 다른 색을 넣어준다 */
 				switch (i) {
 				case 0:
-					iteminfo[i].color = '#ff0000';
+					item[i].color = '#ff0000';
 					break;
 				case 1:
-					iteminfo[i].color = '#ffff00';
+					item[i].color = '#ffff00';
 					break;
 				case 2:
-					iteminfo[i].color = '#ff00ff';
+					item[i].color = '#ff00ff';
 					break;
 				case 3:
-					iteminfo[i].color = '#00ffff';
+					item[i].color = '#00ffff';
 					break;
 				default:
 					break;
 				}
 				/* 그린다 */
-				ctx.fillStyle = iteminfo[i].color;
-				ctx.fillRect(item[i].x, item[i].y, iteminfo[i].width, iteminfo[i].height);
+				ctx.fillStyle = item[i].color;
+				ctx.fillRect(item[i].x, item[i].y, item[i].width, item[i].height);
 			}
 
 			/* 탄환 충돌 이펙트를 그린다 */
@@ -579,7 +559,7 @@ canvas {
 
 				setTimeout(function() {
 					render();
-				}, 1000 / 25);
+				}, 1000 / 120);
 			}
 
 		}
@@ -592,19 +572,17 @@ canvas {
 
 				var bullet = {
 					x : 600,
-					y : 1500,
-					use : false
-				};
-				/* 탄환 객체를 만들어 지금까지 생성한 값을 집어 넣는다 */
-				var bulletinfo = {
+					y : 600,
 					color : "#00ffff",
 					radius : 4, /*원의 크기*/
 					speed : 0,
 					angle : 4,
-					radians : 0
+					radians : 0,
+					use : false
 				};
+				/* 탄환 객체를 만들어 지금까지 생성한 값을 집어 넣는다 */
+
 				playerBullet.push(bullet);
-				playerBulletinfo.push(bulletinfo);
 				/* 탄환 배열에 집어 넣는다. 이 펑션으로 확실해지는 것은 화면내에 물체 하나를 추가 할때마다 다수의 값을 가진(용량이 제법 되는)객체가 만들어져야 한다는것, 패턴 가짓수 만들기에는 주의가 필요하다 */
 			}
 		}
@@ -625,7 +603,7 @@ canvas {
 
 					playerBullet[playerBulletcnt].x = playerUnit.x + (width * i) - 2;
 					playerBullet[playerBulletcnt].y = playerUnit.y + playerUnit.height / 2;
-					playerBulletinfo[playerBulletcnt].speed = 9;
+					playerBullet[playerBulletcnt].speed = 3;
 					playerBullet[playerBulletcnt].use = true;
 					playerBulletcnt++;
 					if (playerBulletcnt > (playerBulletMax - 1)) {
@@ -642,7 +620,7 @@ canvas {
 
 			for (var i = 0; i < playerBullet.length; i++) {
 				if (playerBullet[i].use) {/* 사용하는 공만 움직임 */
-					playerBullet[i].y -= playerBulletinfo[i].speed;
+					playerBullet[i].y -= playerBullet[i].speed;
 
 					if (playerBullet[i].x > canvas.width || playerBullet[i].x < 0) {
 						nouseplayerBullet(i);
@@ -658,8 +636,8 @@ canvas {
 		//아군 탄환 객체 사용하지않음으로 변경 후 객체 값 초기화
 		function nouseplayerBullet(i) {
 			playerBullet[i].x = 600;
-			playerBullet[i].y = 1600;
-			playerBulletinfo[i].speed = 0;/* 0으로 해서 보이지 않는공은 아무것도 안함 */
+			playerBullet[i].y = 600;
+			playerBullet[i].speed = 0;/* 0으로 해서 보이지 않는공은 아무것도 안함 */
 			playerBullet[i].use = false;
 		}
 
@@ -704,10 +682,7 @@ canvas {
 				var newitem = {
 					itemcode : i,
 					x : 600,
-					y : 1500,
-					use : false
-				};
-				var newiteminfo = {
+					y : 600,
 					color : "#ffffff",
 					width : 30,
 					height : 30,
@@ -715,11 +690,12 @@ canvas {
 					yspeed : 0,
 					angle : 0,
 					radius : 4,
-					radians : Math.PI / 180
+					radians : Math.PI / 180,
+					use : false
 				};
 				/* 아이템 객체를 만들어 지금까지 생성한 값을 집어 넣는다 */
-				item.push(newitem)
-				iteminfo.push(newiteminfo);
+
+				item.push(newitem);
 				/* 아이템 배열에 집어 넣는다. 이 펑션으로 확실해지는 것은 화면내에 물체 하나를 추가 할때마다 다수의 값을 가진(용량이 제법 되는)객체가 만들어져야 한다는것, 패턴 가짓수 만들기에는 주의가 필요하다 */
 			}
 
@@ -729,9 +705,9 @@ canvas {
 
 			item[i].x = Math.floor(Math.random() * (canvas.width - 1)) + 1;
 			item[i].y = 0;
-			iteminfo[i].xspeed = 7;
-			iteminfo[i].yspeed = 7;
-			iteminfo[i].angle = Math.floor((Math.random() * 60) + 60);
+			item[i].xspeed = 3;
+			item[i].yspeed = 3;
+			item[i].angle = Math.floor((Math.random() * 60) + 60);
 			item[i].use = true;
 
 		}
@@ -739,12 +715,12 @@ canvas {
 		function calcitem() {
 			for (var i = 0; i < item.length; i++) {
 				if (item[i].use) {
-					iteminfo[i].radians = iteminfo[i].angle * Math.PI / 180;
-					item[i].x += Math.cos(iteminfo[i].radians) * iteminfo[i].xspeed;
-					item[i].y += Math.sin(iteminfo[i].radians) * iteminfo[i].yspeed;
+					item[i].radians = item[i].angle * Math.PI / 180;
+					item[i].x += Math.cos(item[i].radians) * item[i].xspeed;
+					item[i].y += Math.sin(item[i].radians) * item[i].yspeed;
 
 					if (item[i].x > canvas.width - 30 || item[i].x < 5) {
-						iteminfo[i].xspeed *= -1;
+						item[i].xspeed *= -1;
 					} else if (item[i].y > canvas.height || item[i].y < 0) {
 						nouseplayeritem(i);
 					}
@@ -765,11 +741,11 @@ canvas {
 				/* 사용하는 공만 충돌판정 확인함 */
 				if (item[i].use) {
 
-					var distanceX = (playerUnit.x + playerUnit.width / 2) - (item[i].x + iteminfo[i].width / 2);
-					var distanceY = (playerUnit.y + playerUnit.height / 2) - (item[i].y + iteminfo[i].height / 2);
+					var distanceX = (playerUnit.x + playerUnit.width / 2) - (item[i].x + item[i].width / 2);
+					var distanceY = (playerUnit.y + playerUnit.height / 2) - (item[i].y + item[i].height / 2);
 					var distance = distanceX * distanceX + distanceY * distanceY;
 
-					if (distance <= (iteminfo[i].width / 2 + (playerUnit.width / 2 - 10)) * (iteminfo[i].height / 2 + (playerUnit.height / 2 - 10))) {
+					if (distance <= (item[i].width / 2 + (playerUnit.width / 2 - 10)) * (item[i].height / 2 + (playerUnit.height / 2 - 10))) {
 						/*아이템 초기화 */
 						nouseplayeritem(i);
 
@@ -790,10 +766,10 @@ canvas {
 		/*아이템 초기화 */
 		function nouseplayeritem(i) {
 			item[i].x = 600;
-			item[i].y = 1500;
-			iteminfo[i].xspeed = 0;
-			iteminfo[i].yspeed = 0;
-			iteminfo[i].angle = 0;
+			item[i].y = 600;
+			item[i].xspeed = 0;
+			item[i].yspeed = 0;
+			item[i].angle = 0;
 			item[i].use = false;
 
 		}
@@ -860,22 +836,22 @@ canvas {
 			for (var i = 0; i < item.length; i++) {
 				switch (i) {
 				case 0:
-					iteminfo[i].color = '#ff0000';
+					item[i].color = '#ff0000';
 					break;
 				case 1:
-					iteminfo[i].color = '#ffff00';
+					item[i].color = '#ffff00';
 					break;
 				case 2:
-					iteminfo[i].color = '#ff00ff';
+					item[i].color = '#ff00ff';
 					break;
 				case 3:
-					iteminfo[i].color = '#00ffff';
+					item[i].color = '#00ffff';
 					break;
 				default:
 					break;
 				}
-				ctx.fillStyle = iteminfo[i].color;
-				ctx.fillRect(item[i].x, item[i].y, iteminfo[i].width, iteminfo[i].height);
+				ctx.fillStyle = item[i].color;
+				ctx.fillRect(item[i].x, item[i].y, item[i].width, item[i].height);
 			}
 
 			/* 탄환 충돌 이펙트를 그린다 */
@@ -906,7 +882,7 @@ canvas {
 
 				setTimeout(function() {
 					playerExplosion();
-				}, 1000 / 25);
+				}, 1000 / 120);
 			} else {
 				/*  폭발이벤트가 끝나면 배경을 뺀 모든 그림을 초기화 시킨다. */
 
