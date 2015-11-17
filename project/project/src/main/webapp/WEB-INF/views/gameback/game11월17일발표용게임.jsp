@@ -15,7 +15,7 @@ canvas { border: 1px solid #555555;}
 	var gnum = "${gnum}";
 
 	$(function() {
-		var database = new Array();
+		
 		var canvasBuffer2 = document.createElement("canvas");
 		var ctx2 = document.getElementById("canvas2").getContext("2d"),
 		canvasTemp2 = document.createElement("canvas"), scrollImg2 = new Image(), tempContext2 = canvasTemp2.getContext("2d"), imgWidth2 = 0, imgHeight2 = 0, imageData2 = {}, canvasWidth2 = 500, canvasHeight2 = 1530, scrollVal2 = 0, speed2 = 2;
@@ -69,7 +69,7 @@ canvas { border: 1px solid #555555;}
 
 			/* 캔버스 버퍼 객체에 펜을 담는다 */
 			canvasBuffer2 = document.createElement("canvas");
-			
+		
 			twoplayerdraw();
 
 		}
@@ -93,117 +93,113 @@ canvas { border: 1px solid #555555;}
 
 	}
 	function remoteTwoplayer(data) {
-		console.log("받는곳");
-		for (var i = 0; i < data.length; i++) {
-			gameEnd2= data[i].gameend;
-			if(gameEnd2){
-				 explosion2 = data[i].explosion;
+		gameEnd2= data.gameend;
+		if(gameEnd2){
+			 explosion2 = data.explosion;
+		}
+		else{
+			 Player2 = data.remotePlayer;
+		}
+		
+		 playerBullet2 = data.playerBullet;
+		 enemyBalls2 =  data.enemyBalls; 
+		 item2  =  data.item; 
+		 laser2 =  data.laser; 
+		
+		 
+			ctx2.clearRect(0, 0, canvasWidth2, canvasHeight2);
+			/*  캔버스를 한번 지운다 */
+
+			if (scrollVal2 >= canvasHeight2 - speed2) {
+				scrollVal2 = 0;
 			}
-			else{
-				 Player2 = data[i].remotePlayer;
+			/* 혹시 스크롤 한바퀴 다돌아 간경우 스크롤을 초기화한다 */
+
+			scrollVal2 += speed2;
+			/* 지정된 속도를 기준으로 스크롤의 값이 늘어난다(그리는 위치가 변경된다) */
+
+			// This is the bread and butter, you have to make sure the imagedata isnt larger than the canvas your putting image data to.
+			//back buffer에 그려진 배경이미지의 끝부분(아래쪽)을 복사해서 Canvas의 앞부분(위쪽)에 붙여 넣는다
+			imageData2 = tempContext2.getImageData(0, canvasHeight2 - scrollVal2, canvasWidth2, canvasHeight2);
+			ctx2.putImageData(imageData2, 0, 0, 0, 0, canvasWidth2, imgHeight2);
+
+			//back buffer에 그려진 배경이미지의 시작부분(위쪽)을 복사해서 Canavas의 뒷부분(아래쪽)에 붙여 넣는다
+			imageData2 = tempContext2.getImageData(0, 0, canvasWidth2, canvasHeight2 - scrollVal2);
+			ctx2.putImageData(imageData2, 0, scrollVal2, 0, 0, canvasWidth2, imgHeight2);
+			/* 배경 스크롤을 그려주는 부분 */
+
+			/* 아군 탄환 그리기   */
+		for (var i = 0; i < playerBullet2.length; i++) {
+			if(playerBullet2[i].use){
+				ctx2.drawImage(playerBulletimg2, //Source Image
+				0, 0, //X, Y Position on spaceShipSprit
+				9, 54, //Cut Size from spaceShipSprit
+				playerBullet2[i].x, playerBullet2[i].y, //View Position
+				5, 20 //View Size
+				);
+				ctx2.drawImage(canvasBuffer2, 0, 0);
 			}
-			
-			 playerBullet2 = data[i].playerBullet;
-			 enemyBalls2 =  data[i].enemyBalls; 
-			 item2  =  data[i].item; 
-			 laser2 =  data[i].laser; 
-			
-			 console.log("옴"+playerBullet2.length);
-				ctx2.clearRect(0, 0, canvasWidth2, canvasHeight2);
-				/*  캔버스를 한번 지운다 */
-
-				if (scrollVal2 >= canvasHeight2 - speed2) {
-					scrollVal2 = 0;
-				}
-				/* 혹시 스크롤 한바퀴 다돌아 간경우 스크롤을 초기화한다 */
-
-				scrollVal2 += speed2;
-				/* 지정된 속도를 기준으로 스크롤의 값이 늘어난다(그리는 위치가 변경된다) */
-
-				// This is the bread and butter, you have to make sure the imagedata isnt larger than the canvas your putting image data to.
-				//back buffer에 그려진 배경이미지의 끝부분(아래쪽)을 복사해서 Canvas의 앞부분(위쪽)에 붙여 넣는다
-				imageData2 = tempContext2.getImageData(0, canvasHeight2 - scrollVal2, canvasWidth2, canvasHeight2);
-				ctx2.putImageData(imageData2, 0, 0, 0, 0, canvasWidth2, imgHeight2);
-
-				//back buffer에 그려진 배경이미지의 시작부분(위쪽)을 복사해서 Canavas의 뒷부분(아래쪽)에 붙여 넣는다
-				imageData2 = tempContext2.getImageData(0, 0, canvasWidth2, canvasHeight2 - scrollVal2);
-				ctx2.putImageData(imageData2, 0, scrollVal2, 0, 0, canvasWidth2, imgHeight2);
-				/* 배경 스크롤을 그려주는 부분 */
-
-				/* 아군 탄환 그리기   */
-			for (var i = 0; i < playerBullet2.length; i++) {
-				if(playerBullet2[i].use){
-					ctx2.drawImage(playerBulletimg2, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					9, 54, //Cut Size from spaceShipSprit
-					playerBullet2[i].x, playerBullet2[i].y, //View Position
-					5, 20 //View Size
+			} 
+		if(!gameEnd2){
+			/* 플레이어 기체를 그려준다 */
+			ctx2.drawImage(spaceShipSprit2, //Source Image
+					405, 180, //X, Y Position on spaceShipSprit
+					Player2.width, Player2.height,  //Cut Size from spaceShipSprit
+					Player2.x, Player2.y, //View Position
+					Player2.width, Player2.height //View Size
 					);
 					ctx2.drawImage(canvasBuffer2, 0, 0);
+		}
+			
+
+			/*  탄환(적기체)를 그려준다 */
+			for (var i = 0; i < enemyBalls2.length; i++) {
+				ctx2.fillStyle = enemyBalls2[i].color;
+				ctx2.beginPath();
+				ctx2.arc(enemyBalls2[i].x, enemyBalls2[i].y, enemyBalls2[i].radius, 0, Math.PI * 2, true)
+				ctx2.closePath();
+				ctx2.fill();
+			} 
+
+			/* 아이템을 그려준다   */
+			for (var i = 0; i < item2.length; i++) {
+			
+				switch (i) {
+				case 0:
+					item2[i].color = '#ff0000';
+					break;
+				case 1:
+					item2[i].color = '#ffff00';
+					break;
+				case 2:
+					item2[i].color = '#ff00ff';
+					break;
+				case 3:
+					item2[i].color = '#00ffff';
+					break;
+				default:
+					break;
 				}
-				} 
-			if(!gameEnd2){
-				/* 플레이어 기체를 그려준다 */
-				ctx2.drawImage(spaceShipSprit2, //Source Image
-						405, 180, //X, Y Position on spaceShipSprit
-						Player2.width, Player2.height,  //Cut Size from spaceShipSprit
-						Player2.x, Player2.y, //View Position
-						Player2.width, Player2.height //View Size
-						);
-						ctx2.drawImage(canvasBuffer2, 0, 0);
+				
+				ctx2.fillStyle = item2[i].color;
+				ctx2.fillRect(item2[i].x, item2[i].y, item2[i].width, item2[i].height);
 			}
-				
 
-				/*  탄환(적기체)를 그려준다 */
-				for (var i = 0; i < enemyBalls2.length; i++) {
-					ctx2.fillStyle = enemyBalls2[i].color;
-					ctx2.beginPath();
-					ctx2.arc(enemyBalls2[i].x, enemyBalls2[i].y, enemyBalls2[i].radius, 0, Math.PI * 2, true)
-					ctx2.closePath();
-					ctx2.fill();
-				} 
-
-				/* 아이템을 그려준다   */
-				for (var i = 0; i < item2.length; i++) {
-				
-					switch (i) {
-					case 0:
-						item2[i].color = '#ff0000';
-						break;
-					case 1:
-						item2[i].color = '#ffff00';
-						break;
-					case 2:
-						item2[i].color = '#ff00ff';
-						break;
-					case 3:
-						item2[i].color = '#00ffff';
-						break;
-					default:
-						break;
-					}
-					
-					ctx2.fillStyle = item2[i].color;
-					ctx2.fillRect(item2[i].x, item2[i].y, item2[i].width, item2[i].height);
+			/* 탄환 충돌 이펙트를 그린다 */
+			 for (var i = 0; i < laser2.length; i++) {
+				if (laser2[i].use) {
+					ctx2.drawImage(laserimg2, laser2[i].x, laser2[i].y, laser2[i].w, laser2[i].h, laser2[i].exx, laser2[i].exy, 32, 32);
 				}
-
-				/* 탄환 충돌 이펙트를 그린다 */
-				 for (var i = 0; i < laser2.length; i++) {
-					if (laser2[i].use) {
-						ctx2.drawImage(laserimg2, laser2[i].x, laser2[i].y, laser2[i].w, laser2[i].h, laser2[i].exx, laser2[i].exy, 32, 32);
-					}
-				} 
-				 if(gameEnd2){
-				 ctx2.drawImage(explosionimg2, explosion2.x, explosion2.y, explosion2.w, explosion2.h, explosion2.px, explosion2.py, 64, 64);
-					explosion2.x += explosion2.w;
-					explosion2.idx++;
-					if (explosion2.idx % 5 == 0) {
-						explosion2.x = 0;
-						explosion2.y += explosion2.h;
-					}
-				 }
-			 
-			}
+			} 
+			 if(gameEnd2){
+			 ctx2.drawImage(explosionimg2, explosion2.x, explosion2.y, explosion2.w, explosion2.h, explosion2.px, explosion2.py, 64, 64);
+				explosion2.x += explosion2.w;
+				explosion2.idx++;
+				if (explosion2.idx % 5 == 0) {
+					explosion2.x = 0;
+					explosion2.y += explosion2.h;
+				}
+			 }
 		}
 		var ctx = document.getElementById("canvas").getContext("2d"),
 		canvasTemp = document.createElement("canvas"), scrollImg = new Image(), tempContext = canvasTemp.getContext("2d"), imgWidth = 0, imgHeight = 0, imageData = {}, canvasWidth = 500, canvasHeight = 1530, scrollVal = 0, speed = 2;
@@ -349,7 +345,7 @@ canvas { border: 1px solid #555555;}
 					x : startX,
 					y : startY,
 					color : startColor,
-					radius : 4,
+					radius : 8,
 					speed : startSpeed,
 					angle : startAngle,
 					radians : Math.PI / 180
@@ -477,28 +473,24 @@ canvas { border: 1px solid #555555;}
 			/* render 돌릴때마다 메세지 전송 */
 			var data = {
 						remotePlayer : playerUnit,
-					 	playerBullet : playerBullet,
+						playerBullet : playerBullet,
 						enemyBalls:enemyBalls,
 						item:item,
 						laser:laser,
 						gameend:false
-			};
-			console.log(data.remotePlayer.x+"data안에 들은 기체 정보");
-			database.push(data);
-			spacecnt++;
-			/* 탄환 속도 제한을 위해 시간 체크 */
-			
-			if(spacecnt%30==0){console.log("메세지보내러옴");
+						};
 				var msg = {
 						position : "game",
 						cmd : "playing",
 						nick : nick,
 						gnum : gnum,
-						gamedata : database
+						gamedata : data
 					};
 					ws.send(JSON.stringify(msg));	
-					console.log("database보냄");
-				database = new Array();
+			/* 탄환 속도 제한을 위해 시간 체크 */
+			spacecnt++;
+			if(spacecnt%60==0){
+				
 			}
 			if(spacecnt%20==0){
 				spacetimer=true;

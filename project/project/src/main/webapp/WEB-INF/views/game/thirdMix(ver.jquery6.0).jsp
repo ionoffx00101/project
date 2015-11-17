@@ -161,7 +161,7 @@ canvas { border: 1px solid #555555;}
 					x : startX,
 					y : startY,
 					color : startColor,
-					radius : 4,
+					radius : 8,
 					speed : startSpeed,
 					angle : startAngle,
 					radians : Math.PI / 180

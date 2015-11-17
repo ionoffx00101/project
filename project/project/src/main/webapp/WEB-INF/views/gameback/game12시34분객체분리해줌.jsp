@@ -6,7 +6,9 @@
 <meta charset="utf-8">
 <title>Websocket Client</title>
 <style type="text/css">
-canvas { border: 1px solid #555555;}
+canvas {
+	border: 1px solid #555555;
+}
 </style>
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
@@ -16,13 +18,13 @@ canvas { border: 1px solid #555555;}
 
 	$(function() {
 		var database = new Array();
+		var data = new Array();
+		var datacnt = 0;
+		var datastop = false;
 		var canvasBuffer2 = document.createElement("canvas");
-		var ctx2 = document.getElementById("canvas2").getContext("2d"),
-		canvasTemp2 = document.createElement("canvas"), scrollImg2 = new Image(), tempContext2 = canvasTemp2.getContext("2d"), imgWidth2 = 0, imgHeight2 = 0, imageData2 = {}, canvasWidth2 = 500, canvasHeight2 = 1530, scrollVal2 = 0, speed2 = 2;
+		var ctx2 = document.getElementById("canvas2").getContext("2d"), canvasTemp2 = document.createElement("canvas"), scrollImg2 = new Image(), tempContext2 = canvasTemp2.getContext("2d"), imgWidth2 = 0, imgHeight2 = 0, imageData2 = {}, canvasWidth2 = 500, canvasHeight2 = 1530, scrollVal2 = 0, speed2 = 2;
 		//var ws = new WebSocket("ws://localhost:8888/MavenWeb/wsinit");
-		var ws = new WebSocket(
-				"ws://192.168.8.55:8500/project/game?position=game&nick=" + nick
-						+ "&gnum=" + gnum + "&rnum=" + rnum);
+		var ws = new WebSocket("ws://192.168.8.55:8500/project/game?position=game&nick=" + nick + "&gnum=" + gnum + "&rnum=" + rnum);
 		ws.onopen = function() {
 
 		};
@@ -39,9 +41,11 @@ canvas { border: 1px solid #555555;}
 				alert('게임이 종료 되었습니다');
 				location.href = "roomIn?rnum=" + rnum;
 			}
-			if (ob.cmd == 'playing'){
-				var data = ob.gamedata;
-				remoteTwoplayer(data);
+			if (ob.cmd == 'playing') {
+				data = ob.gamedata;
+				datacnt = 0;
+				datastop = false;
+				remoteTwoplayer();
 			}
 		};
 		ws.onclose = function(event) {
@@ -56,7 +60,7 @@ canvas { border: 1px solid #555555;}
 			ws.send(JSON.stringify(msg));
 
 		});
-		
+
 		function loadImage2() {
 			/* 사용된 이미지의 폭과 너비를 저장하고 그림용 펜의 역할을 수행하는 캔버스 템프에도 담아둔다  */
 			imgWidth2 = scrollImg2.width, imgHeight2 = scrollImg2.height;
@@ -69,12 +73,12 @@ canvas { border: 1px solid #555555;}
 
 			/* 캔버스 버퍼 객체에 펜을 담는다 */
 			canvasBuffer2 = document.createElement("canvas");
-			
+
 			twoplayerdraw();
 
 		}
-	function twoplayerdraw() {
-		
+		function twoplayerdraw() {
+
 			spaceShipSprit2 = new Image();
 			spaceShipSprit2.src = "<c:url value="../resources/img/samplespaceships.png"/>";
 			/* 아군 탄환 이미지 */
@@ -88,51 +92,48 @@ canvas { border: 1px solid #555555;}
 			/* 아군 탄환 적탄환 충돌 이미지 */
 			laserimg2 = new Image();
 			laserimg2.src = "<c:url value="../resources/img/lazer_exp.png"/>";
-			
-			
 
-	}
-	function remoteTwoplayer(data) {
-		console.log("받는곳");
-		for (var i = 0; i < data.length; i++) {
-			gameEnd2= data[i].gameend;
-			if(gameEnd2){
-				 explosion2 = data[i].explosion;
+		}
+		function remoteTwoplayer() {
+			var i=datacnt;
+			
+			gameEnd2 = data[i].gameend;
+
+			if (gameEnd2) {
+				/* explosion2 = data[i].explosion; */
+			} else {
+				Player2 = data[i].remotePlayer;
 			}
-			else{
-				 Player2 = data[i].remotePlayer;
+
+			/* playerBullet2 = data[i].playerBullet;
+			enemyBalls2 = data[i].enemyBalls;
+			item2 = data[i].item;
+			laser2 = data[i].laser; */
+			
+			ctx2.clearRect(0, 0, canvasWidth2, canvasHeight2);
+			/*  캔버스를 한번 지운다 */
+
+			if (scrollVal2 >= canvasHeight2 - speed2) {
+				scrollVal2 = 0;
 			}
-			
-			 playerBullet2 = data[i].playerBullet;
-			 enemyBalls2 =  data[i].enemyBalls; 
-			 item2  =  data[i].item; 
-			 laser2 =  data[i].laser; 
-			
-			 console.log("옴"+playerBullet2.length);
-				ctx2.clearRect(0, 0, canvasWidth2, canvasHeight2);
-				/*  캔버스를 한번 지운다 */
+			/* 혹시 스크롤 한바퀴 다돌아 간경우 스크롤을 초기화한다 */
 
-				if (scrollVal2 >= canvasHeight2 - speed2) {
-					scrollVal2 = 0;
-				}
-				/* 혹시 스크롤 한바퀴 다돌아 간경우 스크롤을 초기화한다 */
+			scrollVal2 += speed2;
+			/* 지정된 속도를 기준으로 스크롤의 값이 늘어난다(그리는 위치가 변경된다) */
 
-				scrollVal2 += speed2;
-				/* 지정된 속도를 기준으로 스크롤의 값이 늘어난다(그리는 위치가 변경된다) */
+			// This is the bread and butter, you have to make sure the imagedata isnt larger than the canvas your putting image data to.
+			//back buffer에 그려진 배경이미지의 끝부분(아래쪽)을 복사해서 Canvas의 앞부분(위쪽)에 붙여 넣는다
+			imageData2 = tempContext2.getImageData(0, canvasHeight2 - scrollVal2, canvasWidth2, canvasHeight2);
+			ctx2.putImageData(imageData2, 0, 0, 0, 0, canvasWidth2, imgHeight2);
 
-				// This is the bread and butter, you have to make sure the imagedata isnt larger than the canvas your putting image data to.
-				//back buffer에 그려진 배경이미지의 끝부분(아래쪽)을 복사해서 Canvas의 앞부분(위쪽)에 붙여 넣는다
-				imageData2 = tempContext2.getImageData(0, canvasHeight2 - scrollVal2, canvasWidth2, canvasHeight2);
-				ctx2.putImageData(imageData2, 0, 0, 0, 0, canvasWidth2, imgHeight2);
+			//back buffer에 그려진 배경이미지의 시작부분(위쪽)을 복사해서 Canavas의 뒷부분(아래쪽)에 붙여 넣는다
+			imageData2 = tempContext2.getImageData(0, 0, canvasWidth2, canvasHeight2 - scrollVal2);
+			ctx2.putImageData(imageData2, 0, scrollVal2, 0, 0, canvasWidth2, imgHeight2);
+			/* 배경 스크롤을 그려주는 부분 */
 
-				//back buffer에 그려진 배경이미지의 시작부분(위쪽)을 복사해서 Canavas의 뒷부분(아래쪽)에 붙여 넣는다
-				imageData2 = tempContext2.getImageData(0, 0, canvasWidth2, canvasHeight2 - scrollVal2);
-				ctx2.putImageData(imageData2, 0, scrollVal2, 0, 0, canvasWidth2, imgHeight2);
-				/* 배경 스크롤을 그려주는 부분 */
-
-				/* 아군 탄환 그리기   */
-			for (var i = 0; i < playerBullet2.length; i++) {
-				if(playerBullet2[i].use){
+			/* 아군 탄환 그리기   */
+			/* for (var i = 0; i < playerBullet2.length; i++) {
+				if (playerBullet2[i].use) {
 					ctx2.drawImage(playerBulletimg2, //Source Image
 					0, 0, //X, Y Position on spaceShipSprit
 					9, 54, //Cut Size from spaceShipSprit
@@ -141,72 +142,65 @@ canvas { border: 1px solid #555555;}
 					);
 					ctx2.drawImage(canvasBuffer2, 0, 0);
 				}
-				} 
-			if(!gameEnd2){
+			} */
+			if (!gameEnd2) {
 				/* 플레이어 기체를 그려준다 */
 				ctx2.drawImage(spaceShipSprit2, //Source Image
-						405, 180, //X, Y Position on spaceShipSprit
-						Player2.width, Player2.height,  //Cut Size from spaceShipSprit
-						Player2.x, Player2.y, //View Position
-						Player2.width, Player2.height //View Size
-						);
-						ctx2.drawImage(canvasBuffer2, 0, 0);
+				405, 180, //X, Y Position on spaceShipSprit
+				36, 36, //Cut Size from spaceShipSprit
+				Player2.x, Player2.y, //View Position
+				36, 36 //View Size
+				);
+				ctx2.drawImage(canvasBuffer2, 0, 0);
 			}
-				
 
-				/*  탄환(적기체)를 그려준다 */
-				for (var i = 0; i < enemyBalls2.length; i++) {
-					ctx2.fillStyle = enemyBalls2[i].color;
-					ctx2.beginPath();
-					ctx2.arc(enemyBalls2[i].x, enemyBalls2[i].y, enemyBalls2[i].radius, 0, Math.PI * 2, true)
-					ctx2.closePath();
-					ctx2.fill();
-				} 
+			/*  탄환(적기체)를 그려준다 */
+		/* 	for (var i = 0; i < enemyBalls2.length; i++) {
+				ctx2.fillStyle = enemyBalls2[i].color;
+				ctx2.beginPath();
+				ctx2.arc(enemyBalls2[i].x, enemyBalls2[i].y, 4, 0, Math.PI * 2, true)
+				ctx2.closePath();
+				ctx2.fill();
+			} */
 
-				/* 아이템을 그려준다   */
-				for (var i = 0; i < item2.length; i++) {
-				
-					switch (i) {
-					case 0:
-						item2[i].color = '#ff0000';
-						break;
-					case 1:
-						item2[i].color = '#ffff00';
-						break;
-					case 2:
-						item2[i].color = '#ff00ff';
-						break;
-					case 3:
-						item2[i].color = '#00ffff';
-						break;
-					default:
-						break;
-					}
-					
-					ctx2.fillStyle = item2[i].color;
-					ctx2.fillRect(item2[i].x, item2[i].y, item2[i].width, item2[i].height);
+			/* 아이템을 그려준다   */
+			/* for (var i = 0; i < item2.length; i++) {
+				ctx2.fillStyle = '#00ffff';
+				ctx2.fillRect(item2[i].x, item2[i].y, 30, 30);
+			}
+ */
+			/* 탄환 충돌 이펙트를 그린다 */
+			/* for (var i = 0; i < laser2.length; i++) {
+				if (laser2[i].use) {
+					ctx2.drawImage(laserimg2, 0, 0, 64, 64, laser2[i].exx, laser2[i].exy, 32, 32);
 				}
-
-				/* 탄환 충돌 이펙트를 그린다 */
-				 for (var i = 0; i < laser2.length; i++) {
-					if (laser2[i].use) {
-						ctx2.drawImage(laserimg2, laser2[i].x, laser2[i].y, laser2[i].w, laser2[i].h, laser2[i].exx, laser2[i].exy, 32, 32);
-					}
-				} 
-				 if(gameEnd2){
-				 ctx2.drawImage(explosionimg2, explosion2.x, explosion2.y, explosion2.w, explosion2.h, explosion2.px, explosion2.py, 64, 64);
-					explosion2.x += explosion2.w;
-					explosion2.idx++;
-					if (explosion2.idx % 5 == 0) {
-						explosion2.x = 0;
-						explosion2.y += explosion2.h;
-					}
-				 }
-			 
+			} */
+			if (gameEnd2) {
+				/* 기체폭발  */
+				/* ctx2.drawImage(explosionimg2, explosion2.x, explosion2.y, explosion2.w, explosion2.h, explosion2.px, explosion2.py, 64, 64);
+				explosion2.x += explosion2.w;
+				explosion2.idx++;
+				if (explosion2.idx % 5 == 0) {
+					explosion2.x = 0;
+					explosion2.y += explosion2.h;
+				} */
 			}
+			
+			if (datacnt > data.length - 1) {
+				datastop = true;
+				data = new Array();
+			}
+
+			if (!datastop) {
+				setTimeout(function() {
+					datacnt++;
+					remoteTwoplayer();
+				}, 1000 / 120);
+			}
+
 		}
-		var ctx = document.getElementById("canvas").getContext("2d"),
-		canvasTemp = document.createElement("canvas"), scrollImg = new Image(), tempContext = canvasTemp.getContext("2d"), imgWidth = 0, imgHeight = 0, imageData = {}, canvasWidth = 500, canvasHeight = 1530, scrollVal = 0, speed = 2;
+
+		var ctx = document.getElementById("canvas").getContext("2d"), canvasTemp = document.createElement("canvas"), scrollImg = new Image(), tempContext = canvasTemp.getContext("2d"), imgWidth = 0, imgHeight = 0, imageData = {}, canvasWidth = 500, canvasHeight = 1530, scrollVal = 0, speed = 2;
 		/* 위쪽은 선생님 코드의 변수 선언, 그림을 그려주는 개체가 둘 필요하기때문에(그림의 처음과 끝을 이어 붙여야 하므로) 두 객체를 선언한다. 아래쪽 캔버스 템프는 조금 간략화된 클래스 선언으로 해당 객체에 상기와 같은 속성을 집어 넣어 준것이다 */
 
 		var playerUnit = {};
@@ -216,6 +210,7 @@ canvas { border: 1px solid #555555;}
 		/*  참조 블로그의 기체 움직임 변수들 각각 플레이어 유닛,버튼 입력 감지,기체 그림용,캔버스 객체의 펜을 담기위한 변수다(캔버스 객체는 실체 게임코드시 위쪽 코드와 일원화 시킬수 있다. 현재로선 기능 가동을 우선하여 객체를 하나 더 만들어둔 셈) */
 
 		var enemyBalls;
+		var enemyBallsinfo;
 		var gameEnd = false;
 		var timeCheckLevel1 = 0;
 		/* 위에서 부터 적 탄환 객체, 게임종료트리거용 객체, 시간이 지나가는것을 체크하는 객체 */
@@ -223,16 +218,18 @@ canvas { border: 1px solid #555555;}
 		/* 사용자 탄환 관련 변수   */
 		var playerBulletimg;
 		var playerBullet;
+		var playerBulletinfo;
 		var playerBulletMax = 50;/* 최대 탄환갯수  100개넘어가면 안쾌적함*/
 		var playerBulletcnt = 0;
-		
+
 		var spacekey = false; // 스페이스바 활성화 되있는지 체크
 		var spacetimer = false; // 탄환발사 시간 여부 체크
-		var spacecnt=0;
+		var spacecnt = 0;
 
 		/* 아이템 관련 변수  */
 		var itemimg;
 		var item;
+		var iteminfo;
 		var itemMax = 5;
 
 		/* 아이템 기능 관련 변수  */
@@ -240,11 +237,13 @@ canvas { border: 1px solid #555555;}
 
 		/* 플레이어 폭발 관련 변수  */
 		var explosion; //폭발 이미지 변수 저장할때 씀
+		var explosioninfo;
 		var explosiontimer = false;
 		var explosionimg;
 
 		/* 적 탄환과 아군 탄환 충돌시 폭발 애니메이션 관련 변수  */
 		var laser;
+		var laserinfo;
 		var lasermax = 10; /* 동시에 터지는 갯수 */
 		var lasercnt = 0;
 		var laserimg;
@@ -279,18 +278,22 @@ canvas { border: 1px solid #555555;}
 
 			/*  탄환 객체 선언 특정 개체를 배열로 만들고  */
 			enemyBalls = new Array();
+			enemyBallsinfo = new Array();
 			createEnemyBalls(10);
 
 			/* 플레이어 탄환 객체 선언 및 배열 내용 생성   */
 			playerBullet = new Array();
+			playerBulletinfo = new Array();
 			createplayerBullet(playerBulletMax);
 
 			/* 아이템 객체 선언 및 배열 내용 생성   */
 			item = new Array();
+			iteminfo = new Array();
 			createitem(itemMax);
 
 			/* 탄환 충돌시 애니메이션 발생 관련 객체 선언 및 배열 내용 생성   */
 			laser = new Array();
+			laserinfo = new Array();
 			createlaser(lasermax);
 
 			/* 조건이 맞을 때까지 루프를 돌도록 설정된 게임 펑션을 돌린다. */
@@ -348,15 +351,17 @@ canvas { border: 1px solid #555555;}
 				var enemy = {
 					x : startX,
 					y : startY,
+				};
+				var enemyinfo = {
 					color : startColor,
 					radius : 4,
 					speed : startSpeed,
 					angle : startAngle,
 					radians : Math.PI / 180
 				};
-
 				/* 탄환 배열에 집어 넣는다. 이 펑션으로 확실해지는 것은 화면내에 물체 하나를 추가 할때마다 다수의 값을 가진(용량이 제법 되는)객체가 만들어져야 한다는것, 패턴 가짓수 만들기에는 주의가 필요하다 */
 				enemyBalls.push(enemy);
+				enemyBallsinfo.push(enemyinfo);
 			}
 		}
 
@@ -431,7 +436,7 @@ canvas { border: 1px solid #555555;}
 				var distanceY = (playerUnit.y + playerUnit.height / 2) - enemyBalls[i].y;
 				var distance = distanceX * distanceX + distanceY * distanceY;
 
-				if (distance <= (enemyBalls[i].radius + (playerUnit.width / 2 - 5)) * (enemyBalls[i].radius + (playerUnit.height / 2 - 5))) {
+				if (distance <= (enemyBallsinfo[i].radius + (playerUnit.width / 2 - 5)) * (enemyBallsinfo[i].radius + (playerUnit.height / 2 - 5))) {
 					rtnVal = true;
 					break;
 				}
@@ -456,15 +461,15 @@ canvas { border: 1px solid #555555;}
 
 			/*   해당탄환이 원래 가지고 있는속도, 현재위치, 방향값을 이용하여 다음위치를 산출하여 적용한다. */
 			for (var i = 0; i < enemyBalls.length; i++) {
-				enemyBalls[i].radians = enemyBalls[i].angle * Math.PI / 180;
-				enemyBalls[i].x += Math.cos(enemyBalls[i].radians) * enemyBalls[i].speed;
-				enemyBalls[i].y += Math.sin(enemyBalls[i].radians) * enemyBalls[i].speed;
+				enemyBallsinfo[i].radians = enemyBallsinfo[i].angle * Math.PI / 180;
+				enemyBalls[i].x += Math.cos(enemyBallsinfo[i].radians) * enemyBallsinfo[i].speed;
+				enemyBalls[i].y += Math.sin(enemyBallsinfo[i].radians) * enemyBallsinfo[i].speed;
 
 				if (enemyBalls[i].x > canvas.width || enemyBalls[i].x < 0) {
-					enemyBalls[i].angle = Math.floor((Math.random() * 60) + 60);
+					enemyBallsinfo[i].angle = Math.floor((Math.random() * 60) + 60);
 					enemyBalls[i].y = 0;
 				} else if (enemyBalls[i].y > canvas.height || enemyBalls[i].y < 0) {
-					enemyBalls[i].angle = Math.floor((Math.random() * 60) + 60);
+					enemyBallsinfo[i].angle = Math.floor((Math.random() * 60) + 60);
 					/*  enemyBalls[i].angle = 360 - enemyBalls[i].angle; */
 					enemyBalls[i].y = 0;
 				}
@@ -475,39 +480,40 @@ canvas { border: 1px solid #555555;}
 		/*   8.게임 루프 펑션 */
 		function render() {
 			/* render 돌릴때마다 메세지 전송 */
-			var data = {
-						remotePlayer : playerUnit,
-					 	playerBullet : playerBullet,
-						enemyBalls:enemyBalls,
-						item:item,
-						laser:laser,
-						gameend:false
+			var remotePlayer = {
+				x : playerUnit.x,
+				y : playerUnit.y
 			};
-			console.log(data.remotePlayer.x+"data안에 들은 기체 정보");
+			var data = {
+				remotePlayer : remotePlayer,
+		/* 		playerBullet : playerBullet,
+				enemyBalls : enemyBalls,
+				item : item,
+				laser : laser, */
+				gameend : false
+			};
 			database.push(data);
 			spacecnt++;
 			/* 탄환 속도 제한을 위해 시간 체크 */
-			
-			if(spacecnt%30==0){console.log("메세지보내러옴");
+
+			if (spacecnt % 30 == 0) {
 				var msg = {
-						position : "game",
-						cmd : "playing",
-						nick : nick,
-						gnum : gnum,
-						gamedata : database
-					};
-					ws.send(JSON.stringify(msg));	
-					console.log("database보냄");
+					position : "game",
+					cmd : "playing",
+					nick : nick,
+					gnum : gnum,
+					gamedata : database
+				};
+				ws.send(JSON.stringify(msg));
+
 				database = new Array();
 			}
-			if(spacecnt%20==0){
-				spacetimer=true;
+			if (spacecnt % 20 == 0) {
+				spacetimer = true;
+			} else {
+				spacetimer = false;
 			}
-			else{
-				spacetimer=false;
-			}
-			
-			
+
 			useplayerBullet();
 			calcitem();
 			calcKeyInnput();
@@ -559,9 +565,9 @@ canvas { border: 1px solid #555555;}
 
 			/*  탄환(적기체)를 그려준다 */
 			for (var i = 0; i < enemyBalls.length; i++) {
-				ctx.fillStyle = enemyBalls[i].color;
+				ctx.fillStyle = enemyBallsinfo[i].color;
 				ctx.beginPath();
-				ctx.arc(enemyBalls[i].x, enemyBalls[i].y, enemyBalls[i].radius, 0, Math.PI * 2, true)
+				ctx.arc(enemyBalls[i].x, enemyBalls[i].y, enemyBallsinfo[i].radius, 0, Math.PI * 2, true)
 				ctx.closePath();
 				ctx.fill();
 			}
@@ -571,29 +577,29 @@ canvas { border: 1px solid #555555;}
 				/* 아이템에 따라 다른 색을 넣어준다 */
 				switch (i) {
 				case 0:
-					item[i].color = '#ff0000';
+					iteminfo[i].color = '#ff0000';
 					break;
 				case 1:
-					item[i].color = '#ffff00';
+					iteminfo[i].color = '#ffff00';
 					break;
 				case 2:
-					item[i].color = '#ff00ff';
+					iteminfo[i].color = '#ff00ff';
 					break;
 				case 3:
-					item[i].color = '#00ffff';
+					iteminfo[i].color = '#00ffff';
 					break;
 				default:
 					break;
 				}
 				/* 그린다 */
-				ctx.fillStyle = item[i].color;
-				ctx.fillRect(item[i].x, item[i].y, item[i].width, item[i].height);
+				ctx.fillStyle = iteminfo[i].color;
+				ctx.fillRect(item[i].x, item[i].y, iteminfo[i].width, iteminfo[i].height);
 			}
 
 			/* 탄환 충돌 이펙트를 그린다 */
 			for (var i = 0; i < laser.length; i++) {
 				if (laser[i].use) {
-					ctx.drawImage(laserimg, laser[i].x, laser[i].y, laser[i].w, laser[i].h, laser[i].exx, laser[i].exy, 32, 32);
+					ctx.drawImage(laserimg, laserinfo[i].x, laserinfo[i].y, laserinfo[i].w, laserinfo[i].h, laser[i].exx, laser[i].exy, 32, 32);
 				}
 			}
 
@@ -606,13 +612,16 @@ canvas { border: 1px solid #555555;}
 			if (gameEnd) {
 				/* 아군기체와 적탄환 춛돌시 아군 기체를 없애고 그 자리에서 충돌 이펙트를 보여준다 */
 				explosion = {
+					px : playerUnit.x,
+					py : playerUnit.y,
+				}
+				explosioninfo = {
 					x : 0,
 					y : 0,
 					w : 64,
 					h : 64,
 					idx : 0,
-					px :playerUnit.x,
-					py :playerUnit.y,
+					
 					frame_cnt : 25
 				}
 				playerExplosion();
@@ -623,7 +632,7 @@ canvas { border: 1px solid #555555;}
 
 				setTimeout(function() {
 					render();
-				}, 1000/120);
+				}, 1000 / 120);
 			}
 
 		}
@@ -637,16 +646,20 @@ canvas { border: 1px solid #555555;}
 				var bullet = {
 					x : 600,
 					y : 600,
+					use : false
+				};
+				var bulletinfo = {
 					color : "#00ffff",
 					radius : 4, /*원의 크기*/
 					speed : 0,
 					angle : 4,
 					radians : 0,
-					use : false
 				};
+
 				/* 탄환 객체를 만들어 지금까지 생성한 값을 집어 넣는다 */
 
 				playerBullet.push(bullet);
+				playerBulletinfo.push(bulletinfo);
 				/* 탄환 배열에 집어 넣는다. 이 펑션으로 확실해지는 것은 화면내에 물체 하나를 추가 할때마다 다수의 값을 가진(용량이 제법 되는)객체가 만들어져야 한다는것, 패턴 가짓수 만들기에는 주의가 필요하다 */
 			}
 		}
@@ -659,16 +672,16 @@ canvas { border: 1px solid #555555;}
 				if (playerBulletcnt > (playerBulletMax - 1)) {
 					playerBulletcnt = 0;
 				}
-				
+
 				/* 아이템을 먹었을때 발사되는 탄환수 늘리고 탄환수가 늘면 플레이어 기체 안에서 영역을 나눠서 예쁘게 나가게 함  */
 				var width = playerUnit.width / item_twoweapon;
 				/* 이 for은 아이템을 먹었을때 탄환이 두개면 2번 호출해서 각자 좌료를 잡아주는 함수이다 */
-				for (var i = 1; i < item_twoweapon; i++) { 
+				for (var i = 1; i < item_twoweapon; i++) {
 
 					playerBullet[playerBulletcnt].x = playerUnit.x + (width * i) - 2;
 					playerBullet[playerBulletcnt].y = playerUnit.y + playerUnit.height / 2;
-					playerBullet[playerBulletcnt].speed = 3;
-					playerBullet[playerBulletcnt].use = true;
+					playerBulletinfo[playerBulletcnt].speed = 3;
+					playerBulletinfo[playerBulletcnt].use = true;
 					playerBulletcnt++;
 					if (playerBulletcnt > (playerBulletMax - 1)) {
 						playerBulletcnt = 0;
@@ -701,8 +714,8 @@ canvas { border: 1px solid #555555;}
 		function nouseplayerBullet(i) {
 			playerBullet[i].x = 600;
 			playerBullet[i].y = 600;
-			playerBullet[i].speed = 0;/* 0으로 해서 보이지 않는공은 아무것도 안함 */
-			playerBullet[i].use = false;
+			playerBulletinfo[i].speed = 0;/* 0으로 해서 보이지 않는공은 아무것도 안함 */
+			playerBulletinfo[i].use = false;
 		}
 
 		/* 플레이어 탄환과 ball 충돌 확인*/
@@ -716,7 +729,7 @@ canvas { border: 1px solid #555555;}
 						var distanceY = playerBullet[i].y - enemyBalls[j].y;
 						var distance = distanceX * distanceX + distanceY * distanceY;
 
-						if (distance <= (enemyBalls[j].radius + 15 * enemyBalls[j].radius + 15)) {
+						if (distance <= (enemyBallsinfo[j].radius + 15 * enemyBallsinfo[j].radius + 15)) {
 							/* 아군 탄환 없앰 */
 							nouseplayerBullet(i);
 
@@ -726,7 +739,7 @@ canvas { border: 1px solid #555555;}
 							/* 충돌한 적 탄환 초기화 */
 							enemyBalls[j].x = 600;
 							enemyBalls[j].y = 600;
-							enemyBalls[j].speed = 0;
+							enemyBallsinfo[j].speed = 0;
 
 							/* 새 적탄환 생성 */
 							createEnemyBalls(1);
@@ -744,9 +757,12 @@ canvas { border: 1px solid #555555;}
 			for (var i = 0; i < imax; i++) {
 
 				var newitem = {
-					itemcode : i,
 					x : 600,
 					y : 600,
+					use : false
+				};
+				var newiteminfo = {
+					itemcode : i,
 					color : "#ffffff",
 					width : 30,
 					height : 30,
@@ -755,11 +771,12 @@ canvas { border: 1px solid #555555;}
 					angle : 0,
 					radius : 4,
 					radians : Math.PI / 180,
-					use : false
 				};
 				/* 아이템 객체를 만들어 지금까지 생성한 값을 집어 넣는다 */
 
 				item.push(newitem);
+				iteminfo.push(newiteminfo);
+
 				/* 아이템 배열에 집어 넣는다. 이 펑션으로 확실해지는 것은 화면내에 물체 하나를 추가 할때마다 다수의 값을 가진(용량이 제법 되는)객체가 만들어져야 한다는것, 패턴 가짓수 만들기에는 주의가 필요하다 */
 			}
 
@@ -769,9 +786,9 @@ canvas { border: 1px solid #555555;}
 
 			item[i].x = Math.floor(Math.random() * (canvas.width - 1)) + 1;
 			item[i].y = 0;
-			item[i].xspeed = 3;
-			item[i].yspeed = 3;
-			item[i].angle = Math.floor((Math.random() * 60) + 60);
+			iteminfo[i].xspeed = 3;
+			iteminfo[i].yspeed = 3;
+			iteminfo[i].angle = Math.floor((Math.random() * 60) + 60);
 			item[i].use = true;
 
 		}
@@ -779,12 +796,12 @@ canvas { border: 1px solid #555555;}
 		function calcitem() {
 			for (var i = 0; i < item.length; i++) {
 				if (item[i].use) {
-					item[i].radians = item[i].angle * Math.PI / 180;
-					item[i].x += Math.cos(item[i].radians) * item[i].xspeed;
-					item[i].y += Math.sin(item[i].radians) * item[i].yspeed;
+					iteminfo[i].radians = iteminfo[i].angle * Math.PI / 180;
+					item[i].x += Math.cos(iteminfo[i].radians) * iteminfo[i].xspeed;
+					item[i].y += Math.sin(iteminfo[i].radians) * iteminfo[i].yspeed;
 
 					if (item[i].x > canvas.width - 30 || item[i].x < 5) {
-						item[i].xspeed *= -1;
+						iteminfo[i].xspeed *= -1;
 					} else if (item[i].y > canvas.height || item[i].y < 0) {
 						nouseplayeritem(i);
 					}
@@ -805,11 +822,11 @@ canvas { border: 1px solid #555555;}
 				/* 사용하는 공만 충돌판정 확인함 */
 				if (item[i].use) {
 
-					var distanceX = (playerUnit.x + playerUnit.width / 2) - (item[i].x + item[i].width / 2);
-					var distanceY = (playerUnit.y + playerUnit.height / 2) - (item[i].y + item[i].height / 2);
+					var distanceX = (playerUnit.x + playerUnit.width / 2) - (item[i].x + iteminfo[i].width / 2);
+					var distanceY = (playerUnit.y + playerUnit.height / 2) - (item[i].y + iteminfo[i].height / 2);
 					var distance = distanceX * distanceX + distanceY * distanceY;
 
-					if (distance <= (item[i].width / 2 + (playerUnit.width / 2 - 10)) * (item[i].height / 2 + (playerUnit.height / 2 - 10))) {
+					if (distance <= (iteminfo[i].width / 2 + (playerUnit.width / 2 - 10)) * (iteminfo[i].height / 2 + (playerUnit.height / 2 - 10))) {
 						/*아이템 초기화 */
 						nouseplayeritem(i);
 
@@ -831,30 +848,37 @@ canvas { border: 1px solid #555555;}
 		function nouseplayeritem(i) {
 			item[i].x = 600;
 			item[i].y = 600;
-			item[i].xspeed = 0;
-			item[i].yspeed = 0;
-			item[i].angle = 0;
+			iteminfo[i].xspeed = 0;
+			iteminfo[i].yspeed = 0;
+			iteminfo[i].angle = 0;
 			item[i].use = false;
 
 		}
 
 		/* 풀레이어 기체와 적탄환 충돌시 이 함수가 호출됨 */
 		function playerExplosion() {
-			var data = {explosion: explosion,playerBullet : playerBullet,enemyBalls:enemyBalls,item:item,laser:laser,gameend:true};
+			var data = {
+			/* 	explosion : explosion,
+				playerBullet : playerBullet,
+				enemyBalls : enemyBalls,
+				item : item,
+				laser : laser, */
+				gameend : true
+			};
 			var msg = {
-					position : "game",
-					cmd : "playing",
-					nick : nick,
-					gnum : gnum,
-					gamedata : data
-				};
-				ws.send(JSON.stringify(msg));	
+				position : "game",
+				cmd : "playing",
+				nick : nick,
+				gnum : gnum,
+				gamedata : data
+			};
+			ws.send(JSON.stringify(msg));
 			/* 아군 기체를 없애고 키값도 받지않는다 */
 			calcitem();
 			calcEnemy();
 			calcBullet();
 			calclaser();
-			
+
 			/*  캔버스를 한번 지운다 */
 			ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
@@ -886,60 +910,59 @@ canvas { border: 1px solid #555555;}
 				);
 				ctx.drawImage(canvasBuffer, 0, 0);
 			}
-			
+
 			/* 적군 탄환 그리기*/
 			for (var i = 0; i < enemyBalls.length; i++) {
 				ctx.fillStyle = enemyBalls[i].color;
 				ctx.beginPath();
-				ctx.arc(enemyBalls[i].x, enemyBalls[i].y, enemyBalls[i].radius, 0, Math.PI * 2, true)
+				ctx.arc(enemyBalls[i].x, enemyBalls[i].y, enemyBallsinfo[i].radius, 0, Math.PI * 2, true)
 				ctx.closePath();
 				ctx.fill();
 			}
-		
+
 			/* 아이템 그리기*/
 			for (var i = 0; i < item.length; i++) {
 				switch (i) {
 				case 0:
-					item[i].color = '#ff0000';
+					iteminfo[i].color = '#ff0000';
 					break;
 				case 1:
-					item[i].color = '#ffff00';
+					iteminfo[i].color = '#ffff00';
 					break;
 				case 2:
-					item[i].color = '#ff00ff';
+					iteminfo[i].color = '#ff00ff';
 					break;
 				case 3:
-					item[i].color = '#00ffff';
+					iteminfo[i].color = '#00ffff';
 					break;
 				default:
 					break;
 				}
-				ctx.fillStyle = item[i].color;
-				ctx.fillRect(item[i].x, item[i].y, item[i].width, item[i].height);
+				ctx.fillStyle = iteminfo[i].color;
+				ctx.fillRect(item[i].x, item[i].y, iteminfo[i].width, iteminfo[i].height);
 			}
-			
+
 			/* 탄환 충돌 이펙트를 그린다 */
 			for (var i = 0; i < laser.length; i++) {
 				if (laser[i].use) {
-					ctx.drawImage(laserimg, laser[i].x, laser[i].y, laser[i].w, laser[i].h, laser[i].exx, laser[i].exy, 32, 32);
+					ctx.drawImage(laserimg, laserinfo[i].x, laserinfo[i].y, laserinfo[i].w, laserinfo[i].h, laser[i].exx, laser[i].exy, 32, 32);
 				}
 			}
-			
+
 			/* 탄환 끼리의 충돌 감지 */
 			checkHitBullet();
-			
+
 			/*  아군 기체 폭발을 그려준다 */
-			ctx.drawImage(explosionimg, explosion.x, explosion.y, explosion.w, explosion.h, playerUnit.x, playerUnit.y, 64, 64);
-			explosion.x += explosion.w;
-			explosion.idx++;
-			if (explosion.idx % 5 == 0) {
+			ctx.drawImage(explosionimg, explosioninfo.x, explosioninfo.y, explosioninfo.w, explosioninfo.h, playerUnit.x, playerUnit.y, 64, 64);
+			explosion.x += explosioninfo.w;
+			explosioninfo.idx++;
+			if (explosioninfo.idx % 5 == 0) {
 				explosion.x = 0;
-				explosion.y += explosion.h;
+				explosion.y += explosioninfo.h;
 			}
 
-			if (explosion.idx > explosion.frame_cnt) {
+			if (explosioninfo.idx > explosioninfo.frame_cnt) {
 				explosiontimer = true;
-				
 
 			}
 
@@ -947,11 +970,10 @@ canvas { border: 1px solid #555555;}
 
 				setTimeout(function() {
 					playerExplosion();
-				}, 1000/120);
-			} 
-			else {
+				}, 1000 / 120);
+			} else {
 				/*  폭발이벤트가 끝나면 배경을 뺀 모든 그림을 초기화 시킨다. */
-				
+
 				ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
 				if (scrollVal >= canvasHeight - speed) {
@@ -980,17 +1002,21 @@ canvas { border: 1px solid #555555;}
 				var newlaser = {
 					exx : 600, //  폭발이 일어나는 위치 담기	
 					exy : 600, //  폭발이 일어나는 위치 담기	
+					use : false
+				};
+				var newlaserinfo = {
+				
 					x : 0,
 					y : 0,
 					w : 64,
 					h : 64,
 					idx : 0,
 					frame_cnt : 32,
-					use : false
 				};
 				/* 아이템 객체를 만들어 지금까지 생성한 값을 집어 넣는다 */
 
 				laser.push(newlaser);
+				laserinfo.push(newlaserinfo);
 				/* 아이템 배열에 집어 넣는다. 이 펑션으로 확실해지는 것은 화면내에 물체 하나를 추가 할때마다 다수의 값을 가진(용량이 제법 되는)객체가 만들어져야 한다는것, 패턴 가짓수 만들기에는 주의가 필요하다 */
 			}
 
@@ -1011,28 +1037,28 @@ canvas { border: 1px solid #555555;}
 		function nouselaser(i) {
 			laser[i].exx = 600;
 			laser[i].exy = 600;
-			laser[i].x = 0;
-			laser[i].y = 0;
-			laser[i].w = 64;
-			laser[i].h = 64;
-			laser[i].idx = 0;
-			laser[i].frame_cnt = 32;
+			laserinfo[i].x = 0;
+			laserinfo[i].y = 0;
+			laserinfo[i].w = 64;
+			laserinfo[i].h = 64;
+			laserinfo[i].idx = 0;
+			laserinfo[i].frame_cnt = 32;
 			laser[i].use = false;
 
 		}
-		
+
 		/* 탄환 충돌 폭발 이벤트 애니메이션 효과용 보여주는 장면을 다르게 해준다 */
 		function calclaser() {
 			for (var i = 0; i < laser.length; i++) {
 				if (laser[i].use) {
-					laser[i].x += laser[i].w;
-					laser[i].idx++;
-					if (laser[i].idx % 8 == 0) {
-						laser[i].x = 0;
-						laser[i].y += laser[i].h;
+					laserinfo[i].x += laserinfo[i].w;
+					laserinfo[i].idx++;
+					if (laserinfo[i].idx % 8 == 0) {
+						laserinfo[i].x = 0;
+						laserinfo[i].y += laserinfo[i].h;
 
 					}
-					if (laser[i].idx > laser[i].frame_cnt) {
+					if (laserinfo[i].idx > laserinfo[i].frame_cnt) {
 						nouselaser(i);
 					}
 
