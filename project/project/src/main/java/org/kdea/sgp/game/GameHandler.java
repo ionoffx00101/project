@@ -222,6 +222,22 @@ public class GameHandler extends TextWebSocketHandler {
 							}
 						}
 					}
+					if (cmd.equals("item")) {
+						Map<String, Object> map = session.getAttributes();
+						int gnum = (Integer) map.get("gnum");
+						String nick = (String) map.get("nick"); // 닉이 같을때 보내지 않
+						
+						//System.out.println(payloadMessage);
+						
+						Map<String, WebSocketSession> gameMember = gameMembersMap.get(gnum);
+						Iterator<String> Keys = gameMember.keySet().iterator();
+						while (Keys.hasNext()) {
+							String key = Keys.next();
+							if(!key.equals(nick)){
+								gameMember.get(key).sendMessage(new TextMessage(payloadMessage));
+							}
+						}
+					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();

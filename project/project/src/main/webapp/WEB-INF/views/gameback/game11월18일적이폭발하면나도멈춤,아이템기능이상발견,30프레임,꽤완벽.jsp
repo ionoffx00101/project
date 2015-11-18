@@ -499,14 +499,10 @@ canvas {
 		/* 7.탄환의 위치를 조정하는 평션 */
 		function calcEnemy() {
 			/* 일정 시간이 지날때마다 탄환 갯수를 추가하는 부분  */
-			if (timeCheckLevel1>100 && timeCheckLevel1 % 150==0) {
-				var itemcode = Math.floor(Math.random() * itemMax);
-				useplayeritem(itemcode);
-			}
 			if (timeCheckLevel1 > 600) {
 				/* 적 탄환이 2개 추가 될때 랜덤아이템 1개를 활성화시킨다   */
-				/* var itemcode = Math.floor(Math.random() * itemMax);
-				useplayeritem(itemcode); */
+				var itemcode = Math.floor(Math.random() * itemMax);
+				useplayeritem(itemcode);
 
 				/* 적 탄환을 두개 추가한다   */
 				createEnemyBalls(2);
@@ -801,7 +797,7 @@ canvas {
 						var distanceY = playerBullet[i].y - enemyBalls[j].y;
 						var distance = distanceX * distanceX + distanceY * distanceY;
 
-						if (distance <= (enemyBallsinfo[j].radius + 18 * enemyBallsinfo[j].radius + 18)) { //탄환범위 늘릴수 있음
+						if (distance <= (enemyBallsinfo[j].radius + 15 * enemyBallsinfo[j].radius + 15)) {
 							/* 아군 탄환 없앰 */
 							nouseplayerBullet(i);
 
@@ -900,10 +896,11 @@ canvas {
 					if (distance <= (iteminfo[i].width / 2 + (playerUnit.width / 2 - 10)) * (iteminfo[i].height / 2 + (playerUnit.height / 2 - 10))) {
 						/*아이템 초기화 */
 						nouseplayeritem(i);
+						iteminfo[i].eat = true; // 먹은걸 먹었다고 저장함
 
 						console.log(i + '먹음');
 						/*아이템 기능 넣기 */
-						if (i==0) {
+						if (iteminfo[0].eat) {
 
 							enemyBalls = new Array();
 							enemyBallsinfo = new Array();
@@ -913,7 +910,7 @@ canvas {
 							iteminfo[0].eat = false;
 						}
 
-						else if (i==1) {
+						else if (iteminfo[1].eat) {
 							if (item_twoweapon < 3) {
 								item_twoweapon += 1;
 								setTimeout(function() {

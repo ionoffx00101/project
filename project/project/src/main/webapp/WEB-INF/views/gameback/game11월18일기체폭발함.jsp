@@ -15,7 +15,7 @@ canvas {
 	var nick = "${nick}";
 	var rnum = "${rnum}";
 	var gnum = "${gnum}";
-	var realGameEnd = false;
+
 	$(function() {
 		var database = new Array();
 		var data = new Array();
@@ -23,9 +23,9 @@ canvas {
 		var datastop = false;
 		var canvasBuffer2 = document.createElement("canvas");
 		var ctx2 = document.getElementById("canvas2").getContext("2d"), canvasTemp2 = document.createElement("canvas"), scrollImg2 = new Image(), tempContext2 = canvasTemp2.getContext("2d"), imgWidth2 = 0, imgHeight2 = 0, imageData2 = {}, canvasWidth2 = 500, canvasHeight2 = 1530, scrollVal2 = 0, speed2 = 2;
-
-		//var realGameEnd = false;
-
+		
+		var realGameEnd =false;
+		
 		var spaceShipSprit2 = new Image();
 		spaceShipSprit2.src = "<c:url value="../resources/img/samplespaceships.png"/>";
 		/* 아군 탄환 이미지 */
@@ -41,26 +41,14 @@ canvas {
 		laserimg2.src = "<c:url value="../resources/img/lazer_exp.png"/>";
 
 		var explosiondraw = {
-			x : 0,
-			y : 0,
-			w : 64,
-			h : 64,
-			idx : 0,
-			frame_cnt : 25
-		}
-		var laserdraw = new Array();
-		for (var i = 0; i < 10; i++) {
-			var newlaserinfo = {
 				x : 0,
 				y : 0,
 				w : 64,
 				h : 64,
 				idx : 0,
-				frame_cnt : 32,
-			};
-			laserdraw.push(newlaserinfo);
-		}
-
+				frame_cnt : 25
+			}
+		
 		//var ws = new WebSocket("ws://localhost:8888/MavenWeb/wsinit");
 		var ws = new WebSocket("ws://192.168.8.55:8500/project/game?position=game&nick=" + nick + "&gnum=" + gnum + "&rnum=" + rnum);
 		ws.onopen = function() {
@@ -141,19 +129,19 @@ canvas {
 
 		}
 		function remoteTwoplayer() {
-			var gameEnd2 = data.gameend;
-			if (gameEnd2) {
+			var gameEnd2= data.gameend;
+			if(gameEnd2){
 				var explosion2 = data.explosion;
-
-			} else {
+				
+			}
+			else{
 				var Player2 = data.remotePlayer;
 			}
 
 			var enemyBalls2 = data.remoteenemyBalls;
 			var playerBullet2 = data.remoteplayerBullet;
 			var item2 = data.remoteitem;
-			var laser2 = data.remotelaser;
-
+			
 			ctx2.clearRect(0, 0, canvasWidth2, canvasHeight2);
 			/*  캔버스를 한번 지운다 */
 
@@ -184,16 +172,16 @@ canvas {
 					ctx2.drawImage(canvasBuffer2, 0, 0);
 				}
 			}
-			if (!gameEnd2) {
-				/* 플레이어 기체를 그려준다 */
-				ctx2.drawImage(spaceShipSprit2, //Source Image
-				405, 180, 36, 36, //고정시켜버림
-				Player2.x, Player2.y, //View Position
-				36, 36 //고정시켜버림
-				);
-				ctx2.drawImage(canvasBuffer2, 0, 0);
+			if(!gameEnd2){
+			/* 플레이어 기체를 그려준다 */
+			ctx2.drawImage(spaceShipSprit2, //Source Image
+			405, 180, 36, 36, //고정시켜버림
+			Player2.x, Player2.y, //View Position
+			36, 36 //고정시켜버림
+			);
+			ctx2.drawImage(canvasBuffer2, 0, 0);
 			}
-
+			
 			for (var i = 0; i < enemyBalls2.length; i++) {
 				ctx2.fillStyle = '#ffffff';
 				ctx2.beginPath();
@@ -206,47 +194,20 @@ canvas {
 				ctx2.fillStyle = '#ffffff';
 				ctx2.fillRect(item2[i].x, item2[i].y, 30, 30);
 			}
-
-			/* 탄환 충돌 이펙트를 그린다 */
-			for (var i = 0; i < laser2.length; i++) {
-				if (laser2[i].use) {
+			
+			if(gameEnd2){
+				 ctx2.drawImage(explosionimg2, explosiondraw.x, explosiondraw.y, explosiondraw.w, explosiondraw.h, explosion2.px, explosion2.py, 64, 64);
+				 explosiondraw.x += explosiondraw.w;
+				 explosiondraw.idx++;
+					if (explosiondraw.idx % 5 == 0) {
+						explosiondraw.x = 0;
+						explosiondraw.y += explosiondraw.h;
+					}
 					
-					ctx2.drawImage(laserimg2, laserdraw[i].x, laserdraw[i].y, laserdraw[i].w, laserdraw[i].h, laser2[i].exx, laser2[i].exy, 32, 32);
-				
-					laserdraw[i].x += laserdraw[i].w;
-					laserdraw[i].idx++;
-					if (laserdraw[i].idx % 8 == 0) {
-						laserdraw[i].x = 0;
-						laserdraw[i].y += laserdraw[i].h;
+					if (explosioninfo.idx > explosioninfo.frame_cnt) {
+						realGameEnd = true;
 
 					}
-					if (laserdraw[i].idx > laserdraw[i].frame_cnt) {
-						laserdraw[i].x = 0;
-						laserdraw[i].y = 0;
-						laserdraw[i].w = 64;
-						laserdraw[i].h = 64;
-						laserdraw[i].idx = 0;
-						laserdraw[i].frame_cnt = 32;
-					}
-
-				}
-				///변화를 줘야한다
-			}
-
-			if (gameEnd2) {
-				ctx2.drawImage(explosionimg2, explosiondraw.x, explosiondraw.y, explosiondraw.w, explosiondraw.h, explosion2.px, explosion2.py, 64, 64);
-				explosiondraw.x += explosiondraw.w;
-				explosiondraw.idx++;
-				if (explosiondraw.idx % 5 == 0) {
-					explosiondraw.x = 0;
-					explosiondraw.y += explosiondraw.h;
-				}
-
-				if (explosiondraw.idx > explosiondraw.frame_cnt) {
-					console.log(realGameEnd+'바뀌는곳');
-					realGameEnd = true;
-
-				}
 			}
 		}
 
@@ -343,7 +304,6 @@ canvas {
 
 			/* 탄환 충돌시 애니메이션 발생 관련 객체 선언 및 배열 내용 생성   */
 			laser = new Array();
-			laserinfo = new Array();
 			createlaser(lasermax);
 
 			/* 조건이 맞을 때까지 루프를 돌도록 설정된 게임 펑션을 돌린다. */
@@ -499,14 +459,10 @@ canvas {
 		/* 7.탄환의 위치를 조정하는 평션 */
 		function calcEnemy() {
 			/* 일정 시간이 지날때마다 탄환 갯수를 추가하는 부분  */
-			if (timeCheckLevel1>100 && timeCheckLevel1 % 150==0) {
-				var itemcode = Math.floor(Math.random() * itemMax);
-				useplayeritem(itemcode);
-			}
 			if (timeCheckLevel1 > 600) {
 				/* 적 탄환이 2개 추가 될때 랜덤아이템 1개를 활성화시킨다   */
-				/* var itemcode = Math.floor(Math.random() * itemMax);
-				useplayeritem(itemcode); */
+				var itemcode = Math.floor(Math.random() * itemMax);
+				useplayeritem(itemcode);
 
 				/* 적 탄환을 두개 추가한다   */
 				createEnemyBalls(2);
@@ -544,8 +500,8 @@ canvas {
 				remoteplayerBullet : playerBullet,
 				remoteenemyBalls : enemyBalls,
 				remoteitem : item,
-				remotelaser : laser,
-				gameend : false
+			/*remotelaser:laser, */
+				gameend:false 
 			};
 			/* database.push(data); */
 			spacecnt++;
@@ -653,7 +609,7 @@ canvas {
 			/* 탄환 충돌 이펙트를 그린다 */
 			for (var i = 0; i < laser.length; i++) {
 				if (laser[i].use) {
-					ctx.drawImage(laserimg, laserinfo[i].x, laserinfo[i].y, laserinfo[i].w, laserinfo[i].h, laser[i].exx, laser[i].exy, 32, 32);
+					ctx.drawImage(laserimg, laser[i].x, laser[i].y, laser[i].w, laser[i].h, laser[i].exx, laser[i].exy, 32, 32);
 				}
 			}
 
@@ -678,15 +634,15 @@ canvas {
 					frame_cnt : 25
 				}
 				//밑에 함수가 settimeout 천밀리초? 뒤에 실행되어야한다
-				//여기서 같이 기다렸다가 메세지가 가야한다
-
+//여기서 같이 기다렸다가 메세지가 가야한다
+				
 				playerExplosion();
-
+				
 			}
 
 			/*  판정에의해 게임 종료 혹은 속행을 판단하고 루프를 다시 돌릴 것인지를 결정한다. 이 과정은 10 밀리세컨드의 인터벌을 둔다 */
-			if (!gameEnd && !realGameEnd) {
-				console.log(realGameEnd+'확인하는곳');
+			if (!gameEnd) {
+
 				setTimeout(function() {
 					/* 	setTimeout(function() {
 						item_twoweapon -= 1;
@@ -706,7 +662,7 @@ canvas {
 						iteminfo[4].eat = false;
 					}
 					render();
-				}, 1000 / 30);
+				}, 1000 / 20);
 			}
 
 		}
@@ -801,7 +757,7 @@ canvas {
 						var distanceY = playerBullet[i].y - enemyBalls[j].y;
 						var distance = distanceX * distanceX + distanceY * distanceY;
 
-						if (distance <= (enemyBallsinfo[j].radius + 18 * enemyBallsinfo[j].radius + 18)) { //탄환범위 늘릴수 있음
+						if (distance <= (enemyBallsinfo[j].radius + 15 * enemyBallsinfo[j].radius + 15)) {
 							/* 아군 탄환 없앰 */
 							nouseplayerBullet(i);
 
@@ -900,10 +856,11 @@ canvas {
 					if (distance <= (iteminfo[i].width / 2 + (playerUnit.width / 2 - 10)) * (iteminfo[i].height / 2 + (playerUnit.height / 2 - 10))) {
 						/*아이템 초기화 */
 						nouseplayeritem(i);
+						iteminfo[i].eat = true; // 먹은걸 먹었다고 저장함
 
 						console.log(i + '먹음');
 						/*아이템 기능 넣기 */
-						if (i==0) {
+						if (iteminfo[0].eat) {
 
 							enemyBalls = new Array();
 							enemyBallsinfo = new Array();
@@ -913,7 +870,7 @@ canvas {
 							iteminfo[0].eat = false;
 						}
 
-						else if (i==1) {
+						else if (iteminfo[1].eat) {
 							if (item_twoweapon < 3) {
 								item_twoweapon += 1;
 								setTimeout(function() {
@@ -951,20 +908,20 @@ canvas {
 		/* 풀레이어 기체와 적탄환 충돌시 이 함수가 호출됨 */
 		function playerExplosion() {
 			var data = {
-				explosion : explosion,
-				remoteplayerBullet : playerBullet,
-				remoteenemyBalls : enemyBalls,
-				remoteitem : item,
-				remotelaser : laser,
-				gameend : true
-			};
+					explosion: explosion,
+					remoteplayerBullet : playerBullet,
+					remoteenemyBalls:enemyBalls,
+					remoteitem:item,
+					/* laser:laser, */
+					gameend:true
+					};
 			var msg = {
-				position : "game",
-				cmd : "playing",
-				nick : nick,
-				gnum : gnum,
-				gamedata : data
-			};
+					position : "game",
+					cmd : "playing",
+					nick : nick,
+					gnum : gnum,
+					gamedata : data
+				};
 			ws.send(JSON.stringify(msg));
 			/* 아군 기체를 없애고 키값도 받지않는다 */
 			calcitem();
@@ -1038,7 +995,7 @@ canvas {
 			/* 탄환 충돌 이펙트를 그린다 */
 			for (var i = 0; i < laser.length; i++) {
 				if (laser[i].use) {
-					ctx.drawImage(laserimg, laserinfo[i].x, laserinfo[i].y, laserinfo[i].w, laserinfo[i].h, laser[i].exx, laser[i].exy, 32, 32);
+					ctx.drawImage(laserimg, laser[i].x, laser[i].y, laser[i].w, laser[i].h, laser[i].exx, laser[i].exy, 32, 32);
 				}
 			}
 
@@ -1095,21 +1052,17 @@ canvas {
 				var newlaser = {
 					exx : 600, //  폭발이 일어나는 위치 담기	
 					exy : 600, //  폭발이 일어나는 위치 담기	
-					use : false
-				};
-				var newlaserinfo = {
 					x : 0,
 					y : 0,
 					w : 64,
 					h : 64,
 					idx : 0,
 					frame_cnt : 32,
+					use : false
 				};
-
 				/* 아이템 객체를 만들어 지금까지 생성한 값을 집어 넣는다 */
 
 				laser.push(newlaser);
-				laserinfo.push(newlaserinfo);
 				/* 아이템 배열에 집어 넣는다. 이 펑션으로 확실해지는 것은 화면내에 물체 하나를 추가 할때마다 다수의 값을 가진(용량이 제법 되는)객체가 만들어져야 한다는것, 패턴 가짓수 만들기에는 주의가 필요하다 */
 			}
 
@@ -1130,12 +1083,12 @@ canvas {
 		function nouselaser(i) {
 			laser[i].exx = 600;
 			laser[i].exy = 600;
-			laserinfo[i].x = 0;
-			laserinfo[i].y = 0;
-			laserinfo[i].w = 64;
-			laserinfo[i].h = 64;
-			laserinfo[i].idx = 0;
-			laserinfo[i].frame_cnt = 32;
+			laser[i].x = 0;
+			laser[i].y = 0;
+			laser[i].w = 64;
+			laser[i].h = 64;
+			laser[i].idx = 0;
+			laser[i].frame_cnt = 32;
 			laser[i].use = false;
 
 		}
@@ -1144,14 +1097,14 @@ canvas {
 		function calclaser() {
 			for (var i = 0; i < laser.length; i++) {
 				if (laser[i].use) {
-					laserinfo[i].x += laserinfo[i].w;
-					laserinfo[i].idx++;
-					if (laserinfo[i].idx % 8 == 0) {
-						laserinfo[i].x = 0;
-						laserinfo[i].y += laserinfo[i].h;
+					laser[i].x += laser[i].w;
+					laser[i].idx++;
+					if (laser[i].idx % 8 == 0) {
+						laser[i].x = 0;
+						laser[i].y += laser[i].h;
 
 					}
-					if (laserinfo[i].idx > laserinfo[i].frame_cnt) {
+					if (laser[i].idx > laser[i].frame_cnt) {
 						nouselaser(i);
 					}
 

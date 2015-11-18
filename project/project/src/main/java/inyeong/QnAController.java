@@ -177,6 +177,6 @@ public class QnAController {
 	@RequestMapping(value="tempgame13", method=RequestMethod.GET)
     public String tempgame14lnk(Model model,HttpServletRequest request) {
 		
-        return "game/thirdMix(ver.jquery6.0)";
+        return "game/thirdMix(ver.jquery6.1)";
     }
 }

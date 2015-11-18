@@ -499,7 +499,7 @@ canvas {
 		/* 7.탄환의 위치를 조정하는 평션 */
 		function calcEnemy() {
 			/* 일정 시간이 지날때마다 탄환 갯수를 추가하는 부분  */
-			if (timeCheckLevel1>100 && timeCheckLevel1 % 150==0) {
+			if (timeCheckLevel1>100 && timeCheckLevel1 % 200==0) {
 				var itemcode = Math.floor(Math.random() * itemMax);
 				useplayeritem(itemcode);
 			}
