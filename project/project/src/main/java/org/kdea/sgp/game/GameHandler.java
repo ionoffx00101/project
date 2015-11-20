@@ -198,6 +198,7 @@ public class GameHandler extends TextWebSocketHandler {
 					if (cmd.equals("end")) {
 						Map<String, Object> map = session.getAttributes();
 						int gnum = (Integer) map.get("gnum");
+						System.out.println(payloadMessage);
 						Map<String, WebSocketSession> gameMember = gameMembersMap.get(gnum);
 						Iterator<String> Keys = gameMember.keySet().iterator();
 						while (Keys.hasNext()) {

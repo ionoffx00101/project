@@ -12,25 +12,24 @@ canvas {
 </style>
 <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 <script type="text/javascript">
+
 	var nick = "${nick}";
 	var rnum = "${rnum}";
 	var gnum = "${gnum}";
 	//추가된곳
 	var victory = true;
+	
 	var realGameEnd = false;
-
-	var endcheck = false;
-
 	$(function() {
 		//글씨
-
+		
 		var database = new Array();
 		var data = new Array();
 		var datacnt = 0;
 		var datastop = false;
 		var canvasBuffer2 = document.createElement("canvas");
 		var ctx2 = document.getElementById("canvas2").getContext("2d"), canvasTemp2 = document.createElement("canvas"), scrollImg2 = new Image(), tempContext2 = canvasTemp2.getContext("2d"), imgWidth2 = 0, imgHeight2 = 0, imageData2 = {}, canvasWidth2 = 500, canvasHeight2 = 1530, scrollVal2 = 0, speed2 = 2;
-		var ctx = document.getElementById("canvas").getContext("2d"), canvasTemp = document.createElement("canvas"), scrollImg = new Image(), tempContext = canvasTemp.getContext("2d"), imgWidth = 0, imgHeight = 0, imageData = {}, canvasWidth = 500, canvasHeight = 1530, scrollVal = 0, speed = 2;
+
 		//var realGameEnd = false;
 
 		var spaceShipSprit2 = new Image();
@@ -43,20 +42,22 @@ canvas {
 		enemyimg2.src = "<c:url value="../resources/img/enemy_2_3.png"/>";
 		//아이템 이미지
 		var itemImg_02 = new Image();
-		itemImg_02.src = "<c:url value="../resources/img/item_R.png"/>";
-		var itemImg_12 = new Image();
-		itemImg_12.src = "<c:url value="../resources/img/item_B.png"/>";
-		var itemImg_22 = new Image();
-		itemImg_22.src = "<c:url value="../resources/img/item_A.png"/>";
-		var itemImg_32 = new Image();
-		itemImg_32.src = "<c:url value="../resources/img/item_S_1.png"/>";
-		var itemImg_42 = new Image();
-		itemImg_42.src = "<c:url value="../resources/img/item_S_2.png"/>";
-
+			itemImg_02.src = "<c:url value="../resources/img/item_R.png"/>";
+		var	itemImg_12 = new Image();
+			itemImg_12.src = "<c:url value="../resources/img/item_B.png"/>";
+		var	itemImg_22 = new Image();
+			itemImg_22.src = "<c:url value="../resources/img/item_A.png"/>";
+		var	itemImg_32 = new Image();
+			itemImg_32.src = "<c:url value="../resources/img/item_S_1.png"/>";
+		var	itemImg_42 = new Image();
+			itemImg_42.src = "<c:url value="../resources/img/item_S_2.png"/>";
+		
 		/* 적 탄환 플레이어 충돌 이미지 */
 		var explosionimg2 = new Image();
 		explosionimg2.src = "<c:url value="../resources/img/explosion-sprite-sheet.png"/>";
-
+		
+		
+		
 		/* 아군 탄환 적탄환 충돌 이미지 */
 		var laserimg2 = new Image();
 		laserimg2.src = "<c:url value="../resources/img/laser_exp.png"/>";
@@ -97,49 +98,31 @@ canvas {
 				scrollImg2.onload = loadImage2;
 			}
 			if (ob.cmd == 'end') {
-
-				if (!endcheck) {
-					endcheck = true;
-					realGameEnd = true;
-					// score, victory
-					if (victory) {
-						//1p
-						ctx.font = 'bold 55px Verdana';
-						ctx.fillStyle = '#ffffff';
-						ctx.fillText('Win!', 180, 350);
-						//2p
-						ctx2.font = 'bold 55px Verdana';
-						ctx2.fillStyle = '#ffffff';
-						ctx2.fillText('lose..', 170, 350);
-					} else if (!victory) {
-						//1p
-						ctx.font = 'bold 55px Verdana';
-						ctx.fillStyle = '#ffffff';
-						ctx.fillText('lose..', 170, 350);
-						//2p
-						ctx2.font = 'bold 55px Verdana';
-						ctx2.fillStyle = '#ffffff';
-						ctx2.fillText('Win!', 180, 350);
-
-					}
-					setTimeout(function() {
-						location.href = "roomIn?rnum=" + rnum;
-					}, 3000);
-				}
+				// score, victory
+				alert('게임이 종료 되었습니다');
+				location.href = "roomIn?rnum=" + rnum;
 			}
 			if (ob.cmd == 'playing') {
-				var itemroot2 = ob.itemroot;
-				for (var i = 0; i < itemroot2.length; i++) {
-					if (itemroot2[i].two) {
-						itemroot[i].one = true;
+				var itemroot2 =ob.itemroot;
+				for(var i=0;i<itemroot2.length;i++){
+					if(itemroot2[i].two){
+						itemroot[i].one=true;
 					}
 				}
-
+				
+				
 				data = ob.gamedata;
 				datacnt = 0;
 				datastop = false;
 				remoteTwoplayer();
 			}
+		/* 	if (ob.cmd == 'item') {
+			 console.log(ob.itemcode);
+
+				var itemcode = ob.itemcode;
+				iteminfo[itemcode].eat = true; 
+
+			} */
 		};
 		ws.onclose = function(event) {
 		};
@@ -177,10 +160,10 @@ canvas {
 			/* 아군 탄환 이미지 */
 			playerBulletimg2 = new Image();
 			playerBulletimg2.src = "<c:url value="../resources/img/laserGreen11.png"/>";
-
+			
 			enemyimg2 = new Image();
 			enemyimg2.src = "<c:url value="../resources/img/enemy_2_3.png"/>";
-
+			
 			/* 적 탄환 플레이어 충돌 이미지 */
 			explosionimg2 = new Image();
 			explosionimg2.src = "<c:url value="../resources/img/explosion-sprite-sheet.png"/>";
@@ -191,7 +174,6 @@ canvas {
 
 		}
 		function remoteTwoplayer() {
-			if(!endcheck){
 			var gameEnd2 = data.gameend;
 			if (gameEnd2) {
 				var explosion2 = data.explosion;
@@ -247,54 +229,54 @@ canvas {
 
 			for (var i = 0; i < enemyBalls2.length; i++) {
 				ctx2.drawImage(enemyimg2, //Source Image
-				0, 0, //X, Y Position on spaceShipSprit
-				36, 36, //Cut Size from spaceShipSprit
-				enemyBalls2[i].x, enemyBalls2[i].y, //View Position
-				26, 26 //View Size
-				);
+						0, 0, //X, Y Position on spaceShipSprit
+						36, 36, //Cut Size from spaceShipSprit
+						enemyBalls2[i].x,enemyBalls2[i].y, //View Position
+						26, 26 //View Size
+						);
 			}
 			/* 아이템을 그려준다   */
 			for (var i = 0; i < item2.length; i++) {
-
+				
 				switch (i) {
 				case 0:
 					ctx2.drawImage(itemImg_02, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item2[i].x, item2[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item2[i].x,item2[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				case 1:
 					ctx2.drawImage(itemImg_12, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item2[i].x, item2[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item2[i].x,item2[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				case 2:
 					ctx2.drawImage(itemImg_22, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item2[i].x, item2[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item2[i].x,item2[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				case 3:
 					ctx2.drawImage(itemImg_32, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item2[i].x, item2[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item2[i].x,item2[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				case 4:
 					ctx2.drawImage(itemImg_42, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item2[i].x, item2[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item2[i].x,item2[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				default:
@@ -307,9 +289,9 @@ canvas {
 			/* 탄환 충돌 이펙트를 그린다 */
 			for (var i = 0; i < laser2.length; i++) {
 				if (laser2[i].use) {
-
+					
 					ctx2.drawImage(laserimg2, laserdraw[i].x, laserdraw[i].y, laserdraw[i].w, laserdraw[i].h, laser2[i].exx, laser2[i].exy, 32, 32);
-
+				
 					laserdraw[i].x += laserdraw[i].w;
 					laserdraw[i].idx++;
 					if (laserdraw[i].idx % 8 == 0) {
@@ -340,21 +322,21 @@ canvas {
 				}
 
 				if (explosiondraw.idx > explosiondraw.frame_cnt) {
-
+					console.log(realGameEnd+'바뀌는곳');
 					realGameEnd = true;
 					var msg = {
-						position : "game",
-						cmd : "end",
-						nick : nick,
-						gnum : gnum
-					};
-					ws.send(JSON.stringify(msg));
+							position : "game",
+							cmd : "end",
+							nick : nick,
+							gnum : gnum
+						};
+						ws.send(JSON.stringify(msg));
 
 				}
 			}
-			}
 		}
 
+		var ctx = document.getElementById("canvas").getContext("2d"), canvasTemp = document.createElement("canvas"), scrollImg = new Image(), tempContext = canvasTemp.getContext("2d"), imgWidth = 0, imgHeight = 0, imageData = {}, canvasWidth = 500, canvasHeight = 1530, scrollVal = 0, speed = 2;
 		/* 위쪽은 선생님 코드의 변수 선언, 그림을 그려주는 개체가 둘 필요하기때문에(그림의 처음과 끝을 이어 붙여야 하므로) 두 객체를 선언한다. 아래쪽 캔버스 템프는 조금 간략화된 클래스 선언으로 해당 객체에 상기와 같은 속성을 집어 넣어 준것이다 */
 
 		var playerUnit = {};
@@ -409,13 +391,13 @@ canvas {
 		var laserimg;
 
 		//아이템 타이머
-		var itemtimer1 = 0;
-		var itemtimer3 = 0;
-		var itemtimer4 = 0;
-
+		var itemtimer1=0;
+		var itemtimer3=0;
+		var itemtimer4=0;
+		
 		//스코어
-		var score = 0;
-
+		var score=0;
+		
 		/* 1.아래쪽부터 돌아가는 로드 이미지는 게임에 시동을 거는 역할을 한다. */
 		function loadImage() {
 			/* 사용된 이미지의 폭과 너비를 저장하고 그림용 펜의 역할을 수행하는 캔버스 템프에도 담아둔다  */
@@ -465,56 +447,8 @@ canvas {
 			laserinfo = new Array();
 			createlaser(lasermax);
 
-			imageData = tempContext.getImageData(0, canvasHeight - scrollVal, canvasWidth, canvasHeight);
-			ctx.putImageData(imageData, 0, 0, 0, 0, canvasWidth, imgHeight);
-
-			imageData = tempContext.getImageData(0, 0, canvasWidth, canvasHeight - scrollVal);
-			ctx.putImageData(imageData, 0, scrollVal, 0, 0, canvasWidth, imgHeight);
-
-			imageData = tempContext.getImageData(0, canvasHeight - scrollVal, canvasWidth, canvasHeight);
-			ctx2.putImageData(imageData, 0, 0, 0, 0, canvasWidth, imgHeight);
-
-			imageData = tempContext.getImageData(0, 0, canvasWidth, canvasHeight - scrollVal);
-			ctx2.putImageData(imageData, 0, scrollVal, 0, 0, canvasWidth, imgHeight);
-
-			ctx.font = 'bold 55px Verdana';
-			ctx.fillStyle = '#ffffff';
-			ctx.fillText('Ready!', 150, 350);
-
-			ctx2.font = 'bold 55px Verdana';
-			ctx2.fillStyle = '#ffffff';
-			ctx2.fillText('Ready!', 150, 350);
-
-			setTimeout(function() {
-				ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-				ctx2.clearRect(0, 0, canvasWidth, canvasHeight);
-
-				imageData = tempContext.getImageData(0, canvasHeight - scrollVal, canvasWidth, canvasHeight);
-				ctx.putImageData(imageData, 0, 0, 0, 0, canvasWidth, imgHeight);
-
-				imageData = tempContext.getImageData(0, 0, canvasWidth, canvasHeight - scrollVal);
-				ctx.putImageData(imageData, 0, scrollVal, 0, 0, canvasWidth, imgHeight);
-
-				imageData = tempContext.getImageData(0, canvasHeight - scrollVal, canvasWidth, canvasHeight);
-				ctx2.putImageData(imageData, 0, 0, 0, 0, canvasWidth, imgHeight);
-
-				imageData = tempContext.getImageData(0, 0, canvasWidth, canvasHeight - scrollVal);
-				ctx2.putImageData(imageData, 0, scrollVal, 0, 0, canvasWidth, imgHeight);
-
-				ctx.font = 'bold 55px Verdana';
-				ctx.fillStyle = '#ffffff';
-				ctx.fillText('Go!', 195, 350);
-
-				ctx2.font = 'bold 55px Verdana';
-				ctx2.fillStyle = '#ffffff';
-				ctx2.fillText('Go!', 195, 350);
-
-				setTimeout(function() {
-					render();
-				}, 1000);
-			}, 2000);
-
-			//render();
+			/* 조건이 맞을 때까지 루프를 돌도록 설정된 게임 펑션을 돌린다. */
+			render();
 		}
 
 		/* 2.기체이미지를 가져오는 펑션 */
@@ -522,14 +456,15 @@ canvas {
 
 			spaceShipSprit = new Image();
 			spaceShipSprit.src = "<c:url value="../resources/img/samplespaceships.png"/>";
-
+			
 			/* 아군 탄환 이미지 */
 			playerBulletimg = new Image();
 			playerBulletimg.src = "<c:url value="../resources/img/laserGreen11.png"/>";
-
+			
 			enemyimg = new Image();
 			enemyimg.src = "<c:url value="../resources/img/enemy_2_3.png"/>";
-
+			
+			
 			/* 아이템 이미지 > 현재는 네모칸으로 해놔서 이미지를 사용하지 않는다 */
 			itemImg_0 = new Image();
 			itemImg_0.src = "<c:url value="../resources/img/item_R.png"/>";
@@ -663,8 +598,8 @@ canvas {
 		function checkHitPlayer() {
 			var rtnVal = false;
 			for (var i = 0; i < enemyBalls.length; i++) {
-				var distanceX = (playerUnit.x + playerUnit.width / 2) - (enemyBalls[i].x + enemyBallsinfo[i].width / 2);
-				var distanceY = (playerUnit.y + playerUnit.height / 2) - (enemyBalls[i].y + enemyBallsinfo[i].height / 2);
+				var distanceX = (playerUnit.x + playerUnit.width / 2) - (enemyBalls[i].x+ enemyBallsinfo[i].width / 2);
+				var distanceY = (playerUnit.y + playerUnit.height / 2) - (enemyBalls[i].y+ enemyBallsinfo[i].height / 2);
 				var distance = distanceX * distanceX + distanceY * distanceY;
 
 				if (distance <= (enemyBallsinfo[i].width / 2 + (playerUnit.width / 2 - 5)) * (enemyBallsinfo[i].height / 2 + (playerUnit.height / 2 - 5))) {
@@ -679,7 +614,7 @@ canvas {
 		/* 7.탄환의 위치를 조정하는 평션 */
 		function calcEnemy() {
 			/* 일정 시간이 지날때마다 탄환 갯수를 추가하는 부분  */
-			if (timeCheckLevel1 > 100 && timeCheckLevel1 % 150 == 0) {
+			if (timeCheckLevel1>100 && timeCheckLevel1 % 150==0) {
 				var itemcode = Math.floor(Math.random() * itemMax);
 				useplayeritem(itemcode);
 			}
@@ -689,9 +624,7 @@ canvas {
 				useplayeritem(itemcode); */
 
 				/* 적 탄환을 두개 추가한다   */
-				if (enemyBalls.length < 40) {
-					createEnemyBalls(2);
-				}
+				createEnemyBalls(2);
 				timeCheckLevel1 = 0;
 			}
 			timeCheckLevel1++;
@@ -716,27 +649,25 @@ canvas {
 
 		/*   8.게임 루프 펑션 */
 		function render() {
-			if(!endcheck){
-			
 			/* render 돌릴때마다 메세지 전송 */
-			if (itemtimer1 >= 1) {
+			if(itemtimer1>=1){
 				itemtimer1--;
-			} else {
+			}else{
 				item_twoweapon = 2;
 			}
-			if (itemtimer3 >= 1) {
+			if(itemtimer3>=1){
 				itemtimer3--;
-			} else {
+			}else{
 				for (var i = 0; i < enemyBalls.length; i++) {
 					enemyBallsinfo[i].speed = 10;
 				}
 			}
-			if (itemtimer4 >= 1) {
+			if(itemtimer4>=1){
 				itemtimer4--;
-			} else {
+			}else{
 				playerUnit.speed = 9;
 			}
-
+			
 			var remotePlayer = {
 				x : playerUnit.x,
 				y : playerUnit.y
@@ -763,13 +694,13 @@ canvas {
 					itemroot : itemroot
 				};
 				ws.send(JSON.stringify(msg));
-				for (var i = 0; i < itemroot.length; i++) {
-					if (itemroot[i].two) {
-						itemroot[i].two = false;
-
-					}
+			for(var i=0;i<itemroot.length;i++){
+				if(itemroot[i].two){
+					itemroot[i].two=false;
+		
 				}
-
+			}
+				
 			}
 			if (spacecnt % 5 == 0) {
 				spacetimer = true;
@@ -833,14 +764,14 @@ canvas {
 				ctx.arc(enemyBalls[i].x, enemyBalls[i].y, enemyBallsinfo[i].radius, 0, Math.PI * 2, true)
 				ctx.closePath();
 				ctx.fill(); */
-
+				
 				// ctx.drawImage(enemyimg,enemyBalls[i].x,enemyBalls[i].y);
-				ctx.drawImage(enemyimg, //Source Image
-				0, 0, //X, Y Position on spaceShipSprit
-				36, 36, //Cut Size from spaceShipSprit
-				enemyBalls[i].x, enemyBalls[i].y, //View Position
-				26, 26 //View Size
-				);
+					ctx.drawImage(enemyimg, //Source Image
+							0, 0, //X, Y Position on spaceShipSprit
+							36, 36, //Cut Size from spaceShipSprit
+							enemyBalls[i].x,enemyBalls[i].y, //View Position
+							26, 26 //View Size
+							);
 			}
 
 			/* 아이템을 그려준다   */
@@ -849,42 +780,42 @@ canvas {
 				switch (i) {
 				case 0:
 					ctx.drawImage(itemImg_0, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item[i].x, item[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item[i].x,item[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				case 1:
 					ctx.drawImage(itemImg_1, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item[i].x, item[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item[i].x,item[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				case 2:
 					ctx.drawImage(itemImg_2, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item[i].x, item[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item[i].x,item[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				case 3:
 					ctx.drawImage(itemImg_3, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item[i].x, item[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item[i].x,item[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				case 4:
 					ctx.drawImage(itemImg_4, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item[i].x, item[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item[i].x,item[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				default:
@@ -909,8 +840,8 @@ canvas {
 			gameEnd = checkHitPlayer();
 
 			if (gameEnd) {
-
-				victory = false;
+				
+				victory=false;
 				/* 아군기체와 적탄환 춛돌시 아군 기체를 없애고 그 자리에서 충돌 이펙트를 보여준다 */
 				explosion = {
 					px : playerUnit.x,
@@ -930,9 +861,10 @@ canvas {
 				playerExplosion();
 
 			}
-
+			 
+			 
 			/*  판정에의해 게임 종료 혹은 속행을 판단하고 루프를 다시 돌릴 것인지를 결정한다. 이 과정은 10 밀리세컨드의 인터벌을 둔다 */
-			if (!gameEnd && !realGameEnd) {//
+			if (!gameEnd  && !realGameEnd) {//
 				setTimeout(function() {
 					if (itemroot[0].one) {
 						enemyBalls = new Array();
@@ -943,36 +875,35 @@ canvas {
 						itemroot[0].one = false;
 					}
 					if (itemroot[1].one) {
-						itemtimer1 = 100; //900
+						itemtimer1=100; //900
 						if (item_twoweapon < 3) {
 							item_twoweapon += 1;
 						}
 						itemroot[1].one = false;
-					}
-
+					} 
+					
 					if (itemroot[2].one) {
-						if (enemyBalls.length < 40) {
-							createEnemyBalls(10);
-						}
+						createEnemyBalls(10);
 						itemroot[2].one = false;
 					}
 					if (itemroot[3].one) {
-						itemtimer3 = 100;
+						itemtimer3=100;
 						for (var i = 0; i < enemyBalls.length; i++) {
 							enemyBallsinfo[i].speed = 15;
 						}
 						itemroot[3].one = false;
 					}
 					if (itemroot[4].one) {
-						itemtimer4 = 100;
+						itemtimer4=100;
 						playerUnit.speed = 5;
 						itemroot[4].one = false;
-					}
-
+					} 
+					
+					
 					render();
 				}, 1000 / 30);
 			}
-			}
+
 		}
 
 		/* thirdmix에서 추가된 함수   */
@@ -1061,14 +992,14 @@ canvas {
 				if (playerBullet[i].use) {/* 사용하는 공만 충돌판정 확인함 */
 
 					for (var j = 0; j < enemyBalls.length; j++) {
-						var distanceX = playerBullet[i].x - (enemyBalls[j].x + enemyBallsinfo[j].width / 2);
-						var distanceY = playerBullet[i].y - (enemyBalls[j].y + enemyBallsinfo[j].height / 2);
+						var distanceX = playerBullet[i].x - (enemyBalls[j].x+ enemyBallsinfo[j].width / 2);
+						var distanceY = playerBullet[i].y - (enemyBalls[j].y+ enemyBallsinfo[j].height / 2);
 						var distance = distanceX * distanceX + distanceY * distanceY;
 
-						if (distance <= ((enemyBallsinfo[j].width / 2) + 18 * (enemyBallsinfo[j].height / 2) + 18)) { // 탄환범위 늘릴수 있음+ 18
+						if (distance <= ((enemyBallsinfo[j].width / 2)+18 * (enemyBallsinfo[j].height / 2) + 18)) { // 탄환범위 늘릴수 있음+ 18
 							/* 아군 탄환 없앰 */
 							nouseplayerBullet(i);
-							score += 100;
+							score+=100;
 							/* 폭발이펙트 발생 */
 							uselaser(enemyBalls[j].x, enemyBalls[j].y);// - 15
 
@@ -1108,12 +1039,12 @@ canvas {
 					radius : 4,
 					radians : Math.PI / 180
 				};
-
+				
 				var newitemroot = {
-					itemcode : i,
-					one : false,
-					two : false
-				};
+						itemcode : i,
+						one : false,
+						two : false
+					};
 				/* 아이템 객체를 만들어 지금까지 생성한 값을 집어 넣는다 */
 				item.push(newitem)
 				iteminfo.push(newiteminfo);
@@ -1171,9 +1102,10 @@ canvas {
 						/*아이템 초기화 */
 						nouseplayeritem(i);
 						/*아이템 기능 넣기 */
-						if (i == 0) {
+						if (i==0) {
 							itemroot[0].one = true;
-						} else if (i == 1) {
+						}
+						else if (i==1) {
 							itemroot[1].one = true;
 						} else {
 							itemroot[i].two = true;
@@ -1197,8 +1129,7 @@ canvas {
 
 		/* 풀레이어 기체와 적탄환 충돌시 이 함수가 호출됨 */
 		function playerExplosion() {
-			if(!endcheck){
-				var data = {
+			var data = {
 				explosion : explosion,
 				remoteplayerBullet : playerBullet,
 				remoteenemyBalls : enemyBalls,
@@ -1255,17 +1186,17 @@ canvas {
 
 			/* 적군 탄환 그리기*/
 			for (var i = 0; i < enemyBalls.length; i++) {
-				/* 	ctx.fillStyle = enemyBallsinfo[i].color;
-					ctx.beginPath();
-					ctx.arc(enemyBalls[i].x, enemyBalls[i].y, enemyBallsinfo[i].radius, 0, Math.PI * 2, true)
-					ctx.closePath();
-					ctx.fill();	 */
+			/* 	ctx.fillStyle = enemyBallsinfo[i].color;
+				ctx.beginPath();
+				ctx.arc(enemyBalls[i].x, enemyBalls[i].y, enemyBallsinfo[i].radius, 0, Math.PI * 2, true)
+				ctx.closePath();
+				ctx.fill();	 */
 				ctx.drawImage(enemyimg, //Source Image
-				0, 0, //X, Y Position on spaceShipSprit
-				36, 36, //Cut Size from spaceShipSprit
-				enemyBalls[i].x, enemyBalls[i].y, //View Position
-				26, 26 //View Size
-				);
+						0, 0, //X, Y Position on spaceShipSprit
+						36, 36, //Cut Size from spaceShipSprit
+						enemyBalls[i].x,enemyBalls[i].y, //View Position
+						26, 26 //View Size
+						);
 			}
 
 			/* 아이템 그리기*/
@@ -1273,42 +1204,42 @@ canvas {
 				switch (i) {
 				case 0:
 					ctx.drawImage(itemImg_0, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item[i].x, item[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item[i].x,item[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				case 1:
 					ctx.drawImage(itemImg_1, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item[i].x, item[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item[i].x,item[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				case 2:
 					ctx.drawImage(itemImg_2, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item[i].x, item[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item[i].x,item[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				case 3:
 					ctx.drawImage(itemImg_3, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item[i].x, item[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item[i].x,item[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				case 4:
 					ctx.drawImage(itemImg_4, //Source Image
-					0, 0, //X, Y Position on spaceShipSprit
-					88, 80, //Cut Size from spaceShipSprit
-					item[i].x, item[i].y, //View Position
-					26, 24 //View Size
+							0, 0, //X, Y Position on spaceShipSprit
+							88, 80, //Cut Size from spaceShipSprit
+							item[i].x,item[i].y, //View Position
+							26, 24 //View Size
 					);
 					break;
 				default:
@@ -1368,7 +1299,6 @@ canvas {
 				imageData = tempContext.getImageData(0, 0, canvasWidth, canvasHeight - scrollVal);
 				ctx.putImageData(imageData, 0, scrollVal, 0, 0, canvasWidth, imgHeight);
 				/* 배경 스크롤을 그려주는 부분 */
-			}
 			}
 		}
 
@@ -1441,11 +1371,11 @@ canvas {
 				}
 			}
 		}
-
+	
 	});
 </script>
 </head>
-<body>
+<body> 
 
 	<canvas id="canvas" width="500" height="750"></canvas>
 	<canvas id="canvas2" width="500" height="750"></canvas>

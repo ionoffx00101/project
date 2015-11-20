@@ -17,10 +17,8 @@ canvas {
 	var gnum = "${gnum}";
 	//추가된곳
 	var victory = true;
+
 	var realGameEnd = false;
-
-	var endcheck = false;
-
 	$(function() {
 		//글씨
 
@@ -30,7 +28,7 @@ canvas {
 		var datastop = false;
 		var canvasBuffer2 = document.createElement("canvas");
 		var ctx2 = document.getElementById("canvas2").getContext("2d"), canvasTemp2 = document.createElement("canvas"), scrollImg2 = new Image(), tempContext2 = canvasTemp2.getContext("2d"), imgWidth2 = 0, imgHeight2 = 0, imageData2 = {}, canvasWidth2 = 500, canvasHeight2 = 1530, scrollVal2 = 0, speed2 = 2;
-		var ctx = document.getElementById("canvas").getContext("2d"), canvasTemp = document.createElement("canvas"), scrollImg = new Image(), tempContext = canvasTemp.getContext("2d"), imgWidth = 0, imgHeight = 0, imageData = {}, canvasWidth = 500, canvasHeight = 1530, scrollVal = 0, speed = 2;
+
 		//var realGameEnd = false;
 
 		var spaceShipSprit2 = new Image();
@@ -97,35 +95,96 @@ canvas {
 				scrollImg2.onload = loadImage2;
 			}
 			if (ob.cmd == 'end') {
+				// score, victory
 
-				if (!endcheck) {
-					endcheck = true;
-					realGameEnd = true;
-					// score, victory
-					if (victory) {
-						//1p
-						ctx.font = 'bold 55px Verdana';
-						ctx.fillStyle = '#ffffff';
-						ctx.fillText('Win!', 180, 350);
-						//2p
-						ctx2.font = 'bold 55px Verdana';
-						ctx2.fillStyle = '#ffffff';
-						ctx2.fillText('lose..', 170, 350);
-					} else if (!victory) {
-						//1p
-						ctx.font = 'bold 55px Verdana';
-						ctx.fillStyle = '#ffffff';
-						ctx.fillText('lose..', 170, 350);
-						//2p
-						ctx2.font = 'bold 55px Verdana';
-						ctx2.fillStyle = '#ffffff';
-						ctx2.fillText('Win!', 180, 350);
-
+				if (victory) {
+					console.log('victory true + '+victory);
+					ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+					ctx2.clearRect(0, 0, canvasWidth2, canvasHeight2);
+					
+					//1p			
+					if (scrollVal >= canvasHeight - speed) {
+						scrollVal = 0;
 					}
-					setTimeout(function() {
-						location.href = "roomIn?rnum=" + rnum;
-					}, 3000);
+
+					scrollVal += speed;
+					
+					if (scrollVal2 >= canvasHeight2 - speed2) {
+						scrollVal2 = 0;
+					}
+
+					scrollVal2 += speed2;
+					
+					imageData = tempContext.getImageData(0, canvasHeight - scrollVal, canvasWidth, canvasHeight);
+					ctx.putImageData(imageData, 0, 0, 0, 0, canvasWidth, imgHeight);
+
+					imageData = tempContext.getImageData(0, 0, canvasWidth, canvasHeight - scrollVal);
+					ctx.putImageData(imageData, 0, scrollVal, 0, 0, canvasWidth, imgHeight);
+
+					imageData2 = tempContext2.getImageData(0, canvasHeight2 - scrollVal2, canvasWidth2, canvasHeight2);
+					ctx2.putImageData(imageData2, 0, 0, 0, 0, canvasWidth2, imgHeight2);
+
+					imageData2 = tempContext2.getImageData(0, 0, canvasWidth2, canvasHeight2 - scrollVal2);
+					ctx2.putImageData(imageData2, 0, scrollVal2, 0, 0, canvasWidth2, imgHeight2);
+					
+					//1p
+					ctx.font = 'bold 55px Verdana';
+					ctx.fillStyle = '#ffffff';
+					ctx.fillText('Win!', 180, 350);
+					
+					//2p
+					ctx2.font = 'bold 55px Verdana';
+					ctx2.fillStyle = '#ffffff';
+					ctx2.fillText('lose..', 170, 350);
+
+				} 
+				else if(!victory){
+					console.log('victory false + '+victory);
+					ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+					ctx2.clearRect(0, 0, canvasWidth2, canvasHeight2);
+					
+					//1p
+					if (scrollVal >= canvasHeight - speed) {
+						scrollVal = 0;
+					}
+
+					scrollVal += speed;
+					
+					if (scrollVal2 >= canvasHeight2 - speed2) {
+						scrollVal2 = 0;
+					}
+
+					scrollVal2 += speed2;
+					
+					imageData = tempContext.getImageData(0, canvasHeight - scrollVal, canvasWidth, canvasHeight);
+					ctx.putImageData(imageData, 0, 0, 0, 0, canvasWidth, imgHeight);
+
+					imageData = tempContext.getImageData(0, 0, canvasWidth, canvasHeight - scrollVal);
+					ctx.putImageData(imageData, 0, scrollVal, 0, 0, canvasWidth, imgHeight);
+
+					//2p
+					imageData2 = tempContext2.getImageData(0, canvasHeight2 - scrollVal2, canvasWidth2, canvasHeight2);
+					ctx2.putImageData(imageData2, 0, 0, 0, 0, canvasWidth2, imgHeight2);
+
+					imageData2 = tempContext2.getImageData(0, 0, canvasWidth2, canvasHeight2 - scrollVal2);
+					ctx2.putImageData(imageData2, 0, scrollVal2, 0, 0, canvasWidth2, imgHeight2);
+					
+					//1p
+					ctx.font = 'bold 55px Verdana';
+					ctx.fillStyle = '#ffffff';
+					ctx.fillText('lose..', 170, 350);
+					
+					//2p
+					ctx2.font = 'bold 55px Verdana';
+					ctx2.fillStyle = '#ffffff';
+					ctx2.fillText('Win!', 180, 350);
+
 				}
+
+				/* setTimeout(function() {
+					location.href = "roomIn?rnum=" + rnum;
+				}, 3000); */
+
 			}
 			if (ob.cmd == 'playing') {
 				var itemroot2 = ob.itemroot;
@@ -140,6 +199,13 @@ canvas {
 				datastop = false;
 				remoteTwoplayer();
 			}
+			/* 	if (ob.cmd == 'item') {
+				 console.log(ob.itemcode);
+
+					var itemcode = ob.itemcode;
+					iteminfo[itemcode].eat = true; 
+
+				} */
 		};
 		ws.onclose = function(event) {
 		};
@@ -191,7 +257,6 @@ canvas {
 
 		}
 		function remoteTwoplayer() {
-			if(!endcheck){
 			var gameEnd2 = data.gameend;
 			if (gameEnd2) {
 				var explosion2 = data.explosion;
@@ -340,7 +405,7 @@ canvas {
 				}
 
 				if (explosiondraw.idx > explosiondraw.frame_cnt) {
-
+					console.log(realGameEnd + '바뀌는곳');
 					realGameEnd = true;
 					var msg = {
 						position : "game",
@@ -352,9 +417,9 @@ canvas {
 
 				}
 			}
-			}
 		}
 
+		var ctx = document.getElementById("canvas").getContext("2d"), canvasTemp = document.createElement("canvas"), scrollImg = new Image(), tempContext = canvasTemp.getContext("2d"), imgWidth = 0, imgHeight = 0, imageData = {}, canvasWidth = 500, canvasHeight = 1530, scrollVal = 0, speed = 2;
 		/* 위쪽은 선생님 코드의 변수 선언, 그림을 그려주는 개체가 둘 필요하기때문에(그림의 처음과 끝을 이어 붙여야 하므로) 두 객체를 선언한다. 아래쪽 캔버스 템프는 조금 간략화된 클래스 선언으로 해당 객체에 상기와 같은 속성을 집어 넣어 준것이다 */
 
 		var playerUnit = {};
@@ -716,8 +781,6 @@ canvas {
 
 		/*   8.게임 루프 펑션 */
 		function render() {
-			if(!endcheck){
-			
 			/* render 돌릴때마다 메세지 전송 */
 			if (itemtimer1 >= 1) {
 				itemtimer1--;
@@ -972,7 +1035,7 @@ canvas {
 					render();
 				}, 1000 / 30);
 			}
-			}
+
 		}
 
 		/* thirdmix에서 추가된 함수   */
@@ -1197,8 +1260,7 @@ canvas {
 
 		/* 풀레이어 기체와 적탄환 충돌시 이 함수가 호출됨 */
 		function playerExplosion() {
-			if(!endcheck){
-				var data = {
+			var data = {
 				explosion : explosion,
 				remoteplayerBullet : playerBullet,
 				remoteenemyBalls : enemyBalls,
@@ -1368,7 +1430,6 @@ canvas {
 				imageData = tempContext.getImageData(0, 0, canvasWidth, canvasHeight - scrollVal);
 				ctx.putImageData(imageData, 0, scrollVal, 0, 0, canvasWidth, imgHeight);
 				/* 배경 스크롤을 그려주는 부분 */
-			}
 			}
 		}
 

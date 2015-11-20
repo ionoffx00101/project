@@ -117,7 +117,10 @@ canvas { border: 1px solid #555555;}
 			/* 아군 탄환 이미지 */
 			playerBulletimg = new Image();
 			playerBulletimg.src = "<c:url value="../resources/img/laserGreen11.png"/>";
-
+			
+			enemyimg = new Image();
+			enemyimg.src = "<c:url value="../resources/img/enemy_2_3.png"/>";
+			
 			/* 아이템 이미지 > 현재는 네모칸으로 해놔서 이미지를 사용하지 않는다 */
 			itemimg = new Image();
 			itemimg.src = "<c:url value="../resources/img/laserGreen14.png"/>";
@@ -347,11 +350,25 @@ canvas { border: 1px solid #555555;}
 
 			/*  탄환(적기체)를 그려준다 */
 			for (var i = 0; i < enemyBalls.length; i++) {
-				ctx.fillStyle = enemyBalls[i].color;
+			/* 	ctx.fillStyle = enemyBalls[i].color;
 				ctx.beginPath();
 				ctx.arc(enemyBalls[i].x, enemyBalls[i].y, enemyBalls[i].radius, 0, Math.PI * 2, true)
 				ctx.closePath();
-				ctx.fill();
+				ctx.fill(); */
+		/* 		ctx.drawImage(spaceShipSprit, //Source Image
+						405, 180, //X, Y Position on spaceShipSprit
+						36, 36, //Cut Size from spaceShipSprit
+						enemyBalls[i].x,enemyBalls[i].y, //View Position
+						18, 18 //View Size
+						);
+				 */
+				//ctx.drawImage(enemyimg,enemyBalls[i].x,enemyBalls[i].y);
+				ctx.drawImage(enemyimg, //Source Image
+						0, 0, //X, Y Position on spaceShipSprit
+						36, 36, //Cut Size from spaceShipSprit
+						enemyBalls[i].x,enemyBalls[i].y, //View Position
+						26, 26 //View Size
+						);
 			}
 
 			/* 아이템을 그려준다   */
