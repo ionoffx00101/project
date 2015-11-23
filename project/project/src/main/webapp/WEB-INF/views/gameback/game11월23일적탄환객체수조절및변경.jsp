@@ -556,12 +556,9 @@ canvas {
 		/* 3.탄환객체를 만드는 펑션 */
 		function createEnemyBalls(iCount) {
 			for (var i = 0; i < iCount; i++) {
-				
-				var startX= Math.floor(Math.random() * (canvas.width - 1)) + 1;
-				
 				var enemy = {
-					x : startX,
-					y : 1500
+					x : 600,
+					y : 1500,
 				};
 				var enemyinfo = {
 					radius : 8,
@@ -583,10 +580,10 @@ canvas {
 			/* 	if(enemyBallscnt>enemyBallsMax-1){
 					enemyBallscnt=0;
 				} */
-				console.log(enemyBallscnt+'개 작동중');
+				console.log(enemyBallscnt+'  use 실행됨');
 				if(enemyBallscnt<enemyBallsMax){
 				/* 탄환의 시작 위치 설정 */
-				
+				enemyBalls[enemyBallscnt].x= Math.floor(Math.random() * (canvas.width - 1)) + 1;
 				enemyBalls[enemyBallscnt].y = 0;
 
 				/* 탄환의 방향,속도 설정 */
@@ -690,9 +687,9 @@ canvas {
 				useplayeritem(itemcode); */
 
 				/* 적 탄환을 두개 추가한다   */
-				
-				useEnemyBalls(2);
-			
+				if (enemyBalls.length < 40) {
+					useEnemyBalls(2);
+				}
 				timeCheckLevel1 = 0;
 			}
 			timeCheckLevel1++;
@@ -704,7 +701,7 @@ canvas {
 				enemyBalls[i].x += Math.cos(enemyBallsinfo[i].radians) * enemyBallsinfo[i].speed;
 				enemyBalls[i].y += Math.sin(enemyBallsinfo[i].radians) * enemyBallsinfo[i].speed;
 
-				if (enemyBalls[i].x > canvas.width || enemyBalls[i].x < -25) {//원래 값 enemyBalls[i].x < 0
+				if (enemyBalls[i].x > canvas.width || enemyBalls[i].x < 0) {
 					enemyBallsinfo[i].angle = Math.floor((Math.random() * 60) + 60);
 					enemyBalls[i].y = 0;
 				} else if (enemyBalls[i].y > canvas.height) {// || enemyBalls[i].y < 0
@@ -1171,8 +1168,7 @@ canvas {
 						/*아이템 초기화 */
 						nouseplayeritem(i);
 						/*아이템 기능 넣기 */
-						
-					 	if (i == 0) {
+						if (i == 0) {
 							itemroot[0].one = true;
 						} else if (i == 1) {
 							itemroot[1].one = true;

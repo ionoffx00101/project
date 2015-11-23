@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>thirdMix(ver.jquery6.2)</title>
+<title>thirdMix(ver.jquery6.1)</title>
 <!--  캔버스 두개  -->
 <style type="text/css">
 canvas { border: 1px solid #555555;}
@@ -28,6 +28,7 @@ canvas { border: 1px solid #555555;}
 		/*  참조 블로그의 기체 움직임 변수들 각각 플레이어 유닛,버튼 입력 감지,기체 그림용,캔버스 객체의 펜을 담기위한 변수다(캔버스 객체는 실체 게임코드시 위쪽 코드와 일원화 시킬수 있다. 현재로선 기능 가동을 우선하여 객체를 하나 더 만들어둔 셈) */
 
 		var enemyBalls;
+		var enemyBallscnt=0;
 		var gameEnd = false;
 		var timeCheckLevel1 = 0;
 		/* 위에서 부터 적 탄환 객체, 게임종료트리거용 객체, 시간이 지나가는것을 체크하는 객체 */
@@ -106,25 +107,7 @@ canvas { border: 1px solid #555555;}
 			createlaser(lasermax);
 
 			/* 조건이 맞을 때까지 루프를 돌도록 설정된 게임 펑션을 돌린다. */
-	
-			
-			ctx.font='bold 55px Verdana';
-			ctx.fillStyle = '#333333';
-			ctx.fillText('lose..',170,350);
-			
-			
-			setTimeout(function() {
-				ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-				ctx2.clearRect(0, 0, canvasWidth, canvasHeight);
-				ctx.font='italic 40px Calibri';
-				ctx.fillStyle = '#000000';
-				ctx.fillText('Go!',230,330);
-				
-				ctx2.font='italic 40px Calibri';
-				ctx2.fillStyle = '#000000';
-				ctx2.fillText('Go!',250,350);
-				setTimeout(function() {render();}, 1000);
-			}, 2000);
+			render();
 		}
 
 		/* 2.기체이미지를 가져오는 펑션 */
@@ -282,7 +265,8 @@ canvas { border: 1px solid #555555;}
 				useplayeritem(itemcode);
 
 				/* 적 탄환을 두개 추가한다   */
-					if (enemyBalls.length < 40) {
+				if (enemyBalls.length-enemyBallscnt < 40) {
+					console.log(enemyBalls.length-enemyBallscnt+'몇개로계산되는가');
 						createEnemyBalls(2);
 					}
 				timeCheckLevel1 = 0;
@@ -309,8 +293,8 @@ canvas { border: 1px solid #555555;}
 
 		/*   8.게임 루프 펑션 */
 		function render() {
-			/* 탄환 속도 제한을 위해 시간 체크 */
 			console.log(enemyBalls.length+'탄환수');
+			/* 탄환 속도 제한을 위해 시간 체크 */
 			spacecnt++;
 			if(spacecnt%10==0){
 				spacetimer=true;
@@ -551,7 +535,7 @@ canvas { border: 1px solid #555555;}
 							enemyBalls[j].x = 600;
 							enemyBalls[j].y = 600;
 							enemyBalls[j].speed = 0;
-
+							enemyBallscnt++;
 							/* 새 적탄환 생성 */
 							createEnemyBalls(1);
 							break;
