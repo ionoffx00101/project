@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.13.1</version>
 		</dependency>
 		<!-- 스프링 관련 다섯가지 -->
 		<dependency>
